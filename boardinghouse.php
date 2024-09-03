@@ -138,21 +138,43 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 
     <div class="row mt-5">
+   
         <div class="col">
             <h2>Rooms</h2>
             <?php 
-            if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"){
-                echo "<div class='addroom' style='margin-bottom: 20px;'><a href='php/addroom.php'><button class='btn btn-warning'>Add Rooms</button></a></div>"; 
-            }
+                if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"){
+                    echo "<div class='addroom' style='margin-bottom: 20px;'><a href='php/addroom.php'><button class='btn btn-warning'>Add Rooms</button></a></div>"; 
+                }
             ?>
+
+            <form method="GET" action="">
+                <label for="room_type">Select Room Type:</label>
+                <select name="room_type" id="room_type" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    <option value="Single Room" <?php echo isset($_GET['room_type']) && $_GET['room_type'] == 'Single Room' ? 'selected' : ''; ?>>Single</option>
+                    <option value="Double Room" <?php echo isset($_GET['room_type']) && $_GET['room_type'] == 'Double Room' ? 'selected' : ''; ?>>Double</option>
+                </select>
+            </form>
+            <br>
+            <br>
+
             <div class="row row-cols-1 row-cols-md-3 g-4">
             <?php 
             if (!empty($_SESSION["uname"]) && $_SESSION['role'] == 'landlord'){
-                $hname = $_SESSION['hname'];
-                $query = "SELECT * FROM rooms where hname = '$hname'";
-                $result = mysqli_query($conn, $query);
-                while ($fetch = mysqli_fetch_assoc($result)) {
-                    $id = $fetch['id'];
+                $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
+                $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
+
+                if (!empty($hname)) {
+                    // Adjust the query to filter by room type if selected
+                    $query = "SELECT * FROM rooms WHERE hname = '$hname'";
+                    if (!empty($room_type)) {
+                        $query .= " AND room_type = '$room_type'";
+                    }
+                    $result = mysqli_query($conn, $query);
+
+                    if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
+                        while ($fetch = mysqli_fetch_assoc($result)) {
+                            $id = $fetch['id'];
             ?>
                 <div class="col">
                     <div class="card">
@@ -161,6 +183,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">Room No: <?php echo $fetch['room-no']?></h5>
+                            <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
                             <p class="card-text">Price: <?php echo $fetch['price']?></p>
                             <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
                             <p class="card-text">Status: <?php echo $fetch['status']?></p>
@@ -174,7 +197,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         </div>
                     </div>
                 </div>
-            <?php }}?>
+            <?php }}}}?>
 
             <?php 
             if (!empty($_SESSION) && $_SESSION['role'] == 'user'){
@@ -194,6 +217,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">Room No: <?php echo $fetch['room-no']?></h5>
+                            <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
                             <p class="card-text">Price: <?php echo $fetch['price']?></p>
                             <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
                             <p class="card-text">Status: <?php echo $fetch['status']?></p>
@@ -214,6 +238,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             <?php }}?>
             </div>
         </div>
+       
     </div>
 
     <div class="row mt-5">
