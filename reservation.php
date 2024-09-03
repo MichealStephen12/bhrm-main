@@ -80,6 +80,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             <table class="table table-bordered table-striped text-center">
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
@@ -110,6 +111,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             $id = $fetch['id'];
                     ?>
                             <tr>
+                                <td><?php echo $fetch['id'] ?></td>
                                 <td><?php echo $fetch['fname'] ?></td>
                                 <td><?php echo $fetch['lname'] ?></td>
                                 <td><?php echo $fetch['email'] ?></td>
@@ -146,6 +148,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             $id = $fetch['id'];  
                     ?>
                         <tr>
+                            <td><?php echo $fetch['id'] ?></td>
                             <td><?php echo $fetch['fname'] ?></td>
                             <td><?php echo $fetch['lname'] ?></td>
                             <td><?php echo $fetch['email'] ?></td>

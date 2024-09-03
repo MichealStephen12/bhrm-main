@@ -118,6 +118,12 @@ if (isset($_GET['reject'])) {
 
         $query_update = "Delete From bhapplication WHERE id = $id";
         mysqli_query($conn, $query_update);
+
+        $query_update = "Delete From documents WHERE id = $id";
+        mysqli_query($conn, $query_update);
+
+        $query_update = "Delete From description WHERE id = $id";
+        mysqli_query($conn, $query_update);
         
         header('Location: ../index.php');
     } else {

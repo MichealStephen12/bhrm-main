@@ -31,7 +31,10 @@ if (isset($_GET['delete'])) {
 if (isset($_GET['approve'])) {
     $id = $_GET['approve'];
 
-    $query = "UPDATE `reservation` SET `id`=$id, `res_stat` = 'Approved' WHERE id = $id";
+    $query = "UPDATE `reservation` SET `id`=$id, `res_stat` = 'Approved', `status` = 'occupied' WHERE id = $id";
+    $result = mysqli_query($conn, $query);
+
+    $query = "UPDATE `rooms` SET `id`=$id, `status` = 'occupied' WHERE id = $id";
     $result = mysqli_query($conn, $query);
     header('Location: ../reservation.php');
 }

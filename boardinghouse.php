@@ -185,6 +185,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 while ($fetch = mysqli_fetch_assoc($result)) {
                     $id = $fetch['id'];
                     $hname = $fetch['hname'];
+                    $status = $fetch['status'];
             ?>
                 <div class="col">
                     <div class="card">
@@ -201,7 +202,11 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                 <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
                                 <a href='php/function.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
                             <?php  else: ?>
+                                <?php
+                                    if ($status == 'available'){
+                                ?>
                                 <a href='book-in.php?hname=<?php echo $hname;?>' class='btn btn-warning'>Book Now!</a>
+                                <?php } ?>
                             <?php endif; ?>
                         </div>
                     </div>
