@@ -147,12 +147,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 }
             ?>
 
-            <form method="GET" action="">
-                <label for="room_type">Select Room Type:</label>
-                <select name="room_type" id="room_type" onchange="this.form.submit()">
-                    <option value="">All</option>
-                    <option value="Single Room" <?php echo isset($_GET['room_type']) && $_GET['room_type'] == 'Single Room' ? 'selected' : ''; ?>>Single</option>
-                    <option value="Double Room" <?php echo isset($_GET['room_type']) && $_GET['room_type'] == 'Double Room' ? 'selected' : ''; ?>>Double</option>
+            <form method="get" action="boardinghouse.php">
+                <!-- Retain hname in the form -->
+                <input type="hidden" name="hname" value="<?php echo isset($_GET['hname']) ? $_GET['hname'] : $_SESSION['hname']; ?>">
+                <select name="room_type" onchange="this.form.submit()">
+                    <option value="">--Select Room Type--</option>
+                    <option value="Single Room" <?php if (isset($_GET['room_type']) && $_GET['room_type'] == 'Single Room') echo 'selected'; ?>>Single Room</option>
+                    <option value="Double Room" <?php if (isset($_GET['room_type']) && $_GET['room_type'] == 'Double Room') echo 'selected'; ?>>Double Room</option>
+                    <!-- Add other room types as needed -->
                 </select>
             </form>
             <br>
@@ -161,14 +163,20 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             <div class="row row-cols-1 row-cols-md-3 g-4">
             <?php 
             if (!empty($_SESSION["uname"]) && $_SESSION['role'] == 'landlord'){
+                if (isset($_GET['hname'])) {
+                    $_SESSION['hname'] = $_GET['hname'];
+                }
+            
                 $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
-                $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
-
-                if (!empty($hname)) {
-                    // Adjust the query to filter by room type if selected
-                    $query = "SELECT * FROM rooms WHERE hname = '$hname'";
-                    if (!empty($room_type)) {
-                        $query .= " AND room_type = '$room_type'";
+            
+                if ($hname != '') {
+                    // If both `hname` and `room_type` are set in GET, filter accordingly
+                    if (isset($_GET['room_type']) && !empty($_GET['room_type'])) {
+                        $room_type = $_GET['room_type'];
+                        $query = "SELECT * FROM rooms WHERE hname = '$hname' AND room_type = '$room_type'";
+                    } else {
+                        // Default to fetching all rooms of the specific boarding house
+                        $query = "SELECT * FROM rooms WHERE hname = '$hname'";
                     }
                     $result = mysqli_query($conn, $query);
 
@@ -201,14 +209,20 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
             <?php 
             if (!empty($_SESSION) && $_SESSION['role'] == 'user'){
+                if (isset($_GET['hname'])) {
+                    $_SESSION['hname'] = $_GET['hname'];
+                }
+            
                 $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
-                $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
-
-                if (!empty($hname)) {
-                    // Adjust the query to filter by room type if selected
-                    $query = "SELECT * FROM rooms WHERE hname = '$hname'";
-                    if (!empty($room_type)) {
-                        $query .= " AND room_type = '$room_type'";
+            
+                if ($hname != '') {
+                    // If both `hname` and `room_type` are set in GET, filter accordingly
+                    if (isset($_GET['room_type']) && !empty($_GET['room_type'])) {
+                        $room_type = $_GET['room_type'];
+                        $query = "SELECT * FROM rooms WHERE hname = '$hname' AND room_type = '$room_type'";
+                    } else {
+                        // Default to fetching all rooms of the specific boarding house
+                        $query = "SELECT * FROM rooms WHERE hname = '$hname'";
                     }
                     $result = mysqli_query($conn, $query);
 
