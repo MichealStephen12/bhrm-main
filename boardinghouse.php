@@ -201,14 +201,22 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
             <?php 
             if (!empty($_SESSION) && $_SESSION['role'] == 'user'){
-                isset($_GET['hname']);
-                $hname = $_GET['hname'];
-                $query = "SELECT * FROM rooms where hname = '$hname'";
-                $result = mysqli_query($conn, $query);
-                while ($fetch = mysqli_fetch_assoc($result)) {
-                    $id = $fetch['id'];
-                    $hname = $fetch['hname'];
-                    $status = $fetch['status'];
+                $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
+                $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
+
+                if (!empty($hname)) {
+                    // Adjust the query to filter by room type if selected
+                    $query = "SELECT * FROM rooms WHERE hname = '$hname'";
+                    if (!empty($room_type)) {
+                        $query .= " AND room_type = '$room_type'";
+                    }
+                    $result = mysqli_query($conn, $query);
+
+                    if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
+                        while ($fetch = mysqli_fetch_assoc($result)) {
+                        $id = $fetch['id'];
+                        $hname = $fetch['hname'];
+                        $status = $fetch['status'];
             ?>
                 <div class="col">
                     <div class="card">
@@ -235,7 +243,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         </div>
                     </div>
                 </div>
-            <?php }}?>
+            <?php }}}}?>
             </div>
         </div>
        
