@@ -118,10 +118,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 </head>
 
 <body>
-    <video autoplay muted loop class="video-background">
-        <source src="backvideo.mp4" type="video/mp4">
-    </video>
-
     <nav class="navbar navbar-expand-lg navbar-dark py-0">
         <a class="navbar-brand" href="#">
             <img src="images/logo.png" alt="Logo">
@@ -141,13 +137,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 <li class="nav-item">
                     <a class="nav-link" href="contact.php">Contact</a>
                 </li>
-                <?php
-                if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user') {
-                    echo '<a class="nav-link" href="php/bhfunction.php">Apply as Landlord</a>';
-                } else {
-                    echo '';
-                }
-                ?>
                 <?php
                 if (!empty ($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
                     echo '<a class="nav-link"  href="php/bhapplications.php">View Applications</a>';

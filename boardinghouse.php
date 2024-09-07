@@ -151,7 +151,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <!-- Retain hname in the form -->
                 <input type="hidden" name="hname" value="<?php echo isset($_GET['hname']) ? $_GET['hname'] : $_SESSION['hname']; ?>">
                 <select name="room_type" onchange="this.form.submit()">
-                    <option value="">--Select Room Type--</option>
+                    <option value="">All Rooms</option>
                     <option value="Single Room" <?php if (isset($_GET['room_type']) && $_GET['room_type'] == 'Single Room') echo 'selected'; ?>>Single Room</option>
                     <option value="Double Room" <?php if (isset($_GET['room_type']) && $_GET['room_type'] == 'Double Room') echo 'selected'; ?>>Double Room</option>
                     <!-- Add other room types as needed -->

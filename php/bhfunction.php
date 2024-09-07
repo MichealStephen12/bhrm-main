@@ -1,6 +1,12 @@
 <?php
 require 'connection.php';
 
+if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord') {
+    echo '';
+} else {
+    header("location: ../index.php");
+}
+
 if (isset($_POST['submit'])) {
     $landlord = $_POST['landlord'];
     $hname = $_POST['name'];
@@ -146,10 +152,43 @@ if (isset($_GET['reject'])) {
         body {
             background-color: #e6e6e6; /* Background color */
         }
+        .navbar {
+            background-color: #343a40 !important;
+        }
+
+        .navbar-brand img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .nav-link {
+            color: #fff !important;
+        }
     </style>
 
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark py-0">
+        <a class="navbar-brand" href="#">
+            <img src="images/logo.png" alt="Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <?php
+                if ($_SESSION == true) {
+                    echo '<a class="btn btn-warning" href="logout.php">Logout</a>';
+                } else {
+                    echo '<a class="btn btn-warning" href="login.php">Login</a>';
+                }
+                ?>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container-fluid">
         <div class="row" style="padding-top: 5%;">
             <div class="col-md-4"></div>
@@ -195,7 +234,14 @@ if (isset($_GET['reject'])) {
                                     <button type="submit" name="submit" class="btn btn-warning">Submit</button>
                                 </div>
                                 <div class="col-md-12" style="text-align: center; font-size: 13px; font-weight: 100;">
-                                    <a href="../index.php" style="text-decoration: none; color: black;">Back</a>
+                                    <?php 
+                                        if ($_SESSION['role'] == 'landlord'){
+                                            echo '';
+                                        }else{
+                                            echo '<a href="../index.php" style="text-decoration: none; color: black;">Back</a>';
+                                        }
+                                    ?>
+                                    
                                 </div>
                             </div>
                         </form>
@@ -205,3 +251,8 @@ if (isset($_GET['reject'])) {
             <div class="col-md-4"></div>
         </div>
     </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</html>

@@ -43,7 +43,11 @@ if (isset($_POST['submit'])) {
             $_SESSION["uname"] = $row['uname'];
             $_SESSION["role"] = $row["role"];
             $_SESSION["hname"] = $row['hname'];
-            header("Location: ../boardinghouse.php");
+            if (empty($_SESSION['hname'])){
+                header("Location: bhfunction.php");
+            }else{
+                header("Location: ../boardinghouse.php");
+            }
             exit;
         }
     } else {
@@ -106,6 +110,9 @@ if (isset($_POST['submit'])) {
                                         </div>
                                         <div class="col-md-6" style="text-align: right; font-size: 13px; font-weight: 100;">
                                             <a href="forgot.html" style="text-decoration: none; color: black;">Forgot Password</a>
+                                        </div>
+                                        <div class="col-md-6" style="text-align: right; font-size: 13px; font-weight: 100;">
+                                            <a href="signuplandlord.php" style="text-decoration: none; color: black;">Sign up as landlord</a>
                                         </div>
                                     </div>
                                 </div>
