@@ -31,10 +31,10 @@ if (isset($_GET['delete'])) {
 if (isset($_GET['approve'])) {
     $id = $_GET['approve'];
 
-    $query = "UPDATE `reservation` SET `id`=$id, `res_stat` = 'Approved', `status` = 'occupied' WHERE id = $id";
+    $query = "UPDATE `reservation` SET `res_stat` = 'Approved', `status` = 'occupied' WHERE room_no = $id";
     $result = mysqli_query($conn, $query);
 
-    $query = "UPDATE `rooms` SET `id`=$id, `status` = 'occupied' WHERE id = $id";
+    $query = "UPDATE `rooms` SET `status` = 'occupied' WHERE room_no = $id";
     $result = mysqli_query($conn, $query);
     header('Location: ../reservation.php');
 }
@@ -42,7 +42,10 @@ if (isset($_GET['approve'])) {
 if (isset($_GET['reject'])) {
     $id = $_GET['reject'];
 
-    $query = "UPDATE `reservation` SET `id`=$id, `res_stat` = 'Rejected' WHERE id = $id";
+    $query = "UPDATE `reservation` SET `res_stat` = 'Rejected',  `status` = 'available' WHERE room_no = $id";
+    $result = mysqli_query($conn, $query);
+
+    $query = "UPDATE `rooms` SET `status` = 'available' WHERE room_no = $id";
     $result = mysqli_query($conn, $query);
     header('Location: ../reservation.php');
 }

@@ -44,13 +44,13 @@ if (isset($_POST['submit'])) {
     }
 
     $hname = $_SESSION['hname'];
-    $query = "INSERT INTO `rooms`(`id`, `room-no`, `room_type`, `amenities`, `price`, `image`, `status`, `hname`) VALUES ('','$roomno','$roomtype','$amenities','$price','images/$fileNameNew', '$status', '$hname')";
+    $query = "INSERT INTO `rooms`(`id`, `room_no`, `room_type`, `amenities`, `price`, `image`, `status`, `hname`) VALUES ('','$roomno','$roomtype','$amenities','$price','images/$fileNameNew', '$status', '$hname')";
     mysqli_query($conn, $query);
 
     header("location: ../boardinghouse.php");
 }
 
-$data = ['id' => '', 'room-no' => '', 'roomtype' => '', 'amenities' => '', 'price' => '', 'image' => '', 'status'=>''];
+$data = ['id' => '', 'room_no' => '', 'roomtype' => '', 'amenities' => '', 'price' => '', 'image' => '', 'status'=>''];
 
 if(isset($_GET['rupdate'])){
     $id = $_GET['rupdate'];
@@ -98,7 +98,7 @@ if(isset($_POST['update'])){
         echo "you cannot upload this type of file";
     }
 
-    $query = "UPDATE `rooms` SET `id`= $id,`room-no`='$roomno',`room-no`='$roomtype',`amenities`='$amenities', `price`='$price', `image`='images/$fileNameNew', `status`='$status' WHERE id = $id";
+    $query = "UPDATE `rooms` SET `id`= $id,`room_no`='$roomno',`room_no`='$roomtype',`amenities`='$amenities', `price`='$price', `image`='images/$fileNameNew', `status`='$status' WHERE id = $id";
     mysqli_query($conn, $query);
 
     header("location: ../boardinghouse.php");
@@ -136,7 +136,7 @@ if(isset($_POST['update'])){
                             <div class="row">
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Room No:</label>
-                                    <input type="text" name="roomno" value="<?php echo $data['room-no']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                    <input type="text" name="roomno" value="<?php echo $data['room_no']; ?>"  placeholder="Enter here.." class="form-control" required>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Room Type:</label>

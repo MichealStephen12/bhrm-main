@@ -110,6 +110,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         $result = mysqli_query($conn, $query);
                         while ($fetch = mysqli_fetch_assoc($result)) {
                             $id = $fetch['id'];
+                            $roomno = $fetch['room_no'];
                     ?>
                             <tr>
                                 <td><?php echo $fetch['id'] ?></td>
@@ -129,8 +130,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                                 ?>
                                 <td>
-                                    <a href="php/function.php?approve=<?php echo $id;?>"><button class="btn btn-warning">Approve</button></a>
-                                    <a href="php/function.php?reject=<?php echo $id;?>"><button class="btn btn-danger">Reject</button></a>
+                                    <a href="php/function.php?approve=<?php echo $roomno;?>"><button class="btn btn-warning">Approve</button></a>
+                                    <a href="php/function.php?reject=<?php echo $roomno;?>"><button class="btn btn-danger">Reject</button></a>
                                 </td>
                                 <?php } ?>
                             </tr>
