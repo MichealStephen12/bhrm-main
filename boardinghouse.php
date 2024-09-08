@@ -183,6 +183,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
                         while ($fetch = mysqli_fetch_assoc($result)) {
                             $id = $fetch['id'];
+                            $datein = $fetch['datein'];
             ?>
                 <div class="col">
                     <div class="card">
@@ -190,11 +191,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                             <img src="<?php echo $fetch['image']?>" class="card-img-top" alt="Room Image">
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Room No: <?php echo $fetch['room-no']?></h5>
+                            <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
                             <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
                             <p class="card-text">Price: <?php echo $fetch['price']?></p>
                             <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
                             <p class="card-text">Status: <?php echo $fetch['status']?></p>
+                            <div>
+                                <p><?php echo $datein; ?></p>
+                            </div>
                             <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"):
                             ?>
                                 <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
@@ -231,6 +235,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         $id = $fetch['id'];
                         $hname = $fetch['hname'];
                         $status = $fetch['status'];
+                        $datein = $fetch['datein'];
+                        $roomno = $fetch['room_no'];
             ?>
                 <div class="col">
                     <div class="card">
@@ -238,7 +244,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                             <img src="<?php echo $fetch['image']?>" class="card-img-top" alt="Room Image">
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Room No: <?php echo $fetch['room-no']?></h5>
+                            <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
                             <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
                             <p class="card-text">Price: <?php echo $fetch['price']?></p>
                             <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
@@ -251,7 +257,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                 <?php
                                     if ($status == 'available'){
                                 ?>
-                                <a href='book-in.php?hname=<?php echo $hname;?>' class='btn btn-warning'>Book Now!</a>
+                                <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
                                 <?php } ?>
                             <?php endif; ?>
                         </div>

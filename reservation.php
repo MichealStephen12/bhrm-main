@@ -86,6 +86,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <th>Email</th>
                         <th>Date in</th>
                         <th>Add ons</th>
+                        <th>Room Number</th>
                         <th>Amenities</th>
                         <th>Price</th>
                         <th>Image</th>
@@ -117,6 +118,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                                 <td><?php echo $fetch['email'] ?></td>
                                 <td><?php echo $fetch['date_in'] ?></td>
                                 <td><?php echo $fetch['addons'] ?></td>
+                                <td><?php echo $fetch['room_no'] ?></td>
                                 <td><?php echo $fetch['amenities'] ?></td>
                                 <td><?php echo $fetch['price'] ?></td>
                                 <td><img src="<?php echo $fetch['image'] ?>"></td>
@@ -154,6 +156,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             <td><?php echo $fetch['email'] ?></td>
                             <td><?php echo $fetch['date_in'] ?></td>
                             <td><?php echo $fetch['addons'] ?></td>
+                            <td><?php echo $fetch['room_no'] ?></td>
                             <td><?php echo $fetch['amenities'] ?></td>
                             <td><?php echo $fetch['price'] ?></td>
                             <td><img src="<?php echo $fetch['image'] ?>"></td>
