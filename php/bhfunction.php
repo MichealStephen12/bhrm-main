@@ -125,13 +125,13 @@ if (isset($_GET['reject'])) {
     
     if (mysqli_query($conn, $query_update)) {
 
-        $query_update = "Delete From bhapplication WHERE id = $id";
+        $query_update = "Delete From bhapplication WHERE hname = '$hname'";
         mysqli_query($conn, $query_update);
 
-        $query_update = "Delete From documents WHERE id = $id";
+        $query_update = "Delete From documents WHERE hname = '$hname'";
         mysqli_query($conn, $query_update);
 
-        $query_update = "Delete From description WHERE id = $id";
+        $query_update = "Delete From description WHERE hname = '$hname'";
         mysqli_query($conn, $query_update);
         
         header('Location: ../index.php');
