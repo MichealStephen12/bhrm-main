@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
         $error_messages = implode("\\n", $errors); // Combine error messages into a single string
         echo "<script>alert('$error_messages');</script>"; // Display the alert button with error messages
     } else {
-        $query = "INSERT INTO `users`(`id`, `fname`, `lname`, `uname`, `pass`, `role`, `hname`) VALUES ('','$fname','$lname','$uname','$pass', 'landlord', `$hname`)";
+        $query = "INSERT INTO `users`(`id`, `fname`, `lname`, `uname`, `pass`, `role`, `hname`) VALUES ('','$fname','$lname','$uname','$pass', 'landlord', '$hname')";
         mysqli_query($conn, $query);
         echo "<script>alert('Successfully added the information.');</script>"; // Display success message in an alert button
     }    
@@ -102,7 +102,7 @@ if (isset($_POST['submit'])) {
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Your Boarding House</label>
-                                    <input type="password" name="hname" placeholder="Password" class="form-control" required>
+                                    <input type="text" name="hname" placeholder="Password" class="form-control" required>
                                 </div>
                                 <div class="col-md-12" style="text-align: center; font-size: 14px; font-weight: 200; padding: 0px 20px 10px 20px;">
                                     <button type="submit" name="submit" class="btn btn-warning">Register</button>
