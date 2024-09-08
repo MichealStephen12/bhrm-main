@@ -81,29 +81,32 @@ if (isset($_POST['submit'])) {
 
 
 if (isset($_GET['approve'])) {
-    $id = $_GET['approve'];
+    $hname = $_GET['approve'];
     
     // Fetch the data from the bhapplication table
-    $query = "select * from bhapplication where id = $id";
+    $query = "select * from bhapplication where hname = '$hname'";
     $result = mysqli_query($conn, $query);
     
     if ($result) {
         $fetch = mysqli_fetch_assoc($result);
         
         $landlord = $fetch['owner'];
-        $name = $fetch['hname'];
+        $hname = $fetch['hname'];
         $address = $fetch['haddress'];
         
         // Insert the data into the boardinghouses table
-        $query_insert = "INSERT INTO boardinghouses (`id`, `owner`, `hname`, `haddress`) VALUES ('', '$landlord', '$name', '$address')";
+        $query_insert = "INSERT INTO boardinghouses (`id`, `owner`, `hname`, `haddress`) VALUES ('', '$landlord', '$hname', '$address')";
         
         if (mysqli_query($conn, $query_insert)) {
             // Update the status in the bhapplication table
-            $query_update = "UPDATE bhapplication SET Status = 'approved' WHERE id = $id";
+            $query_update = "UPDATE bhapplication SET Status = 'approved' WHERE hname = '$hname'";
             mysqli_query($conn, $query_update);
 
-            $query_update = "Delete From bhapplication WHERE id = $id";
+            $query_update = "Delete From bhapplication WHERE hname = '$hname'";
             mysqli_query($conn, $query_update);
+
+            $query_insert = "UPDATE users SET hname = '$hname' where uname = '$landlord'";
+            mysqli_query($conn, $query_insert);
             
             header('Location: ../index.php');
         } else {
@@ -115,10 +118,10 @@ if (isset($_GET['approve'])) {
 }
 
 if (isset($_GET['reject'])) {
-    $id = $_GET['reject'];
+    $hname = $_GET['reject'];
     
     // Update the status in the bhapplication table
-    $query_update = "UPDATE bhapplication SET Status = 'rejected' WHERE id = $id";
+    $query_update = "UPDATE bhapplication SET Status = 'rejected' WHERE hname = '$hname'";
     
     if (mysqli_query($conn, $query_update)) {
 

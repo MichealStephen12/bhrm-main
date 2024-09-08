@@ -71,24 +71,25 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         $result = mysqli_query($conn, $query);
                         while ($fetch = mysqli_fetch_assoc($result)) {
                         $id = $fetch['id'];
+                        $hname = $fetch['hname'];
                         ?>          
-                            <tr>
-                                <td><?php echo $fetch['id'] ?></td>
-                                <td><?php echo $fetch['owner'] ?></td>
-                                <td><?php echo $fetch['hname'] ?></td>
-                                <td><?php echo $fetch['haddress'] ?></td>
-                                <td><?php echo $fetch['bh_description'] ?></td>
-                                <td><img src="../<?php echo $fetch['image'] ?>"></td>
-                                <td><img src="../<?php echo $fetch['documents'] ?>"></td>
-                                <td><?php echo $fetch['status'] ?></td>
-                                 
-                              
-                                <td>
-                                    <a href="bhfunction.php?approve=<?php echo $id;?>"><button class="btn btn-warning">Approve</button></a>
-                                    <a href="bhfunction.php?reject=<?php echo $id;?>"><button class="btn btn-danger">Reject</button></a>
-                                </td>
-                                <?php } ?>
-                            </tr>
+                        <tr>
+                            <td><?php echo $fetch['id'] ?></td>
+                            <td><?php echo $fetch['owner'] ?></td>
+                            <td><?php echo $fetch['hname'] ?></td>
+                            <td><?php echo $fetch['haddress'] ?></td>
+                            <td><?php echo $fetch['bh_description'] ?></td>
+                            <td><img src="../<?php echo $fetch['image'] ?>"></td>
+                            <td><img src="../<?php echo $fetch['documents'] ?>"></td>
+                            <td><?php echo $fetch['status'] ?></td>
+                                
+                            
+                            <td>
+                                <a href="bhfunction.php?approve=<?php echo $hname;?>"><button class="btn btn-warning">Approve</button></a>
+                                <a href="bhfunction.php?reject=<?php echo $hname;?>"><button class="btn btn-danger">Reject</button></a>
+                            </td>
+                            <?php } ?>
+                        </tr>
                 </tbody>
             </table>
         </div>
