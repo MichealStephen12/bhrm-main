@@ -10,6 +10,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 if (isset($_POST['submit'])) {
     $roomno = $_POST['roomno'];
     $roomtype = $_POST['roomtype'];
+    $capacity = $_POST['capacity'];
     $amenities = $_POST['amenities'];
     $price = $_POST['price'];
     $status = $_POST['status'];
@@ -50,7 +51,7 @@ if (isset($_POST['submit'])) {
     header("location: ../boardinghouse.php");
 }
 
-$data = ['id' => '', 'room_no' => '', 'roomtype' => '', 'amenities' => '', 'price' => '', 'image' => '', 'status'=>''];
+$data = ['id' => '', 'room_no' => '', 'room_type' => '', 'capacity' => '', 'amenities' => '', 'price' => '', 'image' => '', 'status'=>''];
 
 if(isset($_GET['rupdate'])){
     $id = $_GET['rupdate'];
@@ -64,6 +65,7 @@ if(isset($_POST['update'])){
     $id = $_GET['rupdate'];
     $roomno = $_POST['roomno'];
     $roomtype = $_POST['roomtype'];
+    $capacity = $_POST['capacity'];
     $amenities = $_POST['amenities'];
     $price = $_POST['price'];
     $status = $_POST['status'];
@@ -98,7 +100,7 @@ if(isset($_POST['update'])){
         echo "you cannot upload this type of file";
     }
 
-    $query = "UPDATE `rooms` SET `id`= $id,`room_no`='$roomno',`room_no`='$roomtype',`amenities`='$amenities', `price`='$price', `image`='images/$fileNameNew', `status`='$status' WHERE id = $id";
+    $query = "UPDATE `rooms` SET `id`= $id,`room_no`='$roomno',`room_type`='$roomtype',`capacity`='$capacity',`amenities`='$amenities', `price`='$price', `image`='images/$fileNameNew', `status`='$status' WHERE id = $id";
     mysqli_query($conn, $query);
 
     header("location: ../boardinghouse.php");
@@ -140,7 +142,11 @@ if(isset($_POST['update'])){
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Room Type:</label>
-                                    <input type="text" name="roomtype" value="<?php echo $data['roomtype']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                    <input type="text" name="roomtype" value="<?php echo $data['room_type']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                </div>
+                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
+                                    <label>Capacity:</label>
+                                    <input type="text" name="capacity" value="<?php echo $data['capacity']; ?>"  placeholder="Enter here.." class="form-control" required>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Amenities:</label>
@@ -152,7 +158,7 @@ if(isset($_POST['update'])){
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Image:</label>
-                                    <input type="file" name="image" placeholder="Enter here.." class="form-control" >
+                                    <input type="file" name="image" value="<?php echo $data['image'];?>" placeholder="Enter here.." class="form-control" >
                                 </div>
                                 <?php if($data['id'] != '') :  ?>
                                 <div class="col-md-12" style="padding: 10px 20px 10px 20px;">

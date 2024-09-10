@@ -2,13 +2,13 @@
 require 'connection.php';
 
 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord') {
-    echo '';
+    echo $_SESSION['uname'];
 } else {
     header("location: ../index.php");
 }
 
 if (isset($_POST['submit'])) {
-    $landlord = $_POST['landlord'];
+    $landlord = $_SESSION['uname'];
     $hname = $_POST['name'];
     $haddress = $_POST['address'];
     $description = $_POST['description'];
@@ -206,10 +206,6 @@ if (isset($_GET['reject'])) {
                     <div class="col-md-12">
                         <form method="post" enctype="multipart/form-data">
                             <div class="row">
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Landlord</label>
-                                    <input type="text" name="landlord" placeholder="Enter here.." class="form-control" required>
-                                </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>House Name</label>
                                     <input type="text" name="name" placeholder="Enter here.." class="form-control" required>

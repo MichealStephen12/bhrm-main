@@ -79,8 +79,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             <td><?php echo $fetch['hname'] ?></td>
                             <td><?php echo $fetch['haddress'] ?></td>
                             <td><?php echo $fetch['bh_description'] ?></td>
-                            <td><img src="../<?php echo $fetch['image'] ?>"></td>
-                            <td><img src="../<?php echo $fetch['documents'] ?>"></td>
+                            <td><img src="../<?php echo $fetch['image'] ?>" width='200px'></td>
+                            <td><img src="../<?php echo $fetch['documents'] ?>" width='200px'></td>
                             <td><?php echo $fetch['status'] ?></td>
                                 
                             

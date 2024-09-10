@@ -52,35 +52,35 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             object-fit: cover; /* Cover the container without distortion */
         }
         .image-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
 
-.text-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-.text-box {
-    border: 1px solid #ccc;
-    padding: 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-.card {
-    background-color: #a9a9a9; /* Change background color to #a9a9a9 */
-    color: #fff; /* Text color */
-    border-radius: 20px; /* Rounded corners */
-    padding: 20px; /* Padding */
-    margin-bottom: 20px; /* Bottom margin */
-}
+        .text-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .text-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #a9a9a9; /* Change background color to #a9a9a9 */
+            color: #fff; /* Text color */
+            border-radius: 20px; /* Rounded corners */
+            padding: 20px; /* Padding */
+            margin-bottom: 20px; /* Bottom margin */
+        }
 
-.card-body {
-    padding: 10px; /* Padding */
-}
+        .card-body {
+            padding: 10px; /* Padding */
+        }
 
     </style>
 </head>
@@ -156,6 +156,13 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     <option value="Double Room" <?php if (isset($_GET['room_type']) && $_GET['room_type'] == 'Double Room') echo 'selected'; ?>>Double Room</option>
                     <!-- Add other room types as needed -->
                 </select>
+
+                <select name="availability" onchange="this.form.submit()">
+                    <option value="">All Availability</option>
+                    <option value="Available" <?php if (isset($_GET['availability']) && $_GET['availability'] == 'Available') echo 'selected'; ?>>Available</option>
+                    <option value="Occupied" <?php if (isset($_GET['availability']) && $_GET['availability'] == 'Occupied') echo 'selected'; ?>>Occupied</option>
+                    <option value="Under Maintenance" <?php if (isset($_GET['availability']) && $_GET['availability'] == 'Under Maintenance') echo 'selected'; ?>>Under Maintenance</option>
+                </select>
             </form>
             <br>
             <br>
@@ -164,112 +171,137 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             <?php 
             if (!empty($_SESSION["uname"]) && $_SESSION['role'] == 'landlord'){
                 if (isset($_GET['hname'])) {
-                    $_SESSION['hname'] = $_GET['hname'];
-                }
-            
-                $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
-            
-                if ($hname != '') {
-                    // If both `hname` and `room_type` are set in GET, filter accordingly
-                    if (isset($_GET['room_type']) && !empty($_GET['room_type'])) {
-                        $room_type = $_GET['room_type'];
-                        $query = "SELECT * FROM rooms WHERE hname = '$hname' AND room_type = '$room_type'";
-                    } else {
-                        // Default to fetching all rooms of the specific boarding house
-                        $query = "SELECT * FROM rooms WHERE hname = '$hname'";
+                        $_SESSION['hname'] = $_GET['hname'];
                     }
-                    $result = mysqli_query($conn, $query);
 
-                    if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
-                        while ($fetch = mysqli_fetch_assoc($result)) {
-                            $id = $fetch['id'];
-                            $datein = $fetch['datein'];
-            ?>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-img-container">
-                            <img src="<?php echo $fetch['image']?>" class="card-img-top" alt="Room Image">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
-                            <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
-                            <p class="card-text">Price: <?php echo $fetch['price']?></p>
-                            <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
-                            <p class="card-text">Status: <?php echo $fetch['status']?></p>
-                            <div>
-                                <p><?php echo $datein; ?></p>
+                    $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
+
+                    if ($hname != '') {
+                        // Prepare query with room type and availability filtering
+                        $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
+                        $availability = isset($_GET['availability']) ? $_GET['availability'] : '';
+
+                        $query = "SELECT * FROM rooms WHERE hname = '$hname'";
+
+                        // Filter by room type if selected
+                        if (!empty($room_type)) {
+                            $query .= " AND room_type = '$room_type'";
+                        }
+
+                        // Filter by availability if selected
+                        if (!empty($availability)) {
+                            $query .= " AND status = '$availability'";
+                        }
+
+                        $result = mysqli_query($conn, $query);
+
+                        if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
+                            while ($fetch = mysqli_fetch_assoc($result)) {
+                                $id = $fetch['id'];
+                                $hname = $fetch['hname'];
+                                $status = $fetch['status'];
+                                $datein = $fetch['datein'];
+                                $roomno = $fetch['room_no'];
+                        ?>
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-img-container">
+                                        <img src="<?php echo $fetch['image']?>" class="card-img-top" alt="Room Image">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
+                                        <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
+                                        <p class="card-text">Capacity: <?php echo $fetch['capacity']?></p>
+                                        <p class="card-text">Price: <?php echo $fetch['price']?></p>
+                                        <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
+                                        <p class="card-text">Status: <?php echo $fetch['status']?></p>
+                                        <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"): ?>
+                                            <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
+                                            <a href='php/function.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
+                                        <?php else: ?>
+                                            <?php if ($status == 'available'){ ?>
+                                                <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
+                                            <?php } ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
-                            <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"):
-                            ?>
-                                <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                                <a href='php/function.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
-                            <?php  else: ?>
-                                <a href='book-in.php?id=<?php echo $id;?>' class='btn btn-warning'>Book Now!</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            <?php }}}}?>
+                        <?php 
+                                    }
+                                }
+                            }
+                        } 
+                        ?>
 
             <?php 
-            if (!empty($_SESSION) && $_SESSION['role'] == 'user'){
-                if (isset($_GET['hname'])) {
-                    $_SESSION['hname'] = $_GET['hname'];
-                }
-            
-                $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
-            
-                if ($hname != '') {
-                    // If both `hname` and `room_type` are set in GET, filter accordingly
-                    if (isset($_GET['room_type']) && !empty($_GET['room_type'])) {
-                        $room_type = $_GET['room_type'];
-                        $query = "SELECT * FROM rooms WHERE hname = '$hname' AND room_type = '$room_type'";
-                    } else {
-                        // Default to fetching all rooms of the specific boarding house
-                        $query = "SELECT * FROM rooms WHERE hname = '$hname'";
+                if (!empty($_SESSION) && $_SESSION['role'] == 'user'){
+                    if (isset($_GET['hname'])) {
+                        $_SESSION['hname'] = $_GET['hname'];
                     }
-                    $result = mysqli_query($conn, $query);
 
-                    if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
-                        while ($fetch = mysqli_fetch_assoc($result)) {
-                        $id = $fetch['id'];
-                        $hname = $fetch['hname'];
-                        $status = $fetch['status'];
-                        $datein = $fetch['datein'];
-                        $roomno = $fetch['room_no'];
-            ?>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-img-container">
-                            <img src="<?php echo $fetch['image']?>" class="card-img-top" alt="Room Image">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
-                            <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
-                            <p class="card-text">Price: <?php echo $fetch['price']?></p>
-                            <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
-                            <p class="card-text">Status: <?php echo $fetch['status']?></p>
-                            <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"):
-                            ?>
-                                <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                                <a href='php/function.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
-                            <?php  else: ?>
-                                <?php
-                                    if ($status == 'available'){
-                                ?>
-                                <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
-                                <?php } ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            <?php }}}}?>
+                    $hname = isset($_SESSION['hname']) ? $_SESSION['hname'] : '';
+
+                    if ($hname != '') {
+                        // Prepare query with room type and availability filtering
+                        $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
+                        $availability = isset($_GET['availability']) ? $_GET['availability'] : '';
+
+                        $query = "SELECT * FROM rooms WHERE hname = '$hname'";
+
+                        // Filter by room type if selected
+                        if (!empty($room_type)) {
+                            $query .= " AND room_type = '$room_type'";
+                        }
+
+                        // Filter by availability if selected
+                        if (!empty($availability)) {
+                            $query .= " AND status = '$availability'";
+                        }
+
+                        $result = mysqli_query($conn, $query);
+
+                        if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
+                            while ($fetch = mysqli_fetch_assoc($result)) {
+                                $id = $fetch['id'];
+                                $hname = $fetch['hname'];
+                                $status = $fetch['status'];
+                                $datein = $fetch['datein'];
+                                $roomno = $fetch['room_no'];
+                        ?>
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-img-container">
+                                        <img src="<?php echo $fetch['image']?>" class="card-img-top" alt="Room Image">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
+                                        <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
+                                        <p class="card-text">Price: <?php echo $fetch['price']?></p>
+                                        <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
+                                        <p class="card-text">Status: <?php echo $fetch['status']?></p>
+                                        <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"): ?>
+                                            <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
+                                            <a href='php/function.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
+                                        <?php else: ?>
+                                            <?php if ($status == 'available'){ ?>
+                                                <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
+                                            <?php } ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php 
+                                    }
+                                }
+                            }
+                        } 
+                        ?>
             </div>
         </div>
        
     </div>
 
-    <div class="row mt-5">
+<div class="row mt-5">
     <div class="col">
         <div class="text-box">
             <p> <?php if (!empty($_SESSION['hname']) && $_SESSION['role'] == 'landlord'){
