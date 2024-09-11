@@ -2,7 +2,7 @@
 require 'connection.php';
 
 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord') {
-    echo $_SESSION['uname'];
+    echo '';
 } else {
     header("location: ../index.php");
 }

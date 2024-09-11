@@ -230,7 +230,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
 
         .footer-col h4 {
             font-size: 18px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-weight: bold;
         }
 
@@ -256,8 +256,14 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
         .footer-col .social-links a {
             color: white;
             margin-right: 10px;
-            font-size: 20px;
+            font-size: 15px;
             transition: color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        .footer-col .social-links a:first-child {
+            margin-top: 0px;
         }
 
         .footer-col .social-links a:hover {
@@ -385,9 +391,9 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                     <div class="footer-col">
                         <h4>Follow Us</h4>
                         <div class="social-links">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#">Facebook<i class="fab fa-facebook-f"></i></a>
+                            <a href="#">Twitter<i class="fab fa-twitter"></i></a>
+                            <a href="#">Instagram<i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>

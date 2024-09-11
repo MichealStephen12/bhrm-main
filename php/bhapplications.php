@@ -67,7 +67,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 </thead>
                 <tbody>
                     <?php
-                        $query = "select * from bhapplication inner join documents inner join description on bhapplication.hname = documents.hname And bhapplication.hname = description.hname";
+                        $query = "select * 
+                        from bhapplication 
+                        inner join documents on bhapplication.hname = documents.hname
+                        inner join description on bhapplication.hname = description.hname";
                         $result = mysqli_query($conn, $query);
                         while ($fetch = mysqli_fetch_assoc($result)) {
                         $id = $fetch['id'];
