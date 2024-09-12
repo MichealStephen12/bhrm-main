@@ -174,7 +174,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         }
 
         .section2{
-            width: 100%;
+            margin: auto;
+            width: 80%;
             background-color: rgb(255, 255, 255);
             height: 130px;
             font-weight: 20;
@@ -206,6 +207,21 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             align-items: center;
         }
 
+        .form select {
+            padding: 10px; /* Padding inside the select */
+            font-size: 16px; /* Text size inside the select */
+            border: 2px solid #ccc; /* Border around the select */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #f9f9f9; /* Background color */
+            color: #333; /* Text color */
+            outline: none; /* Remove default focus outline */
+            transition: border-color 0.3s ease; /* Smooth transition for border color */
+        }
+
+        .form select:focus {
+            border-color: #007bff; /* Change border color on focus */
+        }
+
         .btn{
             color: rgb(255, 255, 255);
             padding: 10px 20px;
@@ -221,6 +237,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             border-radius: 10px;
             flex-wrap: wrap;
             overflow: scroll;
+            padding-left: 30px;
+            padding-right: 15px;
         }
 
 
@@ -368,18 +386,28 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
         <div class="content-background">
             <div class="section1">
-                <div class="secrow1">
-                    <img src="images/a2.png">
+            <?php if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
+            ?> 
+
+            <?php 
+            }else{  
+            ?>
+            <div class="secrow1">
+                <img src="<?php echo $fetch["image"] ?>">
+            </div>
+            <div class="secrow2">
+                <div class="text-box">
+                    <h1>Welcome to <?php echo $_SESSION['hname']?></h1>
+                    <p>Introducing <?php echo $_SESSION['hname']?>: The Epitome of Comfort and Convenience in Maranding, Lala, Lanao del Norte</p>
+                    <p>Located in the serene town of Maranding, Lala, Lanao del Norte, Aziannas Place stands as the premier boarding house, offering an unparalleled living experience for students and professionals alike.</p>
+                    <p>At <?php echo $_SESSION['hname']?>, we understand the importance of a comfortable 
+                    and conducive living environment. Our spacious and well-appointed rooms provide a haven for relaxation and productivity. Each room is thoughtfully designed with modern furnishings, ensuring a cozy and inviting atmosphere.</p>
                 </div>
-                <div class="secrow2">
-                    <div class="text-box">
-                        <h1>Welcome to <?php echo $_SESSION['hname']?></h1>
-                        <p>Introducing <?php echo $_SESSION['hname']?>: The Epitome of Comfort and Convenience in Maranding, Lala, Lanao del Norte</p>
-                        <p>Located in the serene town of Maranding, Lala, Lanao del Norte, Aziannas Place stands as the premier boarding house, offering an unparalleled living experience for students and professionals alike.</p>
-                        <p>At <?php echo $_SESSION['hname']?>, we understand the importance of a comfortable 
-                        and conducive living environment. Our spacious and well-appointed rooms provide a haven for relaxation and productivity. Each room is thoughtfully designed with modern furnishings, ensuring a cozy and inviting atmosphere.</p>
-                    </div>
-                </div>
+            </div>
+            <?php
+            }
+            ?>
+                
             </div>
 
             
@@ -550,41 +578,41 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         ?>
                 </div>
                            
-        </div>
+            </div>
 
 
 
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="footer-col">
-                        <h4>About Us</h4>
-                        <ul>
-                            <li><a href="#">Company Info</a></li>
-                            <li><a href="#">Our Team</a></li>
-                            <li><a href="#">Careers</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Quick Links</h4>
-                        <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">Services</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Follow Us</h4>
-                        <div class="social-links">
-                            <a href="#">Facebook<i class="fab fa-facebook-f"></i></a>
-                            <a href="#">Twitter<i class="fab fa-twitter"></i></a>
-                            <a href="#">Instagram<i class="fab fa-instagram"></i></a>
+            <footer class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="footer-col">
+                            <h4>About Us</h4>
+                            <ul>
+                                <li><a href="#">Company Info</a></li>
+                                <li><a href="#">Our Team</a></li>
+                                <li><a href="#">Careers</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Quick Links</h4>
+                            <ul>
+                                <li><a href="#">Home</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Contact Us</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Follow Us</h4>
+                            <div class="social-links">
+                                <a href="#">Facebook<i class="fab fa-facebook-f"></i></a>
+                                <a href="#">Twitter<i class="fab fa-twitter"></i></a>
+                                <a href="#">Instagram<i class="fab fa-instagram"></i></a>
+                            </div>
                         </div>
                     </div>
+                    <p class="footer-bottom-text">© 2024 Your Company Name. All Rights Reserved.</p>
                 </div>
-                <p class="footer-bottom-text">© 2024 Your Company Name. All Rights Reserved.</p>
-            </div>
-        </footer>
+            </footer>
 
     </div>
 </body>

@@ -148,15 +148,41 @@ if (isset($_GET['reject'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Boarding House</title>
-    <link rel="icon" type="image/x-icon" href="logo.png">
-    <link rel="stylesheet" href="register.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
     <style>
-        body {
-            background-color: #e6e6e6; /* Background color */
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
         }
+        
+        a{
+            text-decoration: none;
+            color: black;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            color: black;
+        }
+
         .navbar {
-            background-color: #343a40 !important;
+            height: 70px;
+            margin: 0 200px;
+            background-color: white;
+            border-radius: 5px;
+            border: inset black 1px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: black;
         }
 
         .navbar-brand img {
@@ -164,94 +190,236 @@ if (isset($_GET['reject'])) {
             height: 80px;
         }
 
-        .nav-link {
-            color: #fff !important;
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-    </style>
 
-</head>
+        .nav-link {
+            color: black;
+            text-decoration: none;
+            padding: 0 10px;
+        }
+
+        .login {
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                margin: 0;
+                padding: 10px 20px;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+
+            .nav-link {
+                padding: 5px 0;
+            }
+
+            .login {
+                margin-top: 10px;
+            }
+        }
+
+        .section0{
+            margin: 40px 200px 90px 200px;
+            display: grid;
+            grid-template-columns: 600px 600px;
+            justify-content: center;
+            box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .section1 {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            
+            display: flex;
+            align-items: center;
+        }
+
+        .thank-you-message {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 600px;
+            margin: 30px auto;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .thank-you-message h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .thank-you-message p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .thank-you-message p:last-child {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .section2 {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 30px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            height: 100px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #ec971f;
+        }
+
+        .form-group a {
+            text-align: center;
+            color: #333;
+            text-decoration: none;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .form-group a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark py-0">
+    <nav class="navbar">
         <a class="navbar-brand" href="#">
-            <img src="images/logo.png" alt="Logo">
+            <img src="../images/logo.png" alt="Logo" width="80" height="80">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <?php
-                if ($_SESSION == true) {
-                    echo '<a class="btn btn-warning" href="logout.php">Logout</a>';
-                } else {
-                    echo '<a class="btn btn-warning" href="login.php">Login</a>';
-                }
-                ?>
-            </ul>
+        <div class="nav-links">
+            <a class="nav-link" href="about.php">About Us</a>
+            <a class="nav-link" href="contact.php">Contact</a>
+        </div>
+        <div class="login">
+            <?php
+            if ($_SESSION == true) {
+                echo '<a href="logout.php">Logout</a>';
+            } else {
+                echo '<a href="login.php">Login</a>';
+            }
+            ?>
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="row" style="padding-top: 5%;">
-            <div class="col-md-4"></div>
-            <div class="col-md-4" style="text-align: center; background-color: #a9a9a9; border-radius: 20px; padding: 10px;">
-                <div class="row">
-                    <div class="col-md-12" style="padding-bottom: 15px;">
-                        <img src="../images/logo.png" height="100px">
-                    </div>
-                    <div class="col-md-12">
-                        <span style="font-weight: 100; font-size: 17px;">Add Boarding House</span>
-                    </div>
-                    <div class="col-md-12">
-                        <form method="post" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>House Name</label>
-                                    <input type="text" name="name" placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>House Address</label>
-                                    <input type="text" name="address" placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Description</label>
-                                    <input type="text" name="description" placeholder="Enter here.." class="form-control" required>
-                                </div>
 
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Provide Image of Boarding House</label>
-                                    <input type="file" name="image" placeholder="Enter here.." class="form-control" required>
-                                </div>
-
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Provide Required Documents for the BH verification</label>
-                                    <input type="file" name="image2" placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                
-                                <div class="col-md-12" style="text-align: center; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <button type="submit" name="submit" class="btn btn-warning">Submit</button>
-                                </div>
-                                <div class="col-md-12" style="text-align: center; font-size: 13px; font-weight: 100;">
-                                    <?php 
-                                        if ($_SESSION['role'] == 'landlord'){
-                                            echo '';
-                                        }else{
-                                            echo '<a href="../index.php" style="text-decoration: none; color: black;">Back</a>';
-                                        }
-                                    ?>
-                                    
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <div class="section0">
+        <div class="section1">
+            <div class="thank-you-message">
+                <h2>Thank You for Registering as a Landlord!</h2>
+                <p>Dear [Applicant's Name],</p>
+                <p>We appreciate your interest in becoming a landlord with us. Your application is under review, and we will notify you via email once it's processed.</p>
+                <p>At [Website/Platform Name], we are committed to providing a platform that benefits both landlords and tenants. If you have any questions in the meantime, feel free to reach out to us.</p>
+                <p>Thank you for choosing us to showcase your property. We look forward to working with you!</p>
+                <p>Best regards,<br>The [Website/Platform Name] Team</p>
             </div>
-            <div class="col-md-4"></div>
+        </div>
+
+        <div class="section2">
+            <img src="../images/logo.png" class="logo" alt="Logo">
+            <div class="title">Add Boarding House</div>
+            <form method="post" enctype="multipart/form-data" class="form-container">
+                <div class="form-group">
+                    <label for="name">House Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter here.." required>
+                </div>
+                <div class="form-group">
+                    <label for="address">House Address</label>
+                    <input type="text" id="address" name="address" placeholder="Enter here.." required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" id="description" name="description" placeholder="Enter here.." required>
+                </div>
+                <div class="form-group">
+                    <label for="image">Provide Image of Boarding House</label>
+                    <input type="file" id="image" name="image" required>
+                </div>
+                <div class="form-group">
+                    <label for="image2">Provide Required Documents for BH verification</label>
+                    <input type="file" id="image2" name="image2" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="submit">Submit</button>
+                </div>
+                <div class="form-group">
+                    <?php 
+                        if ($_SESSION['role'] == 'landlord'){
+                            echo '';
+                        }else{
+                            echo '<a href="../index.php">Back</a>';
+                        }
+                    ?>
+                </div>
+            </form>
         </div>
     </div>
+    
+
 </body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </html>

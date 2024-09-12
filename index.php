@@ -52,6 +52,11 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             min-height: 100vh;  /* Ensure the section is at least the height of the viewport */
         }
 
+        .content-background{
+            background-color: white;
+            margin: 60px 200px 90px 200px;
+            border-radius: 10px;
+        }
 
         .navbar {
             margin: 0 200px;
@@ -111,10 +116,8 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             }
         }
 
-
         .section1 {
             background-color: white;
-            margin: 60px 200px 60px 200px;
             height: auto;
             font-weight: 20;
             display: flex;
@@ -123,6 +126,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             justify-content: center;
             align-items: center; 
             padding: 20px;
+            padding-top: 40px;
             text-align: center;
         }
 
@@ -156,12 +160,10 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
 
         .section2{
             background-color: white;
-            margin: 60px 200px 60px 200px;
-            padding-top: 20px;
+            padding: 30px;
             display: flex;
             border-radius: 10px;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         .card{
@@ -304,70 +306,72 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                     }
                 ?>
             </div>
+
         </nav>
 
-        <div class="section1">
-            <h1>Welcome to Maranding Boarding House Center
-                <?php if (!empty($_SESSION)) {
-                    echo $fetch['fname'];
-                } ?>
-            </h1>
-            <p>Where we show you the best boarding houses around Maranding. Please select your desired boarding house and
-                have an amazing experience and chill moments ahead.</p>
-        </div>
+        <div class="content-background">
+            <div class="section1">
+                <h1>Welcome to Maranding Boarding House Center
+                    <?php if (!empty($_SESSION)) {
+                        echo $fetch['fname'];
+                    } ?>
+                </h1>
+                <p>Where we show you the best boarding houses around Maranding. Please select your desired boarding house and
+                    have an amazing experience and chill moments ahead.</p>
+            </div>
 
-        <div class="section2">
-            <?php
-                if (!empty($_SESSION) && $_SESSION['role'] == 'admin') {
+            <div class="section2">
+                <?php
+                    if (!empty($_SESSION) && $_SESSION['role'] == 'admin') {
+                        $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname";
+                        $result = mysqli_query($conn, $query);
+                        while ($fetch = mysqli_fetch_assoc($result)) {
+                            $id = $fetch['id'];
+                            $hname = $fetch['hname'];
+                    ?>  
+                <div class="card">
+                    <img src="<?php echo $fetch["image"] ?>" width="40%" alt="Boarding House">
+                    <div class="card-content">
+                        <h5>Name: <?php echo $fetch["hname"] ?></h5>
+                        <p>Owner: <?php echo $fetch["owner"] ?></p>
+                        <p>Address: <?php echo $fetch["haddress"] ?></p>
+                    </div> 
+                </div>
+                <?php
+                    }
+                }
+                ?>
+                
+                <?php
+                if (empty($_SESSION) || $_SESSION['role'] == 'user') {
                     $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname";
                     $result = mysqli_query($conn, $query);
                     while ($fetch = mysqli_fetch_assoc($result)) {
                         $id = $fetch['id'];
                         $hname = $fetch['hname'];
-                ?>  
-            <div class="card">
-                <img src="<?php echo $fetch["image"] ?>" width="40%" alt="Boarding House">
-                <div class="card-content">
-                    <h5>Name: <?php echo $fetch["hname"] ?></h5>
-                    <p>Owner: <?php echo $fetch["owner"] ?></p>
-                    <p>Address: <?php echo $fetch["haddress"] ?></p>
-                </div> 
-            </div>
-            <?php
+                ?>   
+                <div class="card">
+                    <img src="<?php echo $fetch["image"] ?>" alt="">
+                    <div class="card-content">
+                        <h5>Name: <?php echo $fetch["hname"] ?></h5>
+                        <p>Owner: <?php echo $fetch["landlord"] ?></p>
+                        <p>Address: <?php echo $fetch["haddress"] ?></p>
+                        <p>Contact No#: <?php echo $fetch["contactno"] ?></p>
+                        <br>
+                        <?php if (!empty($_SESSION) && $_SESSION['role'] == 'admin'): ?>
+                            <a href="php/function.php?edit=<?php echo $id; ?>" class="button">Update</a>
+                            <a href="php/function.php?delete=<?php echo $id; ?>" class="button">Delete</a>
+                        <?php else : ?>
+                            <a href="boardinghouse.php?hname=<?php echo $hname; ?>" class="button">More Details</a>
+                        <?php endif; ?>
+                    </div>     
+                </div>
+                <?php
+                    }
                 }
-            }
-            ?>
-            
-            <?php
-            if (empty($_SESSION) || $_SESSION['role'] == 'user') {
-                $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname";
-                $result = mysqli_query($conn, $query);
-                while ($fetch = mysqli_fetch_assoc($result)) {
-                    $id = $fetch['id'];
-                    $hname = $fetch['hname'];
-            ?>   
-            <div class="card">
-                <img src="<?php echo $fetch["image"] ?>" alt="">
-                <div class="card-content">
-                    <h5>Name: <?php echo $fetch["hname"] ?></h5>
-                    <p>Owner: <?php echo $fetch["landlord"] ?></p>
-                    <p>Address: <?php echo $fetch["haddress"] ?></p>
-                    <p>Contact No#: <?php echo $fetch["contactno"] ?></p>
-                    <br>
-                    <?php if (!empty($_SESSION) && $_SESSION['role'] == 'admin'): ?>
-                        <a href="php/function.php?edit=<?php echo $id; ?>" class="button">Update</a>
-                        <a href="php/function.php?delete=<?php echo $id; ?>" class="button">Delete</a>
-                    <?php else : ?>
-                        <a href="boardinghouse.php?hname=<?php echo $hname; ?>" class="button">More Details</a>
-                    <?php endif; ?>
-                </div>     
+                ?>
             </div>
-            <?php
-                }
-            }
-            ?>
         </div>
-
 
         <footer class="footer">
             <div class="container">
