@@ -93,6 +93,8 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             display: flex;
             justify-content: center;
             align-items: center;
+        }.login a{
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -199,6 +201,14 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             margin-top: 20px;
         }
 
+        .bh-btn{
+            margin-top: 20px;
+            
+        }.bh-btn a{
+            color: white;
+        }
+        
+
         .button{
             color: black;
             padding: 10px 20px;
@@ -292,17 +302,18 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                 <a class="nav-link" href="about.php">About Us</a>
                 <a class="nav-link" href="contact.php">Contact</a>
                 <?php
-                if (!empty ($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
+                if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
                     echo '<a class="nav-link" href="php/bhapplications.php">View Applications</a>';
                 }
                 ?>
             </div>
             <div class="login">
                 <?php
-                    if ($_SESSION == true) {
-                        echo '<a class="button" href="php/logout.php">Logout</a>';
-                    } else {
+                    if (empty($_SESSION['uname'])) {
                         echo '<a class="button" href="php/login.php">Login</a>';
+                        
+                    } else {
+                        echo '<a class="button" href="php/logout.php">Logout</a>';
                     }
                 ?>
             </div>
@@ -312,9 +323,13 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
         <div class="content-background">
             <div class="section1">
                 <h1>Welcome to Maranding Boarding House Center
-                    <?php if (!empty($_SESSION)) {
+                    <?php 
+                    if (!empty($_SESSION['uname'])) {
                         echo $fetch['fname'];
-                    } ?>
+                    }else{
+                        echo '';
+                    }
+                    ?>
                 </h1>
                 <p>Where we show you the best boarding houses around Maranding. Please select your desired boarding house and
                     have an amazing experience and chill moments ahead.</p>
@@ -322,7 +337,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
 
             <div class="section2">
                 <?php
-                    if (!empty($_SESSION) && $_SESSION['role'] == 'admin') {
+                    if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
                         $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname";
                         $result = mysqli_query($conn, $query);
                         while ($fetch = mysqli_fetch_assoc($result)) {
@@ -343,7 +358,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                 ?>
                 
                 <?php
-                if (empty($_SESSION) || $_SESSION['role'] == 'user') {
+                if (empty($_SESSION['uname']) || $_SESSION['role'] == 'user') {
                     $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname";
                     $result = mysqli_query($conn, $query);
                     while ($fetch = mysqli_fetch_assoc($result)) {
@@ -357,13 +372,14 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                         <p>Owner: <?php echo $fetch["landlord"] ?></p>
                         <p>Address: <?php echo $fetch["haddress"] ?></p>
                         <p>Contact No#: <?php echo $fetch["contactno"] ?></p>
-                        <br>
-                        <?php if (!empty($_SESSION) && $_SESSION['role'] == 'admin'): ?>
-                            <a href="php/function.php?edit=<?php echo $id; ?>" class="button">Update</a>
-                            <a href="php/function.php?delete=<?php echo $id; ?>" class="button">Delete</a>
-                        <?php else : ?>
-                            <a href="boardinghouse.php?hname=<?php echo $hname; ?>" class="button">More Details</a>
-                        <?php endif; ?>
+                        <div class="bh-btn">
+                            <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin'): ?>
+                                <a href="php/function.php?edit=<?php echo $id; ?>" class="button">Update</a>
+                                <a href="php/function.php?delete=<?php echo $id; ?>" class="button">Delete</a>
+                            <?php else : ?>
+                                <a href="boardinghouse.php?hname=<?php echo $hname; ?>" class="button">More Details</a>
+                            <?php endif; ?>
+                        </div>
                     </div>     
                 </div>
                 <?php

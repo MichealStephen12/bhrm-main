@@ -15,7 +15,11 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         $fetch = mysqli_fetch_assoc($result); 
     }
 }else{
-    header('location: index.php');
+    $_GET['hname'];
+    $hname = $_GET['hname'];
+    $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname where boardinghouses.hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result); 
 }
 
 ?>
@@ -88,11 +92,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             padding: 0 10px;
         }
 
-        .login {
+        .login{
             width: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
+            
+        }.login a{
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -122,17 +129,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             border-radius: 10px;
         }
 
-        .section1{
-            background-color: white;
-            
-            height: auto;
-            font-weight: 20;
-            display: grid;
-            grid-template-columns: 1fr  1fr;
-            border-radius: 10px;
-            padding: 20px;
-            padding-top: 30px;
-        }
 
         .secrow1{
             display: flex;
@@ -188,15 +184,13 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         .room-header{
             display: flex;
             flex-direction: row;
-            width: 200px;
-            height: 70px;
         }
 
         .room-content{
-            width: 100%;
-            height: auto;
+            display: flex;
+            align-items: center;
         }.room-content h2{
-            margin-bottom: 20px;
+            
         }
 
         .form{
@@ -362,6 +356,9 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <a class="nav-link" href="index.php">Home</a>
                 <a class="nav-link" href="about.php">About</a>
                 <a class="nav-link" href="contact.php">Contact</a>
+                <?php if(empty($_SESSION['uname'])){
+                    echo '<a class="nav-link" href="index.php">Back</a>';
+                } ?>
                 <?php  
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                         echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
@@ -378,6 +375,12 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                         echo '<a class="btn" href="php/logout.php">Logout</a>';
                     } 
+                    if (empty($_SESSION["uname"])){
+                        echo '<a class="btn" href="php/login.php">Login</a>';
+                    }
+                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
+                        echo '<a class="btn" href="php/logout.php">Logout</a>';
+                    }
                 ?>
             </div>
           
@@ -386,28 +389,140 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
         <div class="content-background">
             <div class="section1">
-            <?php if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
-            ?> 
+                <?php if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
+                ?> 
+                <style>
+                    .section1{
+                        background-color: white;
+                        height: auto;
+                        font-weight: 20;
+                        display: grid;
+                        justify-content: center;
+                        grid-template-columns: 1fr  1fr;
+                        grid-template-rows: 1fr ;
+                        border-radius: 10px;
+                        padding: 30px;
+                        padding-top: 30px;
+                    }
 
-            <?php 
-            }else{  
-            ?>
-            <div class="secrow1">
-                <img src="<?php echo $fetch["image"] ?>">
-            </div>
-            <div class="secrow2">
-                <div class="text-box">
-                    <h1>Welcome to <?php echo $_SESSION['hname']?></h1>
-                    <p>Introducing <?php echo $_SESSION['hname']?>: The Epitome of Comfort and Convenience in Maranding, Lala, Lanao del Norte</p>
-                    <p>Located in the serene town of Maranding, Lala, Lanao del Norte, Aziannas Place stands as the premier boarding house, offering an unparalleled living experience for students and professionals alike.</p>
-                    <p>At <?php echo $_SESSION['hname']?>, we understand the importance of a comfortable 
-                    and conducive living environment. Our spacious and well-appointed rooms provide a haven for relaxation and productivity. Each room is thoughtfully designed with modern furnishings, ensuring a cozy and inviting atmosphere.</p>
+                    canvas{
+                        width: 500px;
+                        padding: 10px;
+                        justify-content: center;
+                    }
+                </style>
+                <div class="chart-container">
+                    <canvas id="tenantChart"></canvas>
                 </div>
-            </div>
-            <?php
-            }
-            ?>
-                
+                <div class="chart-container">
+                    <canvas id="tenantOccupancyChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="totalTenantsChart"></canvas>
+                </div>
+                <?php } else {  ?>
+                <style>
+                    .section1{
+                        background-color: white;
+                        height: auto;
+                        font-weight: 20;
+                        display: grid;
+                        grid-template-columns: 1fr  1fr;
+                        border-radius: 10px;
+                        padding: 20px;
+                        padding-top: 30px;
+                    }
+                </style>
+                <div class="secrow1">
+                    <img src="<?php echo $fetch["image"] ?>">
+                </div>
+                <div class="secrow2">
+                    <div class="text-box">
+                        <h1>Welcome to <?php if(!empty($_SESSION['hname'])){ echo $_SESSION['hname']; }else {  echo $_GET['hname']; } ?></h1>
+                        <p>Introducing <?php if(!empty($_SESSION['hname'])){ echo $_SESSION['hname']; }else {  echo $_GET['hname']; } ?>: The Epitome of Comfort and Convenience in Maranding, Lala, Lanao del Norte</p>
+                        <p>Located in the serene town of Maranding, Lala, Lanao del Norte, Aziannas Place stands as the premier boarding house, offering an unparalleled living experience for students and professionals alike.</p>
+                        <p>At <?php if(!empty($_SESSION['hname'])){ echo $_SESSION['hname']; }else {  echo $_GET['hname']; } ?>, we understand the importance of a comfortable 
+                        and conducive living environment. Our spacious and well-appointed rooms provide a haven for relaxation and productivity. Each room is thoughtfully designed with modern furnishings, ensuring a cozy and inviting atmosphere.</p>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>      
+
+                <?php
+                    $roomTypes = [];
+                    $tenantCounts = [];
+                    
+                    if(!empty($_SESSION['hname'])){ 
+                        $hname = $_SESSION['hname']; 
+                    }  
+                    else {  
+                        $hname = $_GET['hname']; 
+                    }
+
+                     // Get the boarding house name from the session
+                    
+                    // Query to count occupied rooms based on room type and the current boarding house (hname)
+                    $query = "SELECT room_type, SUM(capacity) AS tenant_count 
+                            FROM rooms 
+                            WHERE hname = '$hname' AND status = 'occupied' 
+                            GROUP BY room_type";
+                    $result = mysqli_query($conn, $query);
+                    
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $roomTypes[] = $row['room_type'];
+                        $tenantCounts[] = $row['tenant_count'];
+                    }
+                ?>
+
+                <?php
+                    $tenantCountsStatus = [];
+                    $roomNumbers = [];
+                    
+                    if(!empty($_SESSION['hname'])){ 
+                        $hname = $_SESSION['hname']; 
+                    }  
+                    else {  
+                        $hname = $_GET['hname']; 
+                    } // Get the boarding house name from the session
+                    
+                    // Query to get the number of tenants in each occupied room (based on capacity)
+                    $query_tenants_status = "
+                        SELECT room_no, capacity 
+                        FROM rooms 
+                        WHERE hname = '$hname' 
+                        AND status = 'occupied'";
+                        
+                    $result_tenants_status = mysqli_query($conn, $query_tenants_status);
+                    
+                    while ($row = mysqli_fetch_assoc($result_tenants_status)) {
+                        $roomNumbers[] = $row['room_no'];
+                        $tenantCountsStatus[] = $row['capacity'];  // Assuming capacity means the number of tenants
+                    }
+                ?>
+                <?php
+                    $totalTenants = 0;
+
+                    if(!empty($_SESSION['hname'])){ 
+                        $hname = $_SESSION['hname']; 
+                    }  
+                    else {  
+                        $hname = $_GET['hname']; 
+                    } // Get the boarding house name from session
+                    
+                    // Query to get the total number of tenants based on room availability and capacity
+                    $query_total_tenants = "
+                        SELECT SUM(capacity) AS total_tenants
+                        FROM rooms 
+                        WHERE hname = '$hname' 
+                        AND status = 'occupied'";
+                        
+                    $result_total_tenants = mysqli_query($conn, $query_total_tenants);
+                    
+                    if ($row = mysqli_fetch_assoc($result_total_tenants)) {
+                        $totalTenants = $row['total_tenants']; // This will hold the total number of tenants
+                    }
+                ?>
             </div>
 
             
@@ -417,10 +532,10 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         <h2>Rooms</h2>
                         <!-- <?php 
                             if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"){
-                                echo ""; 
+                                echo "<a href='php/addroom.php' class='btn'>Add Rooms</a>"; 
                             }
                         ?> -->
-                        <a href='php/addroom.php' class='btn'>Add Rooms</a>
+                        
                     </div>
                 </div>
 
@@ -510,12 +625,13 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                         }
                                     }
                                 } 
-                            ?>
+                                ?>
 
                         
                 
+                
                 <?php 
-                if (!empty($_SESSION) && $_SESSION['role'] == 'user'){
+                if (!empty($_SESSION["uname"]) && $_SESSION['role'] == 'user' || empty($_SESSION["uname"])){
                     if (isset($_GET['hname'])) {
                         $_SESSION['hname'] = $_GET['hname'];
                     }
@@ -615,5 +731,91 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             </footer>
 
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var roomTypes = <?php echo json_encode($roomTypes); ?>;
+        var tenantCounts = <?php echo json_encode($tenantCounts); ?>;
+
+        var ctx = document.getElementById('tenantChart').getContext('2d');
+        var tenantChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: roomTypes,
+                datasets: [{
+                    label: 'Number of Tenants',
+                    data: tenantCounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var roomNumbers = <?php echo json_encode($roomNumbers); ?>;
+        var tenantCountsStatus = <?php echo json_encode($tenantCountsStatus); ?>;
+
+        var ctx3 = document.getElementById('tenantOccupancyChart').getContext('2d');
+        var tenantOccupancyChart = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: roomNumbers,
+                datasets: [{
+                    label: 'Number of Tenants (Occupied)',
+                    data: tenantCountsStatus,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        var totalTenants = <?php echo json_encode($totalTenants); ?>;
+
+        // Bar chart for total tenants
+        var ctxTotal = document.getElementById('totalTenantsChart').getContext('2d');
+        var totalTenantsChart = new Chart(ctxTotal, {
+            type: 'bar',
+            data: {
+                labels: ['Total Tenants'],
+                datasets: [{
+                    label: 'Number of Tenants',
+                    data: [totalTenants],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Disable the legend since it's a single bar
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
