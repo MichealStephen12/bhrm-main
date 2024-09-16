@@ -56,6 +56,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             background-color: white;
             margin: 60px 200px 90px 200px;
             border-radius: 10px;
+            height: auto;
         }
 
         .navbar {
@@ -169,14 +170,21 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
         }
 
         .card{
-            width: 325px;
+            width: 320px;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0px 10px 20px #aaaaaa;
             margin: 20px;
             padding-bottom: 10px;
+            height: auto;
         }
 
+        @media (max-width: 1000px) {
+            .section2 {
+                justify-content: center;
+            }
+        }
+        
         .card img{
             width: 100%;
             height: auto;

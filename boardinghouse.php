@@ -181,17 +181,19 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             
         }
 
+        @media (max-width: 1000px){
+            .section2{
+                width: 100%;
+                margin: 0px auto 0 auto;
+            }
+        }
+
         .room-header{
             display: flex;
             flex-direction: row;
         }
 
-        .room-content{
-            display: flex;
-            align-items: center;
-        }.room-content h2{
-            
-        }
+        
 
         .form{
             width: 100%;
@@ -199,6 +201,15 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             flex-direction: row;
             justify-content: flex-end;
             align-items: center;
+        }
+
+        @media (max-width: 1000px){
+            .form form{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
         }
 
         .form select {
@@ -210,6 +221,12 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             color: #333; /* Text color */
             outline: none; /* Remove default focus outline */
             transition: border-color 0.3s ease; /* Smooth transition for border color */
+        }
+
+        @media (max-width: 1000px){
+            .form select{
+                width: 45%;
+            }
         }
 
         .form select:focus {
@@ -226,15 +243,25 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         }
 
         .section3{
-            height: 600px;
+            height: auto;
             display: flex;
             border-radius: 10px;
             flex-wrap: wrap;
-            overflow: scroll;
+            padding-top: 5px;
             padding-left: 30px;
-            padding-right: 15px;
+            padding-right: 30px;
+            padding-bottom: 20px;
         }
 
+        @media (max-width: 1000px){
+            .section3{
+                justify-content: center;
+            }
+        }
+
+        .section3::-webkit-scrollbar {
+            display: none; /* For Chrome, Safari, and Opera */
+        }
 
         .card{
             width: 325px;
@@ -243,7 +270,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             box-shadow: 0px 10px 20px #aaaaaa;
             margin: 20px;
             padding-bottom: 10px;
-            height: 500px;
+            height: auto;
         }
 
         .card img{
@@ -410,16 +437,58 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         padding: 10px;
                         justify-content: center;
                     }
+
+                    .chart {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                    }
+
+                    .chart h3{
+                        text-align: center;
+                        padding: 5px;
+                    }
+
+                    @media (max-width: 1000px){
+                        canvas{
+                            width: 450px;
+                            padding: 10px;
+                            justify-content: center;
+                        }
+
+                        .section1{
+                            display: flex;
+                            flex-wrap: wrap;
+                            
+                        }
+                    }
                 </style>
-                <div class="chart-container">
-                    <canvas id="tenantChart"></canvas>
+                <div class="chart">
+                    <h3>Number of tenants per Room Type</h3>
+                    <div class="chart-container">
+                        <canvas id="tenantChart"></canvas>
+                    </div>
                 </div>
-                <div class="chart-container">
-                    <canvas id="tenantOccupancyChart"></canvas>
+                <div class="chart">
+                    <h3>Number of tenants per Room Numer</h3>
+                    <div class="chart-container">
+                        <canvas id="tenantOccupancyChart"></canvas>
+                    </div>
                 </div>
-                <div class="chart-container">
-                    <canvas id="totalTenantsChart"></canvas>
+                <div class="chart">
+                    <h3>Total Tenants</h3>
+                    <div class="chart-container">
+                        <canvas id="totalTenantsChart"></canvas>
+                    </div>
                 </div>
+                <div class="chart">
+                    <h3>Total Tenants by Month</h3>
+                    <div class="chart-container">
+                        <canvas id="tenantsByMonthChart"></canvas>
+                    </div>
+                </div>
+               
+               
                 <?php } else {  ?>
                 <style>
                     .section1{
@@ -523,18 +592,92 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         $totalTenants = $row['total_tenants']; // This will hold the total number of tenants
                     }
                 ?>
+
+                <?php
+                    if (!empty($_SESSION['hname'])){
+                        $hname = $_SESSION['hname'];
+                    }else{
+                        $hname = $_GET['hname'];
+                    }
+                    $query = "
+                    SELECT 
+                        MONTH(datein) AS month, 
+                        SUM(capacity) AS total_tenants
+                    FROM 
+                        rooms
+                    WHERE 
+                        status = 'occupied' AND hname = '$hname'
+                    GROUP BY 
+                        MONTH(datein)
+                    UNION ALL
+                    SELECT 
+                        month, 
+                        0 AS total_tenants
+                    FROM 
+                        (SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS months
+                    WHERE 
+                        month NOT IN (SELECT MONTH(datein) FROM rooms WHERE status = 'occupied' AND hname = '$hname')
+                    ORDER BY 
+                        month;
+                    ";
+                    
+                    $result = mysqli_query($conn, $query);                                       
+                    $months = [];
+                    $tenantCountsByMonth = [];
+
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $months[] = $row['month'];
+                        $tenantCountsByMonth[] = $row['total_tenants'];
+                    }
+
+                    // Ensure months are ordered correctly
+                    $data = array_combine($months, $tenantCountsByMonth);
+                    ksort($data); // Sort data by month
+                    $months = array_keys($data);
+                    $tenantCountsByMonth = array_values($data);
+       
+                ?>
+
             </div>
 
             
             <div class="section2">
                 <div class="room-header">
                     <div class="room-content">
+                        <?php 
+                            if (empty($_SESSION['uname'])){
+                            ?>
+                                <style>
+                                    .room-content{
+                                        display: flex;
+                                        
+                                        align-items: center;
+
+                                    }.button{
+                                    }
+                                </style>
+                            <?php } else{ ?>
+                                <style>
+                                    .room-content{
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        width: 150px;
+                                    }.button{
+                                        margin-top: 15px;
+                                    }
+                                </style>
+                            <?php } ?>
+                            
                         <h2>Rooms</h2>
-                        <!-- <?php 
-                            if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"){
-                                echo "<a href='php/addroom.php' class='btn'>Add Rooms</a>"; 
-                            }
-                        ?> -->
+                        <div class="button">
+                            <?php 
+                                if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"){
+                                    echo "<a href='php/addroom.php' class='btn'>Add Rooms</a>"; 
+                                }
+                            ?>
+                        </div>
+                      
                         
                     </div>
                 </div>
@@ -735,87 +878,122 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        var roomTypes = <?php echo json_encode($roomTypes); ?>;
-        var tenantCounts = <?php echo json_encode($tenantCounts); ?>;
+        // Wrap chart logic in a function
+        function renderCharts() {
+            var roomTypes = <?php echo json_encode($roomTypes); ?>;
+            var tenantCounts = <?php echo json_encode($tenantCounts); ?>;
 
-        var ctx = document.getElementById('tenantChart').getContext('2d');
-        var tenantChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: roomTypes,
-                datasets: [{
-                    label: 'Number of Tenants',
-                    data: tenantCounts,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        var roomNumbers = <?php echo json_encode($roomNumbers); ?>;
-        var tenantCountsStatus = <?php echo json_encode($tenantCountsStatus); ?>;
-
-        var ctx3 = document.getElementById('tenantOccupancyChart').getContext('2d');
-        var tenantOccupancyChart = new Chart(ctx3, {
-            type: 'bar',
-            data: {
-                labels: roomNumbers,
-                datasets: [{
-                    label: 'Number of Tenants (Occupied)',
-                    data: tenantCountsStatus,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-
-        var totalTenants = <?php echo json_encode($totalTenants); ?>;
-
-        // Bar chart for total tenants
-        var ctxTotal = document.getElementById('totalTenantsChart').getContext('2d');
-        var totalTenantsChart = new Chart(ctxTotal, {
-            type: 'bar',
-            data: {
-                labels: ['Total Tenants'],
-                datasets: [{
-                    label: 'Number of Tenants',
-                    data: [totalTenants],
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+            var ctx = document.getElementById('tenantChart').getContext('2d');
+            var tenantChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: roomTypes,
+                    datasets: [{
+                        label: 'Number of Tenants',
+                        data: tenantCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
                 },
-                plugins: {
-                    legend: {
-                        display: false // Disable the legend since it's a single bar
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
+
+            var roomNumbers = <?php echo json_encode($roomNumbers); ?>;
+            var tenantCountsStatus = <?php echo json_encode($tenantCountsStatus); ?>;
+
+            var ctx3 = document.getElementById('tenantOccupancyChart').getContext('2d');
+            var tenantOccupancyChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: roomNumbers,
+                    datasets: [{
+                        label: 'Number of Tenants (Occupied)',
+                        data: tenantCountsStatus,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            var totalTenants = <?php echo json_encode($totalTenants); ?>;
+
+            var ctxTotal = document.getElementById('totalTenantsChart').getContext('2d');
+            var totalTenantsChart = new Chart(ctxTotal, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Tenants'],
+                    datasets: [{
+                        label: 'Number of Tenants',
+                        data: [totalTenants],
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            var months = <?php echo json_encode($months); ?>;
+            var tenantCountsByMonth = <?php echo json_encode($tenantCountsByMonth); ?>;
+
+            var ctx = document.getElementById('tenantsByMonthChart').getContext('2d');
+            var tenantsByMonthChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months.map(function(month) {
+                        // Convert month number to month name
+                        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        return monthNames[month - 1];
+                    }),
+                    datasets: [{
+                        label: 'Number of Tenants',
+                        data: tenantCountsByMonth,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+
+
+        }
+
+        // Call the function when the data is updated or after the page load
+        renderCharts();
+
     </script>
 </body>
 </html>

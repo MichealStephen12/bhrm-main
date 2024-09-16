@@ -207,6 +207,8 @@ if (isset($_GET['reject'])) {
             display: flex;
             justify-content: center;
             align-items: center;
+        }.login a{
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -346,6 +348,14 @@ if (isset($_GET['reject'])) {
             text-decoration: underline;
         }
 
+        .button{
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+        }
+
     </style>
 <body>
     <nav class="navbar">
@@ -358,11 +368,11 @@ if (isset($_GET['reject'])) {
         </div>
         <div class="login">
             <?php
-            if ($_SESSION == true) {
-                echo '<a href="logout.php">Logout</a>';
-            } else {
-                echo '<a href="login.php">Login</a>';
-            }
+                if (!empty($_SESSION['uname'])) {
+                    echo '<a class="button" href="logout.php">Logout</a>';
+                } else {
+                    echo '<a class="button" href="login.php">Login</a>';
+                }
             ?>
         </div>
     </nav>

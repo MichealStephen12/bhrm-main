@@ -34,7 +34,7 @@ if (isset($_GET['approve'])) {
     $query = "UPDATE `reservation` SET `res_stat` = 'Approved', `status` = 'occupied' WHERE room_no = $id";
     $result = mysqli_query($conn, $query);
 
-    $query = "UPDATE `rooms` SET `status` = 'occupied' WHERE room_no = $id";
+    $query = "UPDATE `rooms` SET `status` = 'occupied', `datein` = now() WHERE room_no = $id";
     $result = mysqli_query($conn, $query);
     header('Location: ../reservation.php');
 }
