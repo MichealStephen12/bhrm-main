@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 08, 2024 at 03:19 PM
+-- Generation Time: Sep 16, 2024 at 10:27 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -45,17 +45,20 @@ CREATE TABLE `boardinghouses` (
   `id` int(11) NOT NULL,
   `owner` varchar(255) NOT NULL,
   `hname` varchar(25) NOT NULL,
-  `haddress` varchar(25) NOT NULL
+  `haddress` varchar(25) NOT NULL,
+  `contactno` int(255) NOT NULL,
+  `landlord` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `boardinghouses`
 --
 
-INSERT INTO `boardinghouses` (`id`, `owner`, `hname`, `haddress`) VALUES
-(1, 'dodge@gmail.com', 'Dodge Boarding House', 'Maranding'),
-(2, 'alfred@gmail.com', 'Tugas Boarding House', 'Maranding'),
-(3, 'khemark@gmail.com', 'Khemark BH', 'Tenazas');
+INSERT INTO `boardinghouses` (`id`, `owner`, `hname`, `haddress`, `contactno`, `landlord`) VALUES
+(2, 'alfred@gmail.com', 'Alfred Boarding House', 'maranding', 0, ''),
+(3, 'khemark@gmail.com', 'Khemark BH', 'Tenazas', 0, ''),
+(4, 'dodge@gmail.com', 'Dodge Boarding House', 'maranding', 0, ''),
+(5, 'Jestoni@gmail.com', 'Jestoni Boarding House', 'Zamboanggaa', 0, '');
 
 -- --------------------------------------------------------
 
@@ -74,9 +77,14 @@ CREATE TABLE `description` (
 --
 
 INSERT INTO `description` (`id`, `bh_description`, `hname`) VALUES
-(1, 'Pinaka ayos sa tanan', 'Dodge Boarding House'),
-(2, 'pinaka nindot sa tanan', 'Tugas Boarding House'),
-(4, 'pinaka nindot sa tanan', 'Khemark BH');
+(3, 'pinaka nindot sa tanan', 'tenazas BH'),
+(6, 'pinaka nindot sa tanan', 'Dave BH'),
+(7, 'yes yes', 'Apitong Boarding House'),
+(8, 'YE SYESYSE', 'Syudad Boarding House'),
+(10, 'pinaka nindot sa tanan', 'Alfred Boarding House'),
+(11, 'pinaka nindot sa tanan', 'Khemark BH'),
+(13, 'pinaka nindot sa tanan', 'Dodge Boarding House'),
+(24, 'Pinaka ayos sa tanan', 'Jestoni Boarding House');
 
 -- --------------------------------------------------------
 
@@ -96,9 +104,14 @@ CREATE TABLE `documents` (
 --
 
 INSERT INTO `documents` (`id`, `documents`, `image`, `hname`) VALUES
-(1, 'images/al.jpg', 'images/background.jpeg', 'Dodge Boarding House'),
-(2, 'images/al.jpg', 'images/azianna.jpg', 'Tugas Boarding House'),
-(4, 'images/agesser.png', 'images/98174995_146435506983130_761808498299240448_n.jpg', 'Khemark BH');
+(3, 'images/agesser.png', 'images/background.jpeg', 'tenazas BH'),
+(6, 'images/al.jpg', 'images/agesser.png', 'Dave BH'),
+(7, 'images/sgsdgs.jpg', 'images/sdfghdsf.jpg', 'Apitong Boarding House'),
+(8, 'images/dfghdfh.jpg', 'images/drtd.jpg', 'Syudad Boarding House'),
+(10, 'images/al.jpg', 'images/background.jpeg', 'Alfred Boarding House'),
+(11, 'images/al.jpg', 'images/asfda.jpg', 'Khemark BH'),
+(13, 'images/agesser.png', 'images/98174995_146435506983130_761808498299240448_n.jpg', 'Dodge Boarding House'),
+(24, 'images/drtd.jpg', 'images/sgsdgs.jpg', 'Jestoni Boarding House');
 
 -- --------------------------------------------------------
 
@@ -122,14 +135,6 @@ CREATE TABLE `reservation` (
   `hname` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `reservation`
---
-
-INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `date_in`, `addons`, `room_no`, `amenities`, `price`, `image`, `status`, `res_stat`, `hname`) VALUES
-(1, 'Dodge', 'Ackkerman', 'user@gmail.com', '2024-09-10 00:00:00', 'yes', 1, 'Tv, Wifi, Aircon', 10000000, 'images/drtd.jpg', 'occupied', 'Approved', 'Dodge Boarding House'),
-(2, 'Dodge', 'Ackkerman', 'user@gmail.com', '2024-09-11 00:00:00', 'yesys', 7, 'ref, computer, microwave', 500, 'images/sgsdgs.jpg', 'occupied', 'Approved', 'Dodge Boarding House');
-
 -- --------------------------------------------------------
 
 --
@@ -140,6 +145,7 @@ CREATE TABLE `rooms` (
   `id` int(11) NOT NULL,
   `room_no` int(255) NOT NULL,
   `room_type` varchar(255) NOT NULL,
+  `capacity` int(255) NOT NULL,
   `amenities` varchar(255) NOT NULL,
   `price` int(255) NOT NULL,
   `image` varchar(255) NOT NULL,
@@ -153,9 +159,11 @@ CREATE TABLE `rooms` (
 -- Dumping data for table `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `room_no`, `room_type`, `amenities`, `price`, `image`, `status`, `hname`, `datein`, `dateout`) VALUES
-(1, 1, 'Single Room', 'Tv, Wifi, Aircon', 10000000, 'images/drtd.jpg', 'occupied', 'Dodge Boarding House', NULL, NULL),
-(2, 7, 'Double Room', 'ref, computer, microwave', 500, 'images/sgsdgs.jpg', 'occupied', 'Dodge Boarding House', NULL, NULL);
+INSERT INTO `rooms` (`id`, `room_no`, `room_type`, `capacity`, `amenities`, `price`, `image`, `status`, `hname`, `datein`, `dateout`) VALUES
+(1, 1, 'Single Room', 2, 'Tv, Wifi, Aircon', 10000000, 'images/sdfghdsf.jpg', 'occupied', 'Dodge Boarding House', '2024-09-16', NULL),
+(2, 5, 'Double Room', 3, 'ref, computer, oven', 500, 'images/sdfghdsf.jpg', 'occupied', 'Dodge Boarding House', '2024-09-16', NULL),
+(3, 2, 'Single Room', 4, 'ref, computer, microwave', 10000000, 'images/dfghdfh.jpg', 'available', 'Dodge Boarding House', NULL, NULL),
+(4, 1, 'Single Room', 0, 'ref, computer, microwave', 10000000, 'images/sdfghdsf.jpg', 'occupied', 'Alfred Boarding House', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -178,12 +186,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `fname`, `lname`, `uname`, `pass`, `role`, `hname`) VALUES
-(33, 'Admin', 'Admin', 'admin@gmail.com', 'yes', 'admin', ''),
-(34, 'User', 'User', 'user@gmail.com', 'user', 'user', ''),
-(48, 'dodge', 'suico', 'dodge@gmail.com', 'yes', 'landlord', 'Dodge Boarding House'),
-(49, 'alfred', 'magaso', 'alfred@gmail.com', 'yes', 'landlord', 'Tugas Boarding House'),
-(51, 'khemark', 'ocariza', 'khemark@gmail.com', 'yes', 'landlord', 'Khemark BH'),
-(52, 'Arjay', 'Bonustro', 'Arjay@gmail.com', 'yes', 'landlord', '');
+(1, 'admin', 'admin', 'admin@gmail.com', 'yes', 'admin', ''),
+(2, 'Dodge', 'Suico', 'dodge@gmail.com', 'yes', 'landlord', 'Dodge Boarding House'),
+(3, 'alfred', 'magaso', 'alfred@gmail.com', 'yes', 'landlord', 'Alfred Boarding House'),
+(5, 'khemark', 'ocariza', 'khemark@gmail.com', 'yes', 'landlord', 'Khemark BH'),
+(6, 'Jestoni', 'Villarta', 'Jestoni@gmail.com', 'yes', 'landlord', 'Jestoni Boarding House'),
+(7, 'Dave', 'Suico', 'dave@gmail.com', 'yes', 'landlord', 'Syudad Boarding House'),
+(8, 'user', 'user', 'user@gmail.com', 'yes', 'user', '');
 
 --
 -- Indexes for dumped tables
@@ -239,43 +248,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bhapplication`
 --
 ALTER TABLE `bhapplication`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `boardinghouses`
 --
 ALTER TABLE `boardinghouses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `description`
 --
 ALTER TABLE `description`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `documents`
 --
 ALTER TABLE `documents`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
