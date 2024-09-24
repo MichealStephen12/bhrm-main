@@ -601,14 +601,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     }
                     $query = "
                     SELECT 
-                        MONTH(datein) AS month, 
+                        MONTH(date_in) AS month, 
                         SUM(capacity) AS total_tenants
                     FROM 
-                        rooms
+                        reservation
                     WHERE 
                         status = 'occupied' AND hname = '$hname'
                     GROUP BY 
-                        MONTH(datein)
+                        MONTH(date_in)
                     UNION ALL
                     SELECT 
                         month, 
@@ -616,7 +616,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     FROM 
                         (SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS months
                     WHERE 
-                        month NOT IN (SELECT MONTH(datein) FROM rooms WHERE status = 'occupied' AND hname = '$hname')
+                        month NOT IN (SELECT MONTH(date_in) FROM reservation WHERE status = 'occupied' AND hname = '$hname')
                     ORDER BY 
                         month;
                     ";
@@ -645,7 +645,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <div class="room-header">
                     <div class="room-content">
                         <?php 
-                            if (empty($_SESSION['uname'])){
+                            if (empty($_SESSION['uname']) || $_SESSION['role'] == 'user'){
                             ?>
                                 <style>
                                     .room-content{
@@ -739,7 +739,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                     $id = $fetch['id'];
                                     $hname = $fetch['hname'];
                                     $status = $fetch['status'];
-                                    $datein = $fetch['datein'];
                                     $roomno = $fetch['room_no'];
                             ?>
                                 <div class="card">
@@ -753,8 +752,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                         <p>Status: <?php echo $fetch['status']?></p>
                                         <div class="room-btn">
                                             <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"): ?>
-                                            <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                                            <a href='php/function.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
+                                            <a href='php/roomfunction.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
+                                            <a href='php/roomfunction.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
                                             <?php else: ?>
                                             <?php if ($status == 'available'){ ?>
                                                 <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
@@ -805,7 +804,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                 $id = $fetch['id'];
                                 $hname = $fetch['hname'];
                                 $status = $fetch['status'];
-                                $datein = $fetch['datein'];
                                 $roomno = $fetch['room_no'];
                         ?>
                                 <div class="card">
@@ -813,13 +811,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                     <div class="card-content">
                                         <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
                                         <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
+                                        <p class="card-text">Room Capacity: <?php echo $fetch['capacity']?></p>
                                         <p class="card-text">Price: <?php echo $fetch['price']?></p>
                                         <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
                                         <p class="card-text">Status: <?php echo $fetch['status']?></p>
                                         <div class="room-btn">
                                             <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"): ?>
-                                                <a href='php/addroom.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                                                <a href='php/function.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
+                                                <a href='php/roomfunction.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
+                                                <a href='php/roomfunction.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
                                             <?php else: ?>
                                                 <?php if ($status == 'available'){ ?>
                                                     <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>

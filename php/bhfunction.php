@@ -8,9 +8,11 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
 }
 
 if (isset($_POST['submit'])) {
-    $landlord = $_SESSION['uname'];
+    $owner = $_SESSION['uname'];
+    $landlord = $_POST['landlord'];
     $hname = $_POST['name'];
     $haddress = $_POST['address'];
+    $contactno = $_POST['contactno'];
     $description = $_POST['description'];
 
     $_FILES['image'];
@@ -69,7 +71,7 @@ if (isset($_POST['submit'])) {
         echo "you cannot upload this type of file";
     }
 
-    $query = "INSERT INTO `bhapplication` (`id`, `owner`, `hname`, `haddress`, `Status`) VALUES ('','$landlord','$hname','$haddress', 'PENDING')";
+    $query = "INSERT INTO `bhapplication` (`id`, `owner`, `hname`, `haddress`, `contact_no`, `status`, `landlord`) VALUES ('', '$owner','$hname','$haddress', '$contactno', 'PENDING', '$landlord')";
     mysqli_query($conn, $query);
     $query = "INSERT INTO `documents` (`id`, `documents`, `image`, `hname`) VALUES ('','images/$fileNameNew2', 'images/$fileNameNew', '$hname')";
     mysqli_query($conn, $query);
@@ -89,13 +91,15 @@ if (isset($_GET['approve'])) {
     
     if ($result) {
         $fetch = mysqli_fetch_assoc($result);
-        
-        $landlord = $fetch['owner'];
+
+        $owner = $fetch['owner'];
+        $landlord = $fetch['landlord'];
         $hname = $fetch['hname'];
         $address = $fetch['haddress'];
+        $contactno = $fetch['contact_no'];
         
         // Insert the data into the boardinghouses table
-        $query_insert = "INSERT INTO boardinghouses (`id`, `owner`, `hname`, `haddress`) VALUES ('', '$landlord', '$hname', '$address')";
+        $query_insert = "INSERT INTO boardinghouses (`id`, `owner`, `hname`, `haddress`, `contact_no`, `landlord`) VALUES ('', '$owner', '$hname', '$address', '$contactno', '$landlord')";
         
         if (mysqli_query($conn, $query_insert)) {
             // Update the status in the bhapplication table
@@ -395,12 +399,20 @@ if (isset($_GET['reject'])) {
             <div class="title">Add Boarding House</div>
             <form method="post" enctype="multipart/form-data" class="form-container">
                 <div class="form-group">
+                    <label for="name">Landlord Name</label>
+                    <input type="text" id="landlord" name="landlord" placeholder="Enter here.." required>
+                </div>    
+                <div class="form-group">
                     <label for="name">House Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter here.." required>
                 </div>
                 <div class="form-group">
                     <label for="address">House Address</label>
                     <input type="text" id="address" name="address" placeholder="Enter here.." required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Contact Number</label>
+                    <input type="text" id="contactno" name="contactno" placeholder="Enter here.." required>
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>

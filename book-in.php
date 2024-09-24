@@ -18,14 +18,15 @@ if(isset($_POST['submit'])){
     $datein = $_POST['datein'];
     $addons = $_POST['addons'];
     $roomno = $fetch['room_no'];
+    $capacity = $fetch['capacity'];
     $amenities = $fetch['amenities'];
     $image = $fetch['image'];
     $price = $fetch['price'];
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
    
-    $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `date_in`, `addons`, `room_no`, `amenities`, `price`, `image`, `status`, `res_stat`, `hname`) VALUES 
-                                        ('','$fname','$lname','$email','$datein','$addons','$roomno','$amenities','$price','$image','$status', 'Pending', '$hname')";
+    $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `date_in`, `addons`, `room_no`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `hname`) VALUES 
+                                        ('','$fname','$lname','$email','$datein','$addons','$roomno', '$capacity','$amenities','$price','$image','$status', 'Pending', '$hname')";
     mysqli_query($conn, $query);
 
     header("location: thankyou.php");
@@ -145,6 +146,7 @@ if(isset($_POST['submit'])){
             <div>
                 <h5>Selected Room: <?php echo $fetch['room_no']; ?></h5>
                 <img src="<?php echo $fetch['image'];?>" alt="">
+                <p>Capacity: <?php echo $fetch['capacity']?></p>
                 <p>Price: <?php echo $fetch['price']?></p>
                 <p>Amenities: <?php echo $fetch['amenities']?></p>
             </div>

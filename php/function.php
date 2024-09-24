@@ -7,34 +7,46 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     header("location: ../index.php");
 }
 
-// Delete rooms
-if (isset($_GET['rdelete'])) {
-    $id = $_GET['rdelete'];
-    $query = "DELETE FROM rooms WHERE id = $id";
-    $result = mysqli_query($conn, $query);
-    if ($result) {
-        header('Location: ../boardinghouse.php');
-    }
-}
+
 
 if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
+    $hname = $_GET['delete'];
 
-    $query = "DELETE FROM `boardinghouses` WHERE id = $id";
+    $query = "select * from boardinghouses where hname = '$hname'";
     $result = mysqli_query($conn, $query);
-    if ($result) {
-        header('Location: ../index.php');
+    $fetch = mysqli_fetch_assoc($result);
+    $hname = $fetch['hname'];
+
+    $query = "DELETE FROM `boardinghouses` WHERE hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+    if($result){
+        $query = "DELETE FROM `documents` WHERE hname = '$hname'";
+        $result = mysqli_query($conn, $query);
+    
+        $query = "DELETE FROM `description` WHERE hname = '$hname'";
+        $result = mysqli_query($conn, $query);
+
+        $query = "UPDATE `users` SET hname = '' WHERE hname = '$hname'";
+        $result = mysqli_query($conn, $query);
     }
+    
+    header("location: ../index.php");
 }
 
 
 if (isset($_GET['approve'])) {
     $id = $_GET['approve'];
 
-    $query = "UPDATE `reservation` SET `res_stat` = 'Approved', `status` = 'occupied' WHERE room_no = $id";
+    $query = "Select * from reservation where id = $id";
     $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result);
+    $roomno = $fetch['room_no'];
 
-    $query = "UPDATE `rooms` SET `status` = 'occupied', `datein` = now() WHERE room_no = $id";
+    $query = "UPDATE `reservation` SET `res_stat` = 'Approved', `status` = 'reserved' WHERE id = $id";
+    $result = mysqli_query($conn, $query);
+    
+
+    $query = "UPDATE `rooms` SET `status` = 'reserved' WHERE room_no = $roomno";
     $result = mysqli_query($conn, $query);
     header('Location: ../reservation.php');
 }
@@ -42,10 +54,15 @@ if (isset($_GET['approve'])) {
 if (isset($_GET['reject'])) {
     $id = $_GET['reject'];
 
-    $query = "UPDATE `reservation` SET `res_stat` = 'Rejected',  `status` = 'available' WHERE room_no = $id";
+    $query = "Select * from reservation where id = $id";
+    $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result);
+    $roomno = $fetch['room_no'];
+
+    $query = "UPDATE `reservation` SET `res_stat` = 'Rejected',  `status` = 'available' WHERE id = $id";
     $result = mysqli_query($conn, $query);
 
-    $query = "UPDATE `rooms` SET `status` = 'available' WHERE room_no = $id";
+    $query = "UPDATE `rooms` SET `status` = 'available' WHERE room_no = $roomno";
     $result = mysqli_query($conn, $query);
     header('Location: ../reservation.php');
 }
@@ -132,7 +149,7 @@ if (isset($_POST['update'])) {
                         <img src="../images/logo.png" height="100px">
                     </div>
                     <div class="col-md-12">
-                        <span style="font-weight: 100; font-size: 17px;">Update Rooms</span>
+                        <span style="font-weight: 100; font-size: 17px;">Update Boarding House</span>
                     </div>
                     <div class="col-md-12">
                         <form method="post" enctype="multipart/form-data">

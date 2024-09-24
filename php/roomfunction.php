@@ -61,6 +61,16 @@ if(isset($_GET['rupdate'])){
     $data = mysqli_fetch_assoc($result);
 }
 
+// Delete rooms
+if (isset($_GET['rdelete'])) {
+    $id = $_GET['rdelete'];
+    $query = "DELETE FROM rooms WHERE id = $id";
+    $result = mysqli_query($conn, $query);
+    if ($result) {
+        header('Location: ../boardinghouse.php');
+    }
+}
+
 if(isset($_POST['update'])){
     $id = $_GET['rupdate'];
     $roomno = $_POST['roomno'];

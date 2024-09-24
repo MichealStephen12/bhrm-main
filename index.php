@@ -192,6 +192,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
         
         .card-content{
             padding: 16px;
+            height: auto;
         }
 
         .card-content h5{
@@ -205,16 +206,15 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             margin-bottom: 8px;
         }
 
-        .card-content a{
-            margin-top: 20px;
+        .card-content .bh-btn{
+            display: flex;
+            align-items: bottom;
         }
-
-        .bh-btn{
-            margin-top: 20px;
-            
-        }.bh-btn a{
+        .bh-btn a{
             color: white;
         }
+
+     
         
 
         .button{
@@ -355,9 +355,14 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                 <div class="card">
                     <img src="<?php echo $fetch["image"] ?>" width="40%" alt="Boarding House">
                     <div class="card-content">
-                        <h5>Name: <?php echo $fetch["hname"] ?></h5>
-                        <p>Owner: <?php echo $fetch["owner"] ?></p>
-                        <p>Address: <?php echo $fetch["haddress"] ?></p>
+                        <h5>Name: <?php echo $fetch["hname"]; ?></h5>
+                        <p>Owner: <?php echo $fetch["landlord"]; ?></p>
+                        <p>Contact Number: <?php echo $fetch["contact_no"]; ?></p>
+                        <p>Address: <?php echo $fetch["haddress"]; ?></p>
+                        <div class="bh-btn">
+                            <a href="php/function.php?edit=<?php echo $hname; ?>" class="button">Update</a>
+                            <a href="php/function.php?delete=<?php echo $hname; ?>" class="button">Delete</a>
+                        </div>
                     </div> 
                 </div>
                 <?php
@@ -379,14 +384,13 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                         <h5>Name: <?php echo $fetch["hname"] ?></h5>
                         <p>Owner: <?php echo $fetch["landlord"] ?></p>
                         <p>Address: <?php echo $fetch["haddress"] ?></p>
-                        <p>Contact No#: <?php echo $fetch["contactno"] ?></p>
+                        <p>Contact No#: <?php echo $fetch["contact_no"] ?></p>
                         <div class="bh-btn">
-                            <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin'): ?>
-                                <a href="php/function.php?edit=<?php echo $id; ?>" class="button">Update</a>
-                                <a href="php/function.php?delete=<?php echo $id; ?>" class="button">Delete</a>
-                            <?php else : ?>
+                            <?php if (!empty($_SESSION['uname']) && !empty($_SESSION['role']) && $_SESSION['role'] == 'admin'){?>
+                                 
+                             <?php } else { ?>
                                 <a href="boardinghouse.php?hname=<?php echo $hname; ?>" class="button">More Details</a>
-                            <?php endif; ?>
+                            <?php } ?>
                         </div>
                     </div>     
                 </div>
