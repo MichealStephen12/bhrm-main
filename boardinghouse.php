@@ -874,7 +874,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="chart.min.js"></script>
 
     <script>
         // Wrap chart logic in a function

@@ -503,7 +503,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
         </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="chart.min.js"></script>
 
     <script>
         const ctx = document.getElementById('landlordChart').getContext('2d');
