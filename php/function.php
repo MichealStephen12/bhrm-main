@@ -7,33 +7,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     header("location: ../index.php");
 }
 
-
-
-if (isset($_GET['delete'])) {
-    $hname = $_GET['delete'];
-
-    $query = "select * from boardinghouses where hname = '$hname'";
-    $result = mysqli_query($conn, $query);
-    $fetch = mysqli_fetch_assoc($result);
-    $hname = $fetch['hname'];
-
-    $query = "DELETE FROM `boardinghouses` WHERE hname = '$hname'";
-    $result = mysqli_query($conn, $query);
-    if($result){
-        $query = "DELETE FROM `documents` WHERE hname = '$hname'";
-        $result = mysqli_query($conn, $query);
-    
-        $query = "DELETE FROM `description` WHERE hname = '$hname'";
-        $result = mysqli_query($conn, $query);
-
-        $query = "UPDATE `users` SET hname = '' WHERE hname = '$hname'";
-        $result = mysqli_query($conn, $query);
-    }
-    
-    header("location: ../index.php");
-}
-
-
 if (isset($_GET['approve'])) {
     $id = $_GET['approve'];
 
@@ -71,18 +44,19 @@ $data = ['id' => '', 'owner' => '', 'hname' => '', 'haddress' => '', 'image' => 
 
 
 if (isset($_GET['edit'])) {
-    $id = $_GET['edit'];
+    $house = $_GET['edit'];
 
-    $query = "SELECT * FROM `boardinghouses` WHERE id = $id";
+    $query = "SELECT * FROM `boardinghouses` WHERE hname = '$house'";
     $result = mysqli_query($conn, $query);
     $data = mysqli_fetch_assoc($result);
 }
 
 if (isset($_POST['update'])) {
-    $id = $_GET['edit'];
-    $owner = $_POST['owner'];
+    $house = $_GET['edit'];
+    $landlord = $_POST['landlord'];
     $hname = $_POST['hname'];
     $haddress = $_POST['haddress'];
+    $contactno = $_POST['contactno'];
 
     $file = $_FILES['image'];
 
@@ -113,10 +87,45 @@ if (isset($_POST['update'])) {
         echo "you cannot upload this type of file";
     }
 
-    $query = "UPDATE `boardinghouses` SET `id`= $id,`owner`='$owner',`hname`='$hname',`haddress`='$haddress',`image`= 'images/$fileNameNew'  WHERE id = $id";
+    $query = "select * from boardinghouses where hname = '$house'";
+    $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result);
+    $hname = $fetch['hname'];
+    $owner = $fetch['owner'];
+
+    $query = "UPDATE `boardinghouses` SET `owner`='$owner', `hname`='$hname', `haddress`='$haddress', `contact_no`='$contactno', `landlord`='$landlord'  WHERE hname = '$house'";
+    mysqli_query($conn, $query);
+
+
+    $query = "UPDATE `documents` SET `image`= 'images/$fileNameNew' where hname = '$hname'";
     mysqli_query($conn, $query);
 
     header("location: ../index.php");
+
+
+if (isset($_GET['delete'])) {
+    $hname = $_GET['delete'];
+
+    $query = "select * from boardinghouses where hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result);
+    $hname = $fetch['hname'];
+
+    $query = "DELETE FROM `boardinghouses` WHERE hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+    if($result){
+        $query = "DELETE FROM `documents` WHERE hname = '$hname'";
+        $result = mysqli_query($conn, $query);
+    
+        $query = "DELETE FROM `description` WHERE hname = '$hname'";
+        $result = mysqli_query($conn, $query);
+
+        $query = "UPDATE `users` SET hname = '' WHERE hname = '$hname'";
+        $result = mysqli_query($conn, $query);
+    }
+    
+    header("location: ../index.php");
+}
 }
 
 ?>
@@ -155,8 +164,8 @@ if (isset($_POST['update'])) {
                         <form method="post" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>House Owner</label>
-                                    <input type="text" name="owner" placeholder="Enter here.." class="form-control" value="<?php echo $data['owner']; ?>" required>
+                                    <label>Landlord Name</label>
+                                    <input type="text" name="landlord" placeholder="Enter here.." class="form-control" value="<?php echo $data['landlord']; ?>" required>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>House Name</label>
@@ -165,6 +174,10 @@ if (isset($_POST['update'])) {
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>House Address</label>
                                     <input type="text" name="haddress" placeholder="Enter here.." class="form-control" value="<?php echo $data['haddress']; ?>" required>
+                                </div>
+                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
+                                    <label>Contact Number:</label>
+                                    <input type="text" name="contactno" placeholder="Enter here.." class="form-control" value="<?php echo $data['contact_no']; ?>" required>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Image</label>

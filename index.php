@@ -119,48 +119,6 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             }
         }
 
-        .section1 {
-            background-color: white;
-            height: auto;
-            font-weight: 20;
-            display: flex;
-            border-radius: 10px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center; 
-            padding: 20px;
-            padding-top: 40px;
-            text-align: center;
-        }
-
-        .section1 h1 {
-            font-size: 1.5vw; /* Adjust based on screen width */
-            margin-bottom: 10px;
-        }
-
-        .section1 p {
-            width: 80%; /* Use percentage for responsive width */
-            font-size: 1.3vw; /* Adjust font-size based on viewport */
-            margin-top: 20px;
-        }
-
-        /* Responsive adjustments for smaller screens */
-        @media screen and (max-width: 768px) {
-            .section1 {
-                margin: 40px 20px;
-            }
-
-            .section1 h1 {
-                font-size: 5vw; /* Larger text for smaller screens */
-            }
-
-            .section1 p {
-                font-size: 3.5vw; /* Larger paragraph text for better readability */
-                width: 100%; /* Make the text span the full width */
-            }
-        }
-
-
         .section2{
             background-color: white;
             padding: 30px;
@@ -175,6 +133,9 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             overflow: hidden;
             box-shadow: 0px 10px 20px #aaaaaa;
             margin: 20px;
+            display: flex;
+            flex-direction: column; /* Ensure the flex direction is column */
+            justify-content: space-between; /* Align items to the bottom */
             padding-bottom: 10px;
             height: auto;
         }
@@ -329,19 +290,126 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
         </nav>
 
         <div class="content-background">
-            <div class="section1">
-                <h1>Welcome to Maranding Boarding House Center
-                    <?php 
-                    if (!empty($_SESSION['uname'])) {
-                        echo $fetch['fname'];
-                    }else{
-                        echo '';
+            <?php if(!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin'): ?>
+                <style>
+                    .section1{
+                        background-color: white;
+                        height: auto;
+                        font-weight: 20;
+                        display: flex;
+                        justify-content: center;
+                        grid-template-columns: 1fr  1fr;
+                        grid-template-rows: 1fr ;
+                        border-radius: 10px;
+                        padding: 30px;
+                        padding-top: 30px;
                     }
-                    ?>
-                </h1>
-                <p>Where we show you the best boarding houses around Maranding. Please select your desired boarding house and
-                    have an amazing experience and chill moments ahead.</p>
-            </div>
+
+                    canvas{
+                        width: 700px;
+                        padding: 10px;
+                        justify-content: center;
+                    }
+
+                    .chart {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                    }
+
+                    .chart h3{
+                        text-align: center;
+                        padding: 5px;
+                    }
+
+                    @media (max-width: 1000px){
+                        canvas{
+                            width: 450px;
+                            padding: 10px;
+                            justify-content: center;
+                        }
+
+                        .section1{
+                            display: flex;
+                            flex-wrap: wrap;
+                            
+                        }
+                    }
+                </style>
+                <div class='section1'>
+                    <div class="chart">
+                        <h3>Total of Landlords</h3>
+                        <div class="chart-container">
+                            <canvas id="landlordChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+               
+            <?php else :?>
+                <style>
+                    .section1 {
+                        background-color: white;
+                        height: auto;
+                        font-weight: 20;
+                        display: flex;
+                        border-radius: 10px;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center; 
+                        padding: 20px;
+                        padding-top: 40px;
+                        text-align: center;
+                    }
+
+                    .section1 h1 {
+                        font-size: 1.5vw; /* Adjust based on screen width */
+                        margin-bottom: 10px;
+                    }
+
+                    .section1 p {
+                        width: 80%; /* Use percentage for responsive width */
+                        font-size: 1.3vw; /* Adjust font-size based on viewport */
+                        margin-top: 20px;
+                    }
+
+                    /* Responsive adjustments for smaller screens */
+                    @media screen and (max-width: 768px) {
+                        .section1 {
+                            margin: 40px 20px;
+                        }
+
+                        .section1 h1 {
+                            font-size: 5vw; /* Larger text for smaller screens */
+                        }
+
+                        .section1 p {
+                            font-size: 3.5vw; /* Larger paragraph text for better readability */
+                            width: 100%; /* Make the text span the full width */
+                        }
+                    }
+
+                </style>
+                <div class="section1">
+                    <h1>Welcome to Maranding Boarding House Center
+                        <?php 
+                        if (!empty($_SESSION['uname'])) {
+                            echo $fetch['fname'];
+                        }else{
+                            echo '';
+                        }
+                        ?>
+                    </h1>
+                    <p>Where we show you the best boarding houses around Maranding. Please select your desired boarding house and
+                        have an amazing experience and chill moments ahead.</p>
+            
+                </div>
+            <?php endif; ?>
+            <?php
+                $query = "SELECT COUNT(*) as landlord_count FROM users WHERE role = 'landlord'";
+                $result = mysqli_query($conn, $query);
+                $data = mysqli_fetch_assoc($result);
+                $landlordCount = $data['landlord_count'];
+            ?>
 
             <div class="section2">
                 <?php
@@ -399,6 +467,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                 }
                 ?>
             </div>
+    
         </div>
 
         <footer class="footer">
@@ -433,6 +502,33 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             </div>
         </footer>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('landlordChart').getContext('2d');
+        const landlordChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Landlords'],
+                datasets: [{
+                    label: 'Number of Landlords',
+                    data: [<?php echo $landlordCount; ?>],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    
 </body>
 
 </html>
