@@ -59,7 +59,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             background-size: cover;  /* Ensure the image covers the entire container */
             background-position: center; /* Position the background image centrally */
             background-repeat: no-repeat;  /* Prevent the background from repeating */
-            min-height: 150vh;  /* Ensure the section is at least the height of the viewport */
+            min-height: auto;  /* Ensure the section is at least the height of the viewport */
         }
         
         .navbar {
@@ -127,6 +127,16 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             background-color: white;
             margin: 60px 200px 90px 200px;
             border-radius: 10px;
+        }
+
+        .back{
+            height: 100px;
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            margin-right: 50px;
+        }.back a{
+           height: auto;
         }
 
 
@@ -264,11 +274,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         }
 
         .card{
-            width: 325px;
+            width: 320px;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0px 10px 20px #aaaaaa;
             margin: 20px;
+            display: flex;
+            flex-direction: column; /* Ensure the flex direction is column */
+            justify-content: space-between; /* Align items to the bottom */
             padding-bottom: 10px;
             height: auto;
         }
@@ -383,9 +396,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <a class="nav-link" href="index.php">Home</a>
                 <a class="nav-link" href="about.php">About</a>
                 <a class="nav-link" href="contact.php">Contact</a>
-                <?php if(empty($_SESSION['uname'])){
-                    echo '<a class="nav-link" href="index.php">Back</a>';
-                } ?>
                 <?php  
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                         echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
@@ -415,6 +425,19 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 
         <div class="content-background">
+            <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
+            <?php else: ?>
+            <div class="back">
+                <div>
+                    <?php 
+                        if(empty($_SESSION['uname'])){
+                            echo '<a class="btn" href="index.php">Back</a>';
+                        } 
+                    ?>
+                </div>     
+            </div>
+            <?php endif; ?>
+
             <div class="section1">
                 <?php if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 ?> 
@@ -673,7 +696,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         <div class="button">
                             <?php 
                                 if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"){
-                                    echo "<a href='php/addroom.php' class='btn'>Add Rooms</a>"; 
+                                    echo "<a href='php/roomfunction.php' class='btn'>Add Rooms</a>"; 
                                 }
                             ?>
                         </div>
@@ -706,7 +729,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 
             
-            <div class="section3">
+            <div class="section3">            
                 <?php 
                 if (!empty($_SESSION["uname"]) && $_SESSION['role'] == 'landlord'){
                     if (isset($_GET['hname'])) {
@@ -738,8 +761,9 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                 while ($fetch = mysqli_fetch_assoc($result)) {
                                     $id = $fetch['id'];
                                     $hname = $fetch['hname'];
-                                    $status = $fetch['status'];
+                                    $tenantcount = $fetch['current_tenant'];
                                     $roomno = $fetch['room_no'];
+                                    $capacity = $fetch['capacity'];
                             ?>
                                 <div class="card">
                                     <img src="<?php echo $fetch['image']?>" width="20%" class="card-img-top" alt="Room Image">
@@ -749,25 +773,36 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                         <p>Capacity: <?php echo $fetch['capacity']?></p>
                                         <p>Price: <?php echo $fetch['price']?></p>
                                         <p>Amenities: <?php echo $fetch['amenities']?></p>
+                                        <p>Tenant Type:  <?php echo $fetch['tenant_type']?> Only </p>
+                                        <p>Current Tenant: <?php echo $fetch['current_tenant']; ?> </p>
+                                        <p>Room Floor:  <?php echo $fetch['room_floor']?> </p>
+                                        <p>Amenities: <?php echo $fetch['amenities']?></p>
                                         <p>Status: <?php echo $fetch['status']?></p>
-                                        <div class="room-btn">
-                                            <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"): ?>
+                                        <div class="room-btn"> 
                                             <a href='php/roomfunction.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                                            <a href='php/roomfunction.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
-                                            <?php else: ?>
-                                            <?php if ($status == 'available'){ ?>
-                                                <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
-                                            <?php } ?>
-                                            <?php endif; ?>
+                                            <a href='php/roomfunction.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>  
+                                        <?php 
+                                        if ($tenantcount == $capacity){ 
+                                            $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno";
+                                            mysqli_query($conn, $query);
+                                        ?>
+                                            
+                                        <?php }
+                                        else if ($tenantcount <= $capacity){
+                                            $query = "UPDATE rooms SET status = 'available' WHERE room_no = $roomno";
+                                            mysqli_query($conn, $query);
+                                        ?>  
+
+                                        <?php }?>
                                         </div>
                                     </div> 
                                 </div>     
-                                <?php 
-                                            }
-                                        }
-                                    }
-                                } 
-                                ?>
+                <?php 
+                            }
+                        }
+                    }
+                }
+                ?>
 
                         
                 
@@ -803,37 +838,49 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                             while ($fetch = mysqli_fetch_assoc($result)) {
                                 $id = $fetch['id'];
                                 $hname = $fetch['hname'];
-                                $status = $fetch['status'];
+                                $capacity = $fetch['capacity'];
+                                $tenantcount = $fetch['current_tenant'];
                                 $roomno = $fetch['room_no'];
                         ?>
                                 <div class="card">
                                     <img src="<?php echo $fetch['image']?>" class="card-img-top" alt="Room Image">
                                     <div class="card-content">
-                                        <h5 class="card-title">Room No: <?php echo $fetch['room_no']?></h5>
-                                        <p class="card-text">Room Type: <?php echo $fetch['room_type']?></p>
-                                        <p class="card-text">Room Capacity: <?php echo $fetch['capacity']?></p>
-                                        <p class="card-text">Price: <?php echo $fetch['price']?></p>
-                                        <p class="card-text">Amenities: <?php echo $fetch['amenities']?></p>
-                                        <p class="card-text">Status: <?php echo $fetch['status']?></p>
-                                        <div class="room-btn">
-                                            <?php if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"): ?>
-                                                <a href='php/roomfunction.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                                                <a href='php/roomfunction.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>
-                                            <?php else: ?>
-                                                <?php if ($status == 'available'){ ?>
-                                                    <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
-                                                <?php } ?>
-                                            <?php endif; ?>
-                                        </div>
+                                    <h5>Room No: <?php echo $fetch['room_no']?></h5>
+                                    <p>Room Type: <?php echo $fetch['room_type']?></p>
+                                    <p>Capacity: <?php echo $fetch['capacity']?></p>
+                                    <p>Price: <?php echo $fetch['price']?></p>
+                                    <p>Amenities: <?php echo $fetch['amenities']?></p>
+                                    <p>Tenant Type:  <?php echo $fetch['tenant_type']?> Only </p>
+                                    <p>Current Tenant: <?php echo $fetch['current_tenant']; ?> </p>
+                                    <p>Room Floor:  <?php echo $fetch['room_floor']?> </p>
+                                    <p>Amenities: <?php echo $fetch['amenities']?></p>
+                                    <p>Status: <?php echo $fetch['status']?></p>
+                                    <div class="room-btn">
+                                    <?php 
+                                        if ($tenantcount == $capacity){ 
+                                            $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno";
+                                            mysqli_query($conn, $query);
+                                        ?>
+                                            
+                                        <?php }
+                                        else if ($tenantcount <= $capacity){
+                                            $query = "UPDATE rooms SET status = 'available' WHERE room_no = $roomno";
+                                            mysqli_query($conn, $query);
+                                        ?>  
+                                        <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
+                                    <?php }?>
+
+                                        
+                                    </div>
                                     </div>
                                 </div>
                         
-                        <?php 
-                                    }
-                                }
+                <?php 
                             }
-                        } 
-                        ?>
+                        }
+                    }
+                } 
+                ?>
                 </div>
                            
             </div>

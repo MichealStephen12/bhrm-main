@@ -176,8 +176,6 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
         }
 
      
-        
-
         .button{
             color: black;
             padding: 10px 20px;
@@ -192,6 +190,9 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             color: white;
             padding: 40px 0;
             font-family: Arial, sans-serif;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
 
         .footer .container {

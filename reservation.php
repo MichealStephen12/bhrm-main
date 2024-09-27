@@ -97,7 +97,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
         table {
             border-collapse: collapse;
-            margin: 20px 200px 0px 200px;
+        
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -177,22 +177,26 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
 
 
-    <table border="1" cellspacing="0" cellpadding="5" align="center">
+    <table>
         <thead>
             <tr>
                 <th>Id</th>
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
+                <th>Gender</th>
                 <th>Date in</th>
                 <th>Add ons</th>
                 <th>Room Number</th>
+                <th>Booked Beds</th>
                 <th>Room Capacity</th>
                 <th>Amenities</th>
                 <th>Price</th>
                 <th>Image</th>
                 <th>Status</th>
                 <th>Reservation Status</th>
+                <th>Reservation Duration</th>
+                <th>Reservation Reason</th>
                 <?php  
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                         echo '<th>Actions</th>'; 
@@ -215,15 +219,19 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <td><?php echo $fetch['fname'] ?></td>
                         <td><?php echo $fetch['lname'] ?></td>
                         <td><?php echo $fetch['email'] ?></td>
+                        <td><?php echo $fetch['gender'] ?></td>
                         <td><?php echo $fetch['date_in'] ?></td>
                         <td><?php echo $fetch['addons'] ?></td>
                         <td><?php echo $fetch['room_no'] ?></td>
+                        <td><?php echo $fetch['beds'] ?></td>
                         <td><?php echo $fetch['capacity'] ?></td>
                         <td><?php echo $fetch['amenities'] ?></td>
                         <td><?php echo $fetch['price'] ?></td>
                         <td><img src="<?php echo $fetch['image'] ?>"></td>
                         <td><?php echo $fetch['status'] ?></td>
                         <td><?php echo $fetch['res_stat'] ?></td>
+                        <td><?php echo $fetch['res_duration'] ?></td>
+                        <td><?php echo $fetch['res_reason'] ?></td>
                         
                         <?php  
                             if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
@@ -254,15 +262,19 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <td><?php echo $fetch['fname'] ?></td>
                     <td><?php echo $fetch['lname'] ?></td>
                     <td><?php echo $fetch['email'] ?></td>
+                    <td><?php echo $fetch['gender'] ?></td>
                     <td><?php echo $fetch['date_in'] ?></td>
                     <td><?php echo $fetch['addons'] ?></td>
                     <td><?php echo $fetch['room_no'] ?></td>
+                    <td><?php echo $fetch['beds'] ?></td>
                     <td><?php echo $fetch['capacity'] ?></td>
                     <td><?php echo $fetch['amenities'] ?></td>
                     <td><?php echo $fetch['price'] ?></td>
                     <td><img src="<?php echo $fetch['image'] ?>"></td>
                     <td><?php echo $fetch['status'] ?></td>
                     <td><?php echo $fetch['res_stat'] ?></td>
+                    <td><?php echo $fetch['res_duration'] ?></td>
+                    <td><?php echo $fetch['res_reason'] ?></td>
                 </tr>
             <?php }} ?>
         </tbody>

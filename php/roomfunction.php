@@ -12,6 +12,8 @@ if (isset($_POST['submit'])) {
     $roomtype = $_POST['roomtype'];
     $capacity = $_POST['capacity'];
     $amenities = $_POST['amenities'];
+    $tenanttype = $_POST['tenanttype'];
+    $roomfloor = $_POST['roomfloor'];
     $price = $_POST['price'];
     $status = $_POST['status'];
 
@@ -45,7 +47,8 @@ if (isset($_POST['submit'])) {
     }
 
     $hname = $_SESSION['hname'];
-    $query = "INSERT INTO `rooms`(`id`, `room_no`, `room_type`, `amenities`, `price`, `image`, `status`, `hname`) VALUES ('','$roomno','$roomtype','$amenities','$price','images/$fileNameNew', '$status', '$hname')";
+    $query = "INSERT INTO `rooms`(`id`, `room_no`, `room_type`, `capacity`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`) VALUES 
+                                ('','$roomno','$roomtype', '$capacity','$amenities', '$tenanttype', '$roomfloor','$price','images/$fileNameNew', '$status', '$hname')";
     mysqli_query($conn, $query);
 
     header("location: ../boardinghouse.php");
@@ -77,6 +80,8 @@ if(isset($_POST['update'])){
     $roomtype = $_POST['roomtype'];
     $capacity = $_POST['capacity'];
     $amenities = $_POST['amenities'];
+    $tenanttype = $_POST['tenanttype'];
+    $roomfloor = $_POST['roomfloor'];
     $price = $_POST['price'];
     $status = $_POST['status'];
 
@@ -110,7 +115,7 @@ if(isset($_POST['update'])){
         echo "you cannot upload this type of file";
     }
 
-    $query = "UPDATE `rooms` SET `id`= $id,`room_no`='$roomno',`room_type`='$roomtype',`capacity`='$capacity',`amenities`='$amenities', `price`='$price', `image`='images/$fileNameNew', `status`='$status' WHERE id = $id";
+    $query = "UPDATE `rooms` SET `id`= $id,`room_no`='$roomno',`room_type`='$roomtype',`capacity`='$capacity',`amenities`='$amenities', `tenant_type`='$tenanttype', `room_floor`='$roomfloor', `price`='$price', `image`='images/$fileNameNew', `status`='$status' WHERE id = $id";
     mysqli_query($conn, $query);
 
     header("location: ../boardinghouse.php");
@@ -162,6 +167,22 @@ if(isset($_POST['update'])){
                                     <label>Amenities:</label>
                                     <input type="text" name="amenities" value="<?php echo $data['amenities']; ?>"  placeholder="Enter here.." class="form-control" required>
                                 </div>
+                                <div>
+                                    <label>Tenant Type:</label>
+                                    <select id="fruits" name="tenanttype">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Room Floor:</label>
+                                    <select id="fruits" name="roomfloor">
+                                        <option value="ground floor">Ground Floor</option>
+                                        <option value="1st floor">1st Floor</option>
+                                        <option value="2nd floor">2nd Floor</option>
+                                    </select>
+                                </div>
+                               
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Price:</label>
                                     <input type="text" name="price" value="<?php echo $data['price']; ?>"  placeholder="Enter here.." class="form-control" required>
