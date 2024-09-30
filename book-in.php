@@ -120,14 +120,12 @@ if (isset($_POST['submit'])) {
 
     <div class="section1">
         <div class="sec-content">
-
                 <h5>Selected Room: <?php echo $fetch['room_no']; ?></h5>
                 <img src="<?php echo $fetch['image'];?>" alt="">
                 <p>Current Tenant: <?php echo $fetch['current_tenant']; ?></p>
                 <p>Capacity: <?php echo $fetch['capacity']?></p>
                 <p>Price: <?php echo $fetch['price']?></p>
                 <p>Amenities: <?php echo $fetch['amenities']?></p>
-
         </div>
     </div>
 
@@ -188,19 +186,19 @@ if (isset($_POST['submit'])) {
                 <input type="text" id="addons" name="addons">
             </div>
             <div class="form-col">
-                <label for="subscribe">Book in Details</label>
-                    <?php 
-                        $capacity = $fetch['capacity']; 
-                        for ($i = 1; $i <= $capacity; $i++): ?>
-                        <div>
-                            <label for="bed<?php echo $i; ?>">Book For <?php echo $i; ?> bed(s)</label>
-                            <input type="checkbox" id="bed<?php echo $i; ?>" name="bed[]" value="<?php echo $i; ?>">
-                        </div>
-                    <?php endfor; ?>
-                        <div>
-                            <label for="bed'.$i.'">Book For Whole Room</label>
-                            <input type="checkbox" id="bed'.$i.'" name="bed[]" value="Whole bed">
-                        </div>
+                <label for="subscribe">Number of beds</label>
+                <?php 
+                $capacity = $fetch['capacity']; 
+                for ($i = 1; $i <= $capacity; $i++): ?>
+                <div>
+                    <label for="bed<?php echo $i; ?>">Book For <?php echo $i; ?> bed(s)</label>
+                    <input type="checkbox" id="bed<?php echo $i; ?>" name="bed[]" value="<?php echo $i; ?>" class="bed-checkbox">
+                </div>
+                <?php endfor; ?>
+                <div>
+                    <label for="bed-whole">Book For Whole Room</label>
+                    <input type="checkbox" id="bed-whole" name="bed[]" value="Whole bed" class="bed-checkbox">
+                </div>
             </div>
             <button type="submit" name="submit">Submit</button>
         </form>
@@ -259,6 +257,26 @@ if (isset($_POST['submit'])) {
                 if (checkedCount > capacity) {
                     this.checked = false;
                     alert(`You can only book up to ${capacity} beds.`);
+                }
+            });
+        });
+    </script>
+
+    
+    <script>
+        // Select all checkboxes with the class 'bed-checkbox'
+        const bedCheckboxes = document.querySelectorAll('.bed-checkbox');
+
+        // Add an event listener to each checkbox
+        bedCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Uncheck all other checkboxes
+                    bedCheckboxes.forEach((cb) => {
+                        if (cb !== this) {
+                            cb.checked = false;
+                        }
+                    });
                 }
             });
         });

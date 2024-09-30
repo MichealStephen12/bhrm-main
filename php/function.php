@@ -17,7 +17,7 @@ if (isset($_GET['approve'])) {
 
     $roomno = $fetch['room_no'];
     $tenantcount = $fetch['current_tenant'];
-    $beds = $fetch['beds']; // This could be '1,2,3,4' or 'whole room'
+    $beds = $fetch['beds']; // This will now be a single integer value (e.g., '2' for 2 beds)
 
     // Fetch the room's capacity
     $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
@@ -26,12 +26,12 @@ if (isset($_GET['approve'])) {
     $roomCapacity = $roomData['capacity'];
 
     // Determine how many beds are occupied
-    if ($beds === 'Whole bed') {
+    if (strtolower($beds) === 'whole bed') {
         // If the whole room is reserved, use the room's capacity
         $bedCount = $roomCapacity;
     } else {
-        // Otherwise, count the number of beds in the list (e.g., 1,2,3,4)
-        $bedCount = count(explode(',', $beds));
+        // Otherwise, just use the number of beds directly (as it's now a single number)
+        $bedCount = (int)$beds; // Convert beds to an integer in case it's a string
     }
 
     // Update the reservation status
@@ -54,21 +54,42 @@ if (isset($_GET['approve'])) {
 }
 
 
+
 if (isset($_GET['reject'])) {
     $id = $_GET['reject'];
 
-    $query = "Select * from reservation where id = $id";
+    // Fetch the reservation details, including the room number and beds booked
+    $query = "SELECT * FROM reservation WHERE id = $id";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
     $roomno = $fetch['room_no'];
+    $beds = $fetch['beds']; // Assuming this contains the number of beds booked
 
-    $query = "UPDATE `reservation` SET `res_stat` = 'Rejected', `res_duration` = '',  `status` = 'available', `res_reason` = 'No valid information / No Tenant Came' WHERE id = $id";
-    $result = mysqli_query($conn, $query);
+    // If 'Whole bed' is stored for full room booking, use the room capacity, otherwise the number of beds
+    if ($beds === 'Whole bed') {
+        // Fetch room capacity for whole room booking
+        $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
+        $roomResult = mysqli_query($conn, $roomQuery);
+        $roomData = mysqli_fetch_assoc($roomResult);
+        $bedCount = $roomData['capacity']; // Use the full room capacity
+    } else {
+        // Subtract the number of beds specified
+        $bedCount = (int)$beds; // Convert the string value of beds to an integer
+    }
 
-    $query = "UPDATE `rooms` SET current_tenant = current_tenant - 1 WHERE room_no = $roomno";
-    $result = mysqli_query($conn, $query);
+    // Update the reservation status to 'Rejected'
+    $query = "UPDATE `reservation` SET `res_stat` = 'Rejected', `res_duration` = '', `status` = 'available', `res_reason` = 'No valid information / No Tenant Came' WHERE id = $id";
+    mysqli_query($conn, $query);
+
+    // Subtract the number of beds from the current tenant count
+    $query = "UPDATE `rooms` SET current_tenant = current_tenant - $bedCount WHERE room_no = '$roomno'";
+    mysqli_query($conn, $query);
+
+    // Redirect back to the reservation page
     header('Location: ../reservation.php');
 }
+
+
 
 $data = ['id' => '', 'owner' => '', 'hname' => '', 'haddress' => '', 'image' => '', 'price' => '', 'status' => '', 'amenities' => '', 'description' => ''];
 
