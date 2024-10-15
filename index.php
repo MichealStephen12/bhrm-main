@@ -180,6 +180,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             color: black;
             padding: 10px 20px;
             border-radius: 5px;
+            margin: 5px;
             font-size: 16px;
             cursor: pointer;
             background-color: #007bff;

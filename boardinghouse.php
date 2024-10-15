@@ -524,6 +524,21 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         padding: 20px;
                         padding-top: 30px;
                     }
+
+                    @media (max-width: 1000px){
+                        .section1{
+                            background-color: white;
+                            height: auto;
+                            font-weight: 20;
+                            display: grid;
+                            grid-template-columns: 1fr;
+                            grid-template-rows: 1fr;
+                            border-radius: 10px;
+                            padding: 20px;
+                            padding-top: 30px;
+                        }
+                    }
+
                 </style>
                 <div class="secrow1">
                     <img src="<?php echo $fetch["image"] ?>">
@@ -625,11 +640,11 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     $query = "
                     SELECT 
                         MONTH(date_in) AS month, 
-                        SUM(capacity) AS total_tenants
+                        SUM(beds) AS total_tenants
                     FROM 
                         reservation
                     WHERE 
-                        status = 'occupied' AND hname = '$hname'
+                        res_stat = 'Approved' AND hname = '$hname'
                     GROUP BY 
                         MONTH(date_in)
                     UNION ALL
@@ -1002,6 +1017,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     }
                 }
             });
+
 
             var months = <?php echo json_encode($months); ?>;
             var tenantCountsByMonth = <?php echo json_encode($tenantCountsByMonth); ?>;
