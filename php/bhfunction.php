@@ -2,7 +2,12 @@
 require 'connection.php';
 
 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord') {
-    echo '';
+    $uname = $_SESSION['uname'];
+    $query = "select * from users where uname = '$uname'";
+    $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result);
+    $fname = $fetch['fname'];
+
 } else {
     header("location: ../index.php");
 }
@@ -386,7 +391,7 @@ if (isset($_GET['reject'])) {
         <div class="section1">
             <div class="thank-you-message">
                 <h2>Thank You for Registering as a Landlord!</h2>
-                <p>Dear [Applicant's Name],</p>
+                <p>Dear <?php echo $fetch['fname']?>,</p>
                 <p>We appreciate your interest in becoming a landlord with us. Your application is under review, and we will notify you via email once it's processed.</p>
                 <p>At [Website/Platform Name], we are committed to providing a platform that benefits both landlords and tenants. If you have any questions in the meantime, feel free to reach out to us.</p>
                 <p>Thank you for choosing us to showcase your property. We look forward to working with you!</p>

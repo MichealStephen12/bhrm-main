@@ -136,6 +136,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             transition: background-color 0.3s;
         }
 
+        button:disabled {
+            background-color: #ccc; /* Light gray background */
+            color: #666; /* Darker gray text */
+            border: 1px solid #999; /* Gray border */
+            cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+            opacity: 0.6; /* Slightly transparent */
+        }
+
         button:hover {
             background-color: #0056b3;
         }
@@ -213,6 +221,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 while ($fetch = mysqli_fetch_assoc($result)) {
                     $id = $fetch['id'];
                     $roomno = $fetch['room_no'];
+                    $status = $fetch['status'];
             ?>
                     <tr>
                         <td><?php echo $fetch['id'] ?></td>
@@ -237,8 +246,19 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                         ?>
                         <td>
+                            <?php if($status == 'available'): ?>
                             <a href="php/function.php?approve=<?php echo $id;?>"><button>Approve</button></a>
                             <a href="php/function.php?reject=<?php echo $id;?>"><button  class="reject">Reject</button></a>
+                            <?php elseif ($status == 'Full'): ?>
+                            <a href="php/function.php?approve=<?php echo $id;?>"><button disabled>Approve</button></a>
+                            <a href="php/function.php?reject=<?php echo $id;?>"><button  class="reject">Reject</button></a>
+                            <?php elseif ($status == 'reserved'): ?>
+                            <a href="php/function.php?approve=<?php echo $id;?>"><button>Approve</button></a>
+                            <a href="php/function.php?reject=<?php echo $id;?>"><button  class="reject">Reject</button></a>
+
+                            
+                            <?php else: ?>
+                            <?php endif; ?>
                         </td>
                         <?php } ?>
                     </tr>

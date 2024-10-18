@@ -22,6 +22,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $fetch = mysqli_fetch_assoc($result); 
 }
 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -800,11 +802,17 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                         if ($tenantcount == $capacity){ 
                                             $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno";
                                             mysqli_query($conn, $query);
+
+                                            $query = "UPDATE reservation SET status = 'Full' WHERE room_no = $roomno";
+                                            mysqli_query($conn, $query);
                                         ?>
                                             
                                         <?php }
                                         else if ($tenantcount <= $capacity){
                                             $query = "UPDATE rooms SET status = 'available' WHERE room_no = $roomno";
+                                            mysqli_query($conn, $query);
+
+                                            $query = "UPDATE reservation SET status = 'available' WHERE room_no = $roomno";
                                             mysqli_query($conn, $query);
                                         ?>  
 
