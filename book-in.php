@@ -179,7 +179,7 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="form-col">
                 <label for="datein">Date in</label>
-                <input type="date" id="datein" name="datein">
+                <input type="date" id="datein" name="datein" min="<?php echo date('Y-m-d'); ?>" oninput="this.min = new Date().toISOString().split('T')[0]">
             </div>
             <div class="form-col">
                 <label for="addons">Additional Requests</label>

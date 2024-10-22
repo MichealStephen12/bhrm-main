@@ -737,8 +737,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         <select name="availability" onchange="this.form.submit()">
                             <option value="">All Availability</option>
                             <option value="Available" <?php if (isset($_GET['availability']) && $_GET['availability'] == 'Available') echo 'selected'; ?>>Available</option>
-                            <option value="Occupied" <?php if (isset($_GET['availability']) && $_GET['availability'] == 'Occupied') echo 'selected'; ?>>Occupied</option>
+                            <option value="Full" <?php if (isset($_GET['availability']) && $_GET['availability'] == 'Full') echo 'selected'; ?>>Full</option>
                             <option value="Under Maintenance" <?php if (isset($_GET['availability']) && $_GET['availability'] == 'Under Maintenance') echo 'selected'; ?>>Under Maintenance</option>
+                        </select>
+
+                        <select name="tenant_type" onchange="this.form.submit()">
+                            <option value="">All Gender</option>
+                            <option value="Male" <?php if (isset($_GET['tenant_type']) && $_GET['tenant_type'] == 'Male') echo 'selected'; ?>>Male</option>
+                            <option value="Female" <?php if (isset($_GET['tenant_type']) && $_GET['tenant_type'] == 'Female') echo 'selected'; ?>>Female</option>
                         </select>
                     </form>
                 </div>  
@@ -759,6 +765,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                             // Prepare query with room type and availability filtering
                             $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
                             $availability = isset($_GET['availability']) ? $_GET['availability'] : '';
+                            $tenanttype = isset($_GET['tenant_type']) ? $_GET['tenant_type'] : '';
 
                             $query = "SELECT * FROM rooms WHERE hname = '$hname'";
 
@@ -770,6 +777,10 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                             // Filter by availability if selected
                             if (!empty($availability)) {
                                 $query .= " AND status = '$availability'";
+                            }
+
+                            if (!empty($tenanttype)) {
+                                $query .= " AND tenant_type = '$tenanttype'";
                             }
 
                             $result = mysqli_query($conn, $query);
@@ -791,9 +802,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                         <p>Price: <?php echo $fetch['price']?></p>
                                         <p>Amenities: <?php echo $fetch['amenities']?></p>
                                         <p>Tenant Type:  <?php echo $fetch['tenant_type']?> Only </p>
-                                        <p>Current Tenant: <?php echo $fetch['current_tenant']; ?> </p>
+                                        <p>Current Tenant: <?php echo $fetch['current_tenant']; ?> / <?php echo $fetch['capacity']?> </p>
                                         <p>Room Floor:  <?php echo $fetch['room_floor']?> </p>
-                                        <p>Amenities: <?php echo $fetch['amenities']?></p>
                                         <p>Status: <?php echo $fetch['status']?></p>
                                         <div class="room-btn"> 
                                             <a href='php/roomfunction.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
@@ -842,6 +852,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         // Prepare query with room type and availability filtering
                         $room_type = isset($_GET['room_type']) ? $_GET['room_type'] : '';
                         $availability = isset($_GET['availability']) ? $_GET['availability'] : '';
+                        $tenanttype = isset($_GET['tenant_type']) ? $_GET['tenant_type'] : '';
 
                         $query = "SELECT * FROM rooms WHERE hname = '$hname'";
 
@@ -853,6 +864,10 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         // Filter by availability if selected
                         if (!empty($availability)) {
                             $query .= " AND status = '$availability'";
+                        }
+
+                        if (!empty($tenanttype)) {
+                            $query .= " AND tenant_type = '$tenanttype'";
                         }
 
                         $result = mysqli_query($conn, $query);
@@ -874,9 +889,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                     <p>Price: <?php echo $fetch['price']?></p>
                                     <p>Amenities: <?php echo $fetch['amenities']?></p>
                                     <p>Tenant Type:  <?php echo $fetch['tenant_type']?> Only </p>
-                                    <p>Current Tenant: <?php echo $fetch['current_tenant']; ?> </p>
+                                    <p>Current Tenant: <?php echo $fetch['current_tenant']; ?>/<?php echo $fetch['capacity']?> </p>
                                     <p>Room Floor:  <?php echo $fetch['room_floor']?> </p>
-                                    <p>Amenities: <?php echo $fetch['amenities']?></p>
                                     <p>Status: <?php echo $fetch['status']?></p>
                                     <div class="room-btn">
                                     <?php 
@@ -904,9 +918,9 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     }
                 } 
                 ?>
-                </div>
-                           
             </div>
+                           
+        </div>
 
 
 

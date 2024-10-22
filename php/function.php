@@ -152,7 +152,7 @@ if (isset($_POST['update'])) {
     mysqli_query($conn, $query);
 
     header("location: ../index.php");
-
+}
 
 if (isset($_GET['delete'])) {
     $hname = $_GET['delete'];
@@ -176,7 +176,6 @@ if (isset($_GET['delete'])) {
     }
     
     header("location: ../index.php");
-}
 }
 
 ?>

@@ -95,32 +95,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             }
         }
 
-        table {
-            border-collapse: collapse;
-        
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
         button {
             background-color: #007BFF;
             color: white;
@@ -182,123 +156,199 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             <a  class="nav-link" href="boardinghouse.php?hname=<?php echo $_SESSION['hname'];?>">Back</a>
         </div>
     </nav>
-
-
-
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Gender</th>
-                <th>Date in</th>
-                <th>Add ons</th>
-                <th>Room Number</th>
-                <th>Booked Beds</th>
-                <th>Room Capacity</th>
-                <th>Amenities</th>
-                <th>Price</th>
-                <th>Image</th>
-                <th>Status</th>
-                <th>Reservation Status</th>
-                <th>Reservation Duration</th>
-                <th>Reservation Reason</th>
-                <?php  
-                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                        echo '<th>Actions</th>'; 
-                    }
-                ?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-                $hname = $_SESSION['hname'];
-                $query = "SELECT * FROM reservation WHERE hname = '$hname'";
-                $result = mysqli_query($conn, $query);
-                while ($fetch = mysqli_fetch_assoc($result)) {
-                    $id = $fetch['id'];
-                    $roomno = $fetch['room_no'];
-                    $status = $fetch['status'];
-            ?>
-                    <tr>
-                        <td><?php echo $fetch['id'] ?></td>
-                        <td><?php echo $fetch['fname'] ?></td>
-                        <td><?php echo $fetch['lname'] ?></td>
-                        <td><?php echo $fetch['email'] ?></td>
-                        <td><?php echo $fetch['gender'] ?></td>
-                        <td><?php echo $fetch['date_in'] ?></td>
-                        <td><?php echo $fetch['addons'] ?></td>
-                        <td><?php echo $fetch['room_no'] ?></td>
-                        <td><?php echo $fetch['beds'] ?></td>
-                        <td><?php echo $fetch['capacity'] ?></td>
-                        <td><?php echo $fetch['amenities'] ?></td>
-                        <td><?php echo $fetch['price'] ?></td>
-                        <td><img src="<?php echo $fetch['image'] ?>"></td>
-                        <td><?php echo $fetch['status'] ?></td>
-                        <td><?php echo $fetch['res_stat'] ?></td>
-                        <td><?php echo $fetch['res_duration'] ?></td>
-                        <td><?php echo $fetch['res_reason'] ?></td>
-                        
-                        <?php  
-                            if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                        ?>
-                        <td>
-                            <?php if($status == 'available'): ?>
-                            <a href="php/function.php?approve=<?php echo $id;?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $id;?>"><button  class="reject">Reject</button></a>
-                            <?php elseif ($status == 'Full'): ?>
-                            <a href="php/function.php?approve=<?php echo $id;?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $id;?>"><button  class="reject">Reject</button></a>
-                            <?php elseif ($status == 'reserved'): ?>
-                            <a href="php/function.php?approve=<?php echo $id;?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $id;?>"><button  class="reject">Reject</button></a>
-
-                            
-                            <?php else: ?>
-                            <?php endif; ?>
-                        </td>
-                        <?php } ?>
-                    </tr>
-            <?php
-                }
+    
+    <div class="container">
+        <?php 
+        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
+            $hname = $_SESSION['hname'];
+            $query = "SELECT * FROM reservation WHERE hname = '$hname' order by id desc";
+            $result = mysqli_query($conn, $query);
+            while ($fetch = mysqli_fetch_assoc($result)) {
+        ?>
+        <div class="card">
+            <div class="card-footer">
+                <img src="<?php echo $fetch['image']; ?>">
+            </div>
+            <div class="card-header">
+                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Guest Information:</strong></p>
+                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
+                        <p>Email: <?php echo $fetch['email']; ?></p>
+                        <p>Gender: <?php echo $fetch['gender']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Room Information:</strong></p>
+                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
+                        <p>Bed(s): <?php echo $fetch['beds']; ?></p>
+                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
+                        <p>Price: <?php echo $fetch['price']; ?></p>
+                        <p>Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p><strong>Reservation Details:</strong></p>
+                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
+                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
+                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
+                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
+                    </div>
+                </div>
+                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
+                <div class="button-row">
+                    <div class="button-col">
+                        <?php if($fetch['status'] == 'available' && $fetch['res_stat'] == 'Pending'): ?>
+                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
+                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>
+                        <?php elseif ($fetch['status'] == 'Full'): ?>
+                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
+                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>
+                        <?php elseif ($fetch['status'] == 'reserved'): ?>
+                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
+                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+        <?php 
             }
-            ?>
-        </tbody>
+        } 
+        ?>
+        
+        <?php 
+        if (!empty($_SESSION) && $_SESSION['role'] == 'user') {
+            $uname = $_SESSION['uname'];
+            $hname = $_SESSION['hname'];
+            $query = "SELECT * FROM reservation WHERE email = '$uname' AND hname = '$hname' order by id desc";
+            $result = mysqli_query($conn, $query);
+            while ($fetch = mysqli_fetch_assoc($result)) {
+        ?>
+        <div class="card">
+            <div class="card-footer">
+                <img src="<?php echo $fetch['image']; ?>">
+            </div>
+            <div class="card-header">
+                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Guest Information:</strong></p>
+                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
+                        <p>Email: <?php echo $fetch['email']; ?></p>
+                        <p>Gender: <?php echo $fetch['gender']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Room Information:</strong></p>
+                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
+                        <p>Bed(s): <?php echo $fetch['beds']; ?></p>
+                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
+                        <p>Price: <?php echo $fetch['price']; ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p><strong>Reservation Details:</strong></p>
+                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
+                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
+                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
+                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php 
+            }
+        } 
+        ?>
+    </div>
 
-        <tbody>
-            <?php
-            if (!empty($_SESSION) && $_SESSION['role'] == 'user') {
-                $uname = $_SESSION['uname'];
-                $hname = $_SESSION['hname'];
-                $query = "SELECT * FROM reservation WHERE email = '$uname' AND hname = '$hname'";
-                $result = mysqli_query($conn, $query);
-                while ($fetch = mysqli_fetch_assoc($result)) { 
-            ?>
-                <tr>
-                    <td><?php echo $fetch['id'] ?></td>
-                    <td><?php echo $fetch['fname'] ?></td>
-                    <td><?php echo $fetch['lname'] ?></td>
-                    <td><?php echo $fetch['email'] ?></td>
-                    <td><?php echo $fetch['gender'] ?></td>
-                    <td><?php echo $fetch['date_in'] ?></td>
-                    <td><?php echo $fetch['addons'] ?></td>
-                    <td><?php echo $fetch['room_no'] ?></td>
-                    <td><?php echo $fetch['beds'] ?></td>
-                    <td><?php echo $fetch['capacity'] ?></td>
-                    <td><?php echo $fetch['amenities'] ?></td>
-                    <td><?php echo $fetch['price'] ?></td>
-                    <td><img src="<?php echo $fetch['image'] ?>"></td>
-                    <td><?php echo $fetch['status'] ?></td>
-                    <td><?php echo $fetch['res_stat'] ?></td>
-                    <td><?php echo $fetch['res_duration'] ?></td>
-                    <td><?php echo $fetch['res_reason'] ?></td>
-                </tr>
-            <?php }} ?>
-        </tbody>
-    </table>
+    <style>
+
+        .container{
+            width: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            flex-wrap: wrap;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .card {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            overflow: hidden;
+ 
+        }
+
+        .card-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .card-body {
+            width: auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .card-footer {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+
+        .card-footer img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .reject {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .reject:hover {
+            background-color: #cc0000;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        .button-row{
+            margin: auto;
+            grid-column-start: 1;
+            grid-column-end: 3;
+
+        }
+    </style>
   
 </body>
 </html>
