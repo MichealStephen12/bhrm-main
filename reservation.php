@@ -201,15 +201,15 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
                 <div class="button-row">
                     <div class="button-col">
-                        <?php if($fetch['status'] == 'available' && $fetch['res_stat'] == 'Pending'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>
-                        <?php elseif ($fetch['status'] == 'Full'): ?>
+                        <?php if($fetch['res_stat'] == 'Approved'): ?>
                             <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>
-                        <?php elseif ($fetch['status'] == 'reserved'): ?>
+                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a>   
+                        <?php elseif($fetch['res_stat'] == 'Pending'): ?>
                             <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>
+                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>  
+                        <?php elseif($fetch['res_stat'] == 'Rejected'): ?>
+                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
+                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a> 
                         <?php else: ?>
                         <?php endif; ?>
                     </div>
