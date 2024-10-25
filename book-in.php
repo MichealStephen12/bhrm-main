@@ -32,7 +32,9 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);   
 }else{
+    $_SESSION['login_warning'] = true;
     header('location: index.php');
+    exit(); // Prevent further script execution
 }
 
 

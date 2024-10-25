@@ -3,5 +3,5 @@
     $_SESSION = [];
     session_unset();
     session_destroy();
-    header("Location: /bhrm-main/index.php");
+    header("Location: /bhrm-main/index.php");   
 ?>

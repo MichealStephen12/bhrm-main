@@ -10,12 +10,47 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     $role = $_SESSION["role"];
     $result = mysqli_query($conn, "select * from users where uname = '$uname'");
     $fetch = mysqli_fetch_assoc($result);
+    
+    echo "
+    <script src='jquery.min.js'></script>
+    <link rel='stylesheet' href='toastr.min.css'/>
+    <script src='toastr.min.js'></script>
+    <script>
+        $(document).ready(function() {
+            // Check if the login message should be displayed
+            " . (isset($_SESSION['login_message_displayed']) ? "toastr.success('Logged in Successfully');" : "") . "
+        });
+    </script>
+    ";
+
+    // Unset the session variable to avoid repeated notifications
+    if (isset($_SESSION['login_message_displayed'])) {
+        unset($_SESSION['login_message_displayed']);
+    }
 }
+
+
+
+
 
 if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
     header('location: boardinghouse.php');
 }
+
+if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
+    echo "
+    <script src='jquery.min.js'></script>
+    <link rel='stylesheet' href='toastr.min.css'/>
+    <script src='toastr.min.js'></script>
+    <script>
+        $(document).ready(function() {
+            toastr.error('Please log in to proceed further.');
+        });
+    </script>";
+    unset($_SESSION['login_warning']); // Clear the session variable after use
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

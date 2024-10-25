@@ -32,17 +32,21 @@ if (isset($_POST['submit'])) {
         if ($role == 'admin') {
             $_SESSION["uname"] = $row['uname'];
             $_SESSION["role"] = $row["role"];
+            $_SESSION['login_message_displayed'] = true;
             header("Location: ../index.php");
             exit;
         } elseif ($role == 'user') {
             $_SESSION["uname"] = $row['uname'];
             $_SESSION["role"] = $row["role"];
+            $_SESSION['login_message_displayed'] = true; // Set the variable to true
+
             header("Location: ../index.php");
             exit;
         } elseif ($role == 'landlord'){
             $_SESSION["uname"] = $row['uname'];
             $_SESSION["role"] = $row["role"];
             $_SESSION["hname"] = $row['hname'];
+            $_SESSION['login_message_displayed'] = true;
             if (empty($_SESSION['hname'])){
                 header("Location: bhfunction.php");
             }else{
