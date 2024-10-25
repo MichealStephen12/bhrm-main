@@ -22,8 +22,21 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $fetch = mysqli_fetch_assoc($result); 
 }
 
+?>
 
-
+<?php
+    if (isset($_SESSION['already_booked']) && $_SESSION['already_booked'] === true) {
+        echo "
+        <script src='jquery.min.js'></script>
+        <link rel='stylesheet' href='toastr.min.css' />
+        <script src='toastr.min.js'></script>
+        <script>
+            $(document).ready(function() {
+                toastr.warning('You have already booked a room.');
+            });
+        </script>";
+        unset($_SESSION['already_booked']); 
+    }
 ?>
 
 <!DOCTYPE html>
@@ -32,6 +45,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rooms</title>
+
 </head>
 <!-- Bootstrap CSS -->
     <style>

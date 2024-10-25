@@ -125,6 +125,7 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
             display: flex;
             border-radius: 10px;
             flex-wrap: wrap;
+            justify-content: space-between;
         }
 
         .card{
@@ -275,6 +276,13 @@ if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
                 <?php
                 if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
                     echo '<a class="nav-link" href="php/bhapplications.php">View Applications</a>';
+                }
+                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
+                    echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
+                } 
+
+                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
+                    echo '<a class="nav-link" href="reservation.php?">View Reservation</a>';
                 }
                 ?>
             </div>

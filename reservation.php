@@ -153,7 +153,11 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     echo '<a  class="nav-link" href="reservation.php">View Reservation</a>';
                 }
             ?>
-            <a  class="nav-link" href="boardinghouse.php?hname=<?php echo $_SESSION['hname'];?>">Back</a>
+            <?php if (!empty($_SESSION['hname'])): ?>
+                <a  class="nav-link" href="boardinghouse.php?hname=<?php echo $_SESSION['hname'];?>">Back</a>
+            <?php else: ?>
+                <a  class="nav-link" href="index.php">Back</a>
+            <?php endif; ?>
         </div>
     </nav>
     
@@ -223,7 +227,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         ?>
         
         <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'user') {
+        if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && !empty($_SESSION['hname'])) {
             $uname = $_SESSION['uname'];
             $hname = $_SESSION['hname'];
             $query = "SELECT * FROM reservation WHERE email = '$uname' AND hname = '$hname' order by id desc";
@@ -257,6 +261,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-12">
                         <p><strong>Reservation Details:</strong></p>
                         <p>Date In: <?php echo $fetch['date_in']; ?></p>
+                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
                         <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
                         <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
                         <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
@@ -268,6 +273,71 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             }
         } 
         ?>
+
+        <?php
+        $uname = $_SESSION['uname'];
+        $query = "SELECT * FROM boardinghouses order by id desc";
+        $result = mysqli_query($conn, $query);
+        $fetch = mysqli_fetch_assoc($result);
+        $hname = $fetch['hname'];
+
+        $query = "SELECT * FROM reservation where email = '$uname' and hname = '$hname' order by id desc";
+        $result = mysqli_query($conn, $query);
+        $fetch = mysqli_fetch_assoc($result)
+
+        ?>
+
+        <?php 
+        if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && empty($_SESSION['hname'])) {
+            $uname = $_SESSION['uname'];
+            $query = "SELECT * FROM reservation WHERE email = '$uname' order by id desc";
+            $result = mysqli_query($conn, $query);
+            while ($fetch = mysqli_fetch_assoc($result)) {
+        ?>
+        <div class="card">
+            <div class="card-footer">
+                <img src="<?php echo $fetch['image']; ?>">
+            </div>
+            <div class="card-header">
+                <h5>Boarding House: <?php echo $fetch['hname']; ?></h5>
+            </div>
+            <div class="card-header">
+                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Guest Information:</strong></p>
+                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
+                        <p>Email: <?php echo $fetch['email']; ?></p>
+                        <p>Gender: <?php echo $fetch['gender']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Room Information:</strong></p>
+                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
+                        <p>Bed(s): <?php echo $fetch['beds']; ?></p>
+                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
+                        <p>Price: <?php echo $fetch['price']; ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p><strong>Reservation Details:</strong></p>
+                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
+                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
+                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
+                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
+                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php 
+            }
+        } 
+        ?>
+
+
     </div>
 
     <style>

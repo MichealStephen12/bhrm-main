@@ -2,6 +2,30 @@
 
 require 'php/connection.php';
 
+
+if (!empty($_SESSION["hname"])) {
+    $hname = $_SESSION['hname'];
+    $uname = $_SESSION['uname'];
+    $query = "SELECT * FROM reservation WHERE email = '$uname'";
+    $result = mysqli_query($conn, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $fetch = mysqli_fetch_assoc($result);
+        if (!empty($fetch['res_stat'])) {
+            $_SESSION['already_booked'] = true; // Set session variable
+            header("location: boardinghouse.php?hname=$hname");
+            exit();
+        } else {
+            // Handle not approved case
+            echo '';
+        }
+    } else {
+        // Handle no results case
+        echo '';
+    }
+}
+
+
 if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     $roomno = $_GET['roomno'];
     $query = "select * from rooms where room_no = '$roomno'";
@@ -11,12 +35,15 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     header('location: index.php');
 }
 
+
 if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $email = $_POST['email'];
     $gender = $_POST['gender'];
     $datein = $_POST['datein'];
+    $dateout = $_POST['dateout'];
+    $tenantstatus = $_POST['tenant_status'];
     $addons = $_POST['addons'];
     $roomno = $fetch['room_no'];
     $beds = $_POST['bed']; 
@@ -32,8 +59,8 @@ if (isset($_POST['submit'])) {
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
 
-    $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `addons`, `room_no`, `beds`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
-              VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$addons', '$roomno', '$bedsAsString', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+    $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `beds`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
+              VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedsAsString', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
 
     mysqli_query($conn, $query);
 
@@ -170,8 +197,20 @@ if (isset($_POST['submit'])) {
                 <input type="text" id="lname" name="lname">
             </div>
             <div class="form-col">
-                <label for="lname">Gender</label>
-                <input type="text" id="gender" name="gender">
+                <label>Status</label>
+                <select id="fruits" name="realifestatus">
+                    <option value="">Select Status</option>
+                    <option value="Student">Student</option>
+                    <option value="Worker">Worker</option>
+                </select>
+            </div>
+            <div class="form-col">
+                <label>Gender</label>
+                <select id="fruits" name="gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
             </div>
             <div class="form-col">
                 <label for="email">Email</label>
@@ -182,23 +221,41 @@ if (isset($_POST['submit'])) {
                 <input type="date" id="datein" name="datein" min="<?php echo date('Y-m-d'); ?>" oninput="this.min = new Date().toISOString().split('T')[0]">
             </div>
             <div class="form-col">
+                <label for="dateout">Date out</label>
+                <input type="date" id="dateout" name="dateout" readonly>
+            </div>
+            <div class="form-col">
                 <label for="addons">Additional Requests</label>
                 <input type="text" id="addons" name="addons">
             </div>
             <div class="form-col">
                 <label for="subscribe">Number of beds</label>
                 <?php 
-                $capacity = $fetch['capacity']; 
-                for ($i = 1; $i <= $capacity; $i++): ?>
-                <div>
-                    <label for="bed<?php echo $i; ?>">Book For <?php echo $i; ?> bed(s)</label>
-                    <input type="checkbox" id="bed<?php echo $i; ?>" name="bed[]" value="<?php echo $i; ?>" class="bed-checkbox">
-                </div>
-                <?php endfor; ?>
+                $capacity = $fetch['capacity']; // Total room capacity
+                $currentTenants = $fetch['current_tenant']; // Number of current tenants
+
+                // Calculate the available beds for booking
+                $availableBeds = $capacity - $currentTenants;
+
+                if ($availableBeds > 0) {
+                    for ($i = 1; $i <= $availableBeds; $i++): ?>
+                    <div>
+                        <label for="bed<?php echo $i; ?>">Book For <?php echo $i; ?> bed(s)</label>
+                        <input type="checkbox" id="bed<?php echo $i; ?>" name="bed[]" value="<?php echo $i; ?>" class="bed-checkbox">
+                    </div>
+                    <?php endfor;
+                } else {
+                    echo "<p>No beds available for booking.</p>";
+                }
+                ?>
+
+                <!-- Show the "Book for Whole Room" checkbox only if there are no current tenants -->
+                <?php if ($currentTenants == 0): ?>
                 <div>
                     <label for="bed-whole">Book For Whole Room</label>
                     <input type="checkbox" id="bed-whole" name="bed[]" value="Whole bed" class="bed-checkbox">
                 </div>
+                <?php endif; ?>
             </div>
             <button type="submit" name="submit">Submit</button>
         </form>
@@ -246,6 +303,32 @@ if (isset($_POST['submit'])) {
     </style>
 
 </div>
+
+    <script>
+        document.getElementById('datein').addEventListener('change', function() {
+            calculateDateOut();
+        });
+
+        function calculateDateOut() {
+            const dateInInput = document.getElementById('datein');
+            const dateOutInput = document.getElementById('dateout');
+
+            // Get the selected date from the "Date in" field
+            let dateInValue = new Date(dateInInput.value);
+
+            // Check if a valid date is selected
+            if (isNaN(dateInValue)) return;
+
+            // Add 30 days to the "Date in" value
+            dateInValue.setDate(dateInValue.getDate() + 30);
+
+            // Convert the new date to the correct format (YYYY-MM-DD)
+            const dateOutValue = dateInValue.toISOString().split('T')[0];
+
+            // Set the "Date out" field with the calculated date
+            dateOutInput.value = dateOutValue;
+        }
+    </script>
 
     <script>
         const checkboxes = document.querySelectorAll('input[type="checkbox"][name="bed[]"]');
