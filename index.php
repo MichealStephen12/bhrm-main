@@ -168,11 +168,9 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0px 10px 20px #aaaaaa;
-            margin: 20px;
             display: flex;
             flex-direction: column; /* Ensure the flex direction is column */
             justify-content: space-between; /* Align items to the bottom */
-            padding-bottom: 10px;
             height: auto;
         }
 
@@ -184,7 +182,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         
         .card img{
             width: 100%;
-            height: auto;
+            height: 50%;
         }
         
         .card-content{
@@ -193,8 +191,11 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         }
 
         .card-content h5{
-            font-size: 28px;
+            font-size: 1.2em; /* or set a specific size instead of auto */
             margin-bottom: 8px;
+            white-space: nowrap; /* Prevents text from wrapping to the next line */
+            overflow: hidden; /* Ensures that overflow content is not displayed */
+            text-overflow: ellipsis; /* Adds "..." at the end if text overflows */
         }
 
         .card-content p{
