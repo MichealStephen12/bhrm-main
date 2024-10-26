@@ -4,7 +4,7 @@ require 'php/connection.php';
 
 
 if (!empty($_SESSION["hname"])) {
-    $hname = $_SESSION['hname'];
+    $roomno = $_SESSION['roomno'];
     $uname = $_SESSION['uname'];
     $query = "SELECT * FROM reservation WHERE email = '$uname'";
     $result = mysqli_query($conn, $query);
@@ -13,7 +13,7 @@ if (!empty($_SESSION["hname"])) {
         $fetch = mysqli_fetch_assoc($result);
         if (!empty($fetch['res_stat'])) {
             $_SESSION['already_booked'] = true; // Set session variable
-            header("location: boardinghouse.php?hname=$hname");
+            header("location: beds.php?roomno=$roomno");
             exit();
         } else {
             // Handle not approved case
@@ -27,10 +27,26 @@ if (!empty($_SESSION["hname"])) {
 
 
 if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
-    $roomno = $_GET['roomno'];
-    $query = "select * from rooms where room_no = '$roomno'";
+    $bed = $_GET['bed'];
+    $query = "select * from beds where bed_no = '$bed'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);   
+    $bedno = $fetch['bed_no']; 
+    $bedimg = $fetch['bed_img'];
+    $bedstat = $fetch['bed_stat'];
+    if($result){
+        $uname = $_SESSION['uname'];
+        $query = "select * from users where uname = '$uname'";
+        $result = mysqli_query($conn, $query);
+        $fetch = mysqli_fetch_assoc($result);
+        $fname = $fetch['fname'];
+        $lname = $fetch['lname'];
+    }if($result){
+        $hname = $_SESSION['hname'];
+        $query = "select * from rooms where hname = '$hname'";
+        $result = mysqli_query($conn, $query);
+        $fetch = mysqli_fetch_assoc($result);
+    }
 }else{
     $_SESSION['login_warning'] = true;
     header('location: index.php');
@@ -47,13 +63,8 @@ if (isset($_POST['submit'])) {
     $dateout = $_POST['dateout'];
     $tenantstatus = $_POST['tenant_status'];
     $addons = $_POST['addons'];
-    $roomno = $fetch['room_no'];
-    $beds = $_POST['bed']; 
-    $totalBedsBooked = count($beds);
-
-    // Convert array of beds to a comma-separated string
-    $bedsAsString = implode(',', $beds);
-
+    $roomno = $_SESSION['roomno'];
+    $bedno = $_GET['bed']; 
     $capacity = $fetch['capacity'];
     $amenities = $fetch['amenities'];
     $image = $fetch['image'];
@@ -61,8 +72,8 @@ if (isset($_POST['submit'])) {
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
 
-    $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `beds`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
-              VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedsAsString', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+    $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
+              VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedno', 'Pending', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
 
     mysqli_query($conn, $query);
 
@@ -149,12 +160,17 @@ if (isset($_POST['submit'])) {
 
     <div class="section1">
         <div class="sec-content">
-                <h5>Selected Room: <?php echo $fetch['room_no']; ?></h5>
-                <img src="<?php echo $fetch['image'];?>" alt="">
-                <p>Current Tenant: <?php echo $fetch['current_tenant']; ?></p>
-                <p>Capacity: <?php echo $fetch['capacity']?></p>
-                <p>Price: <?php echo $fetch['price']?></p>
-                <p>Amenities: <?php echo $fetch['amenities']?></p>
+                <h5>Selected Room: <?php echo $_SESSION['roomno'] ?></h5>
+                <img src="<?php echo  $fetch['image'] ?>" alt="">
+                <p>Room Status: <?php echo $fetch['capacity'] ?></p>
+                <p>Room Status: <?php echo $fetch['amenities'] ?></p>
+                <p>Room Status: <?php echo $fetch['price'] ?></p>
+                <p>Room Status: <?php echo $fetch['status'] ?></p>
+        </div>
+        <div class="sec-content">
+                <h5>Selected Bed: <?php echo $bedno ?></h5>
+                <img src="<?php echo $bedimg?>" alt="">
+                <h5>Bed Status: <?php echo $bedstat ?></h5>
         </div>
     </div>
 
@@ -192,11 +208,11 @@ if (isset($_POST['submit'])) {
         <form method="post">
             <div class="form-col">
                 <label for="fname">First Name</label>
-                <input type="text" id="fname" name="fname">
+                <input type="text" id="fname" name="fname" value="<?php echo $fname ?>">
             </div>
             <div class="form-col">
                 <label for="lname">Last Name</label>
-                <input type="text" id="lname" name="lname">
+                <input type="text" id="lname" name="lname" value="<?php echo $lname ?>">
             </div>
             <div class="form-col">
                 <label>Status</label>
@@ -230,35 +246,7 @@ if (isset($_POST['submit'])) {
                 <label for="addons">Additional Requests</label>
                 <input type="text" id="addons" name="addons">
             </div>
-            <div class="form-col">
-                <label for="subscribe">Number of beds</label>
-                <?php 
-                $capacity = $fetch['capacity']; // Total room capacity
-                $currentTenants = $fetch['current_tenant']; // Number of current tenants
-
-                // Calculate the available beds for booking
-                $availableBeds = $capacity - $currentTenants;
-
-                if ($availableBeds > 0) {
-                    for ($i = 1; $i <= $availableBeds; $i++): ?>
-                    <div>
-                        <label for="bed<?php echo $i; ?>">Book For <?php echo $i; ?> bed(s)</label>
-                        <input type="checkbox" id="bed<?php echo $i; ?>" name="bed[]" value="<?php echo $i; ?>" class="bed-checkbox">
-                    </div>
-                    <?php endfor;
-                } else {
-                    echo "<p>No beds available for booking.</p>";
-                }
-                ?>
-
-                <!-- Show the "Book for Whole Room" checkbox only if there are no current tenants -->
-                <?php if ($currentTenants == 0): ?>
-                <div>
-                    <label for="bed-whole">Book For Whole Room</label>
-                    <input type="checkbox" id="bed-whole" name="bed[]" value="Whole bed" class="bed-checkbox">
-                </div>
-                <?php endif; ?>
-            </div>
+            
             <button type="submit" name="submit">Submit</button>
         </form>
     </div>
