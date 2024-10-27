@@ -2,28 +2,37 @@
 
 require 'php/connection.php';
 
-
 if (!empty($_SESSION["hname"])) {
     $roomno = $_SESSION['roomno'];
     $uname = $_SESSION['uname'];
-    $query = "SELECT * FROM reservation WHERE email = '$uname'";
+    
+    // Fetch the latest reservation for the user
+    $query = "SELECT * FROM reservation WHERE email = '$uname' ORDER BY id DESC LIMIT 1";
     $result = mysqli_query($conn, $query);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $fetch = mysqli_fetch_assoc($result);
-        if (!empty($fetch['res_stat'])) {
-            $_SESSION['already_booked'] = true; // Set session variable
+        
+        if (!empty($fetch['res_stat']) && ($fetch['res_stat'] == 'Pending' || $fetch['res_stat'] == 'Approved')) {
+            // Block users with 'Pending' or 'Approved' status in their latest reservation
+            $_SESSION['already_booked'] = true;
             header("location: beds.php?roomno=$roomno");
             exit();
-        } else {
-            // Handle not approved case
-            echo '';
+        } else if ($fetch['res_stat'] == 'Rejected') {
+            // Allow users with 'Rejected' status to proceed
+            unset($_SESSION['already_booked']);
+        } else if ($fetch['res_stat'] == 'Cancelled') {
+            // Allow users with 'Rejected' status to proceed
+            unset($_SESSION['already_booked']);
         }
     } else {
         // Handle no results case
         echo '';
     }
 }
+
+
+
 
 
 if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
@@ -110,26 +119,85 @@ if (isset($_POST['submit'])) {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        nav {
+        .navbar {
+            margin: 0 100px;
+            background-color: white;
+            padding: 10px;
             display: flex;
-            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: black;
+        }
+
+        .navbar-brand img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .nav-links {
+            display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px 0;
-            height: 50px;
         }
 
-        nav img {
-            height: 20%;
-            width: 20%;
+        .nav-link {
+            color: black;
+            text-decoration: none;
+            padding: 0 10px;
         }
 
-        nav a:last-child {
-            background-color: #007bff;
-            padding: 10px 20px;
+        .login {
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }.login a{
             color: white;
             text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                margin: 0;
+                padding: 10px 20px;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                margin-top: 10px;
+            }
+
+            .nav-link {
+                padding: 5px 0;
+            }
+
+            .login {
+                margin-top: 10px;
+            }
+        }
+
+        .btn{
+            color: rgb(255, 255, 255);
+            padding: 10px 20px;
             border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
         }
 
         button {
@@ -151,12 +219,40 @@ if (isset($_POST['submit'])) {
 <body>
     
 <div class="background">
-    <nav>
-        <a href="#">
-            <img src="images/logo.png">
-        </a>
-        <a href="boardinghouse.php?hname=<?php echo $_SESSION['hname'];?>">Back</a>
-    </nav>
+        <nav class="navbar">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" alt="Logo">
+            </a>
+            <div class="nav-links">
+                <a class="nav-link" href="index.php">Home</a>
+                <a class="nav-link" href="about.php">About</a>
+                <a class="nav-link" href="contact.php">Contact</a>
+                <?php  
+                    $hname = $_SESSION['hname'];
+                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
+                        echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
+                    } 
+
+                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
+                        echo '<a class="nav-link" href="reservation.php?">View Reservation</a>';
+                    }
+                ?>
+            </div>
+            <div class="login">
+                <?php
+                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
+                        echo '<a class="btn" href="php/logout.php">Logout</a>';
+                    } 
+                    if (empty($_SESSION["uname"])){
+                        echo '<a class="btn" href="php/login.php">Login</a>';
+                    }
+                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
+                        echo '<a class="btn" href="php/logout.php">Logout</a>';
+                    }
+                ?>
+            </div>
+          
+        </nav>
 
     <div class="section1">
         <div class="sec-content">

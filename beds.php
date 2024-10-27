@@ -92,7 +92,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             background-size: cover;  /* Ensure the image covers the entire container */
             background-position: center; /* Position the background image centrally */
             background-repeat: no-repeat;  /* Prevent the background from repeating */
-            min-height: auto;  /* Ensure the section is at least the height of the viewport */
+            height: auto;  /* Ensure the section is at least the height of the viewport */
         }
         
         .navbar {
@@ -433,7 +433,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     $hname = $_SESSION['hname'];
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                         echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
-                        echo "<a class='btn' href='boardinghouse.php?hname=$hname'>Back</a>";
                     } 
 
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
@@ -459,8 +458,54 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 
         <div class="content-background">
-            <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
+            <?php $hname = $_SESSION['hname']; if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
+                <style>
+                    .back{
+                        height: 100px;
+                        display: flex;
+                        justify-content: right;
+                        align-items: center;
+                        margin-right: 100px;
+                    }.back a{
+                        height: auto;
+                    }
+                    
+                    .btn{
+                        color: rgb(255, 255, 255);
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        background-color: #007bff;
+                    }
+                </style>
+                <div class="back">
+                <div>
+                    <?php echo "<a class='btn' href='boardinghouse.php?hname=$hname'>Back</a>"; ?>
+                </div>     
+            </div>
+                
             <?php else: ?>
+                <style>
+                .back{
+                    height: 100px;
+                    display: flex;
+                    justify-content: right;
+                    align-items: center;
+                    margin-right: 300px;
+                }.back a{
+                    height: auto;
+                }
+                
+                .btn{
+                    color: rgb(255, 255, 255);
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    background-color: #007bff;
+                }
+            </style>
             <div class="back">
                 <div>
                     <?php 
@@ -804,7 +849,11 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                     <h5>Bed No: <?php echo $fetch['bed_no']?></h5>
                                     <p>Bed Status: <?php echo $fetch['bed_stat']?></p>
                                     <div class="room-btn">
-                                        <a href='book-in.php?bed=<?php echo $bedno;?>' class='btn btn-warning'>Book Now!</a>
+                                        <?php if($fetch['bed_stat'] == 'Occupied'): ?>
+                                        <?php elseif($fetch['bed_stat'] == 'Reserved'): ?>
+                                        <?php else:?>
+                                            <a href='book-in.php?bed=<?php echo $bedno;?>' class='btn btn-warning'>Book Now!</a>
+                                        <?php endif;?>
                                     </div>
                                     </div>
                                 </div>
