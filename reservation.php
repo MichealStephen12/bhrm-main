@@ -187,7 +187,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed(s): <?php echo $fetch['bed_no']; ?></p>
+                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                         <p>Amenities: <?php echo $fetch['amenities']; ?></p>
                         <p>Price: <?php echo $fetch['price']; ?></p>
                         <p>Status: <?php echo $fetch['status']; ?></p>
@@ -252,7 +253,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed(s): <?php echo $fetch['bed_no']; ?></p>
+                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                         <p>Amenities: <?php echo $fetch['amenities']; ?></p>
                         <p>Price: <?php echo $fetch['price']; ?></p>
                     </div>
@@ -315,7 +317,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed(s): <?php echo $fetch['bed_no']; ?></p>
+                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?></p>
+                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                         <p>Amenities: <?php echo $fetch['amenities']; ?></p>
                         <p>Price: <?php echo $fetch['price']; ?></p>
                     </div>

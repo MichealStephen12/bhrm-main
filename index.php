@@ -175,6 +175,22 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         }
 
         @media (max-width: 1000px) {
+            .card{
+                width: 320px;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0px 10px 20px #aaaaaa;
+                display: flex;
+                flex-direction: column; /* Ensure the flex direction is column */
+                justify-content: space-between; /* Align items to the bottom */
+                height: auto;
+                margin-bottom: 30px;
+            }.card:last-child{
+                margin-bottom: 0px;
+            }
+        }
+
+        @media (max-width: 1000px) {
             .section2 {
                 justify-content: center;
             }

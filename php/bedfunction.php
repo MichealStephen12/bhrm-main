@@ -8,14 +8,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 }
 
 if (isset($_POST['submit'])) {
-    $roomno = $_POST['roomno'];
-    $roomtype = $_POST['roomtype'];
-    $capacity = $_POST['capacity'];
-    $amenities = $_POST['amenities'];
-    $tenanttype = $_POST['tenanttype'];
-    $roomfloor = $_POST['roomfloor'];
-    $price = $_POST['price'];
-    $status = $_POST['status'];
+    $roomno = $_SESSION['roomno'];
+    $bedno = $_POST['bedno'];
+    $bedstat = $_POST['bedstat'];
+    $bedprice = $_POST['bedprice'];
 
     $_FILES['image'];
 
@@ -33,7 +29,7 @@ if (isset($_POST['submit'])) {
         if ($fileError === 0) {
             if ($fileSize < 1000000) {
                 $fileNameNew = $fileName;
-                $fileDestination = '../images/' . $fileNameNew;
+                $fileDestination = '../beds/' . $fileNameNew;
                 if ($fileNameNew > 0) {
                     move_uploaded_file($fileTmpName, $fileDestination);
                     header("location: ../boardinghouse.php");
@@ -47,46 +43,46 @@ if (isset($_POST['submit'])) {
     }
 
     $hname = $_SESSION['hname'];
-    $query = "INSERT INTO `rooms`(`id`, `room_no`, `room_type`, `capacity`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`) VALUES 
-                                ('','$roomno','$roomtype', '$capacity','$amenities', '$tenanttype', '$roomfloor','$price','images/$fileNameNew', '$status', '$hname')";
+    $roomno = $_SESSION['roomno'];
+    $query = "INSERT INTO `beds`(`id`, `roomno`, `bed_img`, `bed_no`, `bed_stat`, `bed_price`, `hname`) VALUES 
+                                ('','$roomno','beds/$fileNameNew','$bedno','$bedstat', '$bedprice', '$hname')";
     mysqli_query($conn, $query);
 
-    header("location: ../boardinghouse.php");
+    header("location: ../beds.php?roomno=$roomno");
 }
 
-$data = ['id' => '', 'room_no' => '', 'room_type' => '', 'capacity' => '', 'amenities' => '', 'price' => '', 'image' => '', 'status'=>''];
+$data = ['id' => '', 'room_no' => '', 'bed_img' => '', 'bed_no' => '', 'bed_stat' => '', 'bed_price' => ''];
 
-if(isset($_GET['rupdate'])){
-    $id = $_GET['rupdate'];
-
-    $query = "SELECT * FROM `rooms` WHERE id = $id";
+if(isset($_GET['bupdate'])){
+    $hname = $_SESSION['hname'];
+    $id = $_GET['bupdate'];
+    $roomno = $_SESSION['roomno'];
+    $query = "SELECT * FROM `beds` WHERE id = $id and hname = '$hname' and roomno = '$roomno'";
     $result = mysqli_query($conn, $query);
     $data = mysqli_fetch_assoc($result);
 }
 
 // Delete rooms
-if (isset($_GET['rdelete'])) {
-    $id = $_GET['rdelete'];
-    $query = "DELETE FROM rooms WHERE id = $id";
+if (isset($_GET['bdelete'])) {
+    $hname = $_SESSION['hname'];
+    $id = $_GET['bdelete'];
+    $roomno = $_SESSION['roomno'];
+    $query = "DELETE FROM beds WHERE id = $id and hname = '$hname' and roomno = $roomno";
     $result = mysqli_query($conn, $query);
     if ($result) {
-        header('Location: ../boardinghouse.php');
+        header("location: ../beds.php?roomno=$roomno");
     }
 }
 
 if(isset($_POST['update'])){
-    $id = $_GET['rupdate'];
-    $roomno = $_POST['roomno'];
-    $roomtype = $_POST['roomtype'];
-    $capacity = $_POST['capacity'];
-    $amenities = $_POST['amenities'];
-    $tenanttype = $_POST['tenanttype'];
-    $roomfloor = $_POST['roomfloor'];
-    $price = $_POST['price'];
-    $status = $_POST['status'];
+    $id = $_GET['bupdate'];
+    $roomno = $_SESSION['roomno'];
+    $bedno = $_POST['bedno'];
+    $bedstat = $_POST['bedstat'];
+    $bedprice = $_POST['bedprice'];
 
-    $file = $_FILES['image'];
-    
+    $_FILES['image'];
+
     $fileName = $_FILES['image']['name'];
     $fileTmpName = $_FILES['image']['tmp_name'];
     $fileSize = $_FILES['image']['size'];
@@ -97,28 +93,28 @@ if(isset($_POST['update'])){
     $fileactualext = strtolower(end($fileExt));
     $allowed = array('jpg', 'jpeg', 'png', 'pdf');
 
-    if(in_array($fileactualext, $allowed)){
-        if($fileError === 0){
-            if($fileSize < 1000000){
+    if (in_array($fileactualext, $allowed)) {
+        if ($fileError === 0) {
+            if ($fileSize < 1000000) {
                 $fileNameNew = $fileName;
-                $fileDestination = '../images/'.$fileNameNew;
-                if($fileNameNew > 0){
+                $fileDestination = '../beds/' . $fileNameNew;
+                if ($fileNameNew > 0) {
                     move_uploaded_file($fileTmpName, $fileDestination);
                     header("location: ../boardinghouse.php");
                 }
-                
-            }else{
-                echo 'your file is too big.';
+            } else {
+                echo "your file is too big.";
             }
         }
-    }else{
+    } else {
         echo "you cannot upload this type of file";
     }
 
-    $query = "UPDATE `rooms` SET `id`= $id,`room_no`='$roomno',`room_type`='$roomtype',`capacity`='$capacity',`amenities`='$amenities', `tenant_type`='$tenanttype', `room_floor`='$roomfloor', `price`='$price', `image`='images/$fileNameNew', `status`='$status' WHERE id = $id";
+    $roomno = $_SESSION['roomno'];
+    $query = "UPDATE `beds` SET `id`=$id,`roomno`='$roomno',`bed_img`='beds/$fileNameNew',`bed_no`='$bedno',`bed_stat`='$bedstat',`bed_price`='$bedprice',`hname`='$hname' WHERE id = $id and hname = '$hname' and roomno = $roomno";
     mysqli_query($conn, $query);
 
-    header("location: ../boardinghouse.php");
+    header("location: ../beds.php?roomno=$roomno");
 }
 ?>
 
@@ -153,53 +149,30 @@ if(isset($_POST['update'])){
                             <div class="row">
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Room No:</label>
-                                    <input type="text" name="roomno" value="<?php echo $data['room_no']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                    <input type="text" name="roomno" value="<?php echo $_SESSION['roomno']; ?>"  placeholder="Enter here.." class="form-control" required>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Room Type:</label>
-                                    <input type="text" name="roomtype" value="<?php echo $data['room_type']; ?>"  placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Capacity:</label>
-                                    <input type="text" name="capacity" value="<?php echo $data['capacity']; ?>"  placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Amenities:</label>
-                                    <input type="text" name="amenities" value="<?php echo $data['amenities']; ?>"  placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                <div>
-                                    <label>Tenant Type:</label>
-                                    <select id="fruits" name="tenanttype">
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label>Room Floor:</label>
-                                    <select id="fruits" name="roomfloor">
-                                        <option value="ground floor">Ground Floor</option>
-                                        <option value="1st floor">1st Floor</option>
-                                        <option value="2nd floor">2nd Floor</option>
-                                    </select>
-                                </div>
-                               
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Price:</label>
-                                    <input type="text" name="price" value="<?php echo $data['price']; ?>"  placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Image:</label>
-                                    <input type="file" name="image" value="<?php echo $data['image'];?>" placeholder="Enter here.." class="form-control" >
+                                    <label>Bed Image:</label>
+                                    <input type="file" name="image" value="<?php echo $data['bed_img'];?>" placeholder="Enter here.." class="form-control" >
                                 </div>
                                 <?php if($data['id'] != '') :  ?>
                                 <div class="col-md-12" style="padding: 10px 20px 10px 20px;">
-                                    <img src="../<?php echo $data['image'];?>" value="<?php echo $data['image'];?>" height="100" width="100" alt="">
+                                    <img src="../<?php echo $data['bed_img'];?>" value="<?php echo $data['bed_img'];?>" height="100" width="100" alt="">
                                 </div>
                                 <?php endif; ?>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Status:</label>
-                                    <input type="text" name="status" value="<?php echo $data['status']; ?>" placeholder="Enter here.." class="form-control" required>
+                                    <label>Bed No:</label>
+                                    <input type="text" name="bedno" value="<?php echo $data['bed_no']; ?>"  placeholder="Enter here.." class="form-control" required>
                                 </div>
+                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
+                                    <label>Bed Status:</label>
+                                    <input type="text" name="bedstat" value="<?php echo $data['bed_stat']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                </div>
+                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
+                                    <label>Bed Price:</label>
+                                    <input type="text" name="bedprice" value="<?php echo $data['bed_price']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                </div>
+        
                                 <div class="col-md-12" style="text-align: center; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <?php if($data['id'] != '') :  ?>
                                     <input type="submit" name="update" value="Update" class="btn btn-warning">

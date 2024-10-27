@@ -1,6 +1,10 @@
 <?php 
 require 'php/connection.php';
 
+if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"] == 'user')) {
+    unset($_SESSION['roomno']);
+}
+
 if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $uname = $_SESSION['uname'];
     $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname where boardinghouses.owner = '$uname'";
@@ -293,7 +297,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
         .card img{
             width: 100%;
-            height: auto;
+            height: 50%;
         }
         
         .card-content{
@@ -408,7 +412,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
                         echo '<a class="nav-link" href="reservation.php?">View Reservation</a>';
-                        echo '<a class="nav-link" href="index.php">Back</a>';
                     }
                 ?>
             </div>
@@ -437,7 +440,9 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     <?php 
                         if(empty($_SESSION['uname'])){
                             echo '<a class="btn" href="index.php">Back</a>';
-                        } 
+                        }else{
+                            echo '<a class="btn" href="index.php">Back</a>';
+                        }
                     ?>
                 </div>     
             </div>

@@ -8,16 +8,16 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 }
 
 if (isset($_GET['approve'])) {
+    $hname = $_SESSION['hname'];
     $id = $_GET['approve'];
 
     // Fetch reservation details including the beds column
-    $query = "SELECT * FROM reservation WHERE id = $id";
+    $query = "SELECT * FROM reservation WHERE id = $id and hname = '$hname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
 
     $roomno = $fetch['room_no'];
-    $tenantcount = $fetch['current_tenant'];
-    $beds = $fetch['beds']; // This will now be a single integer value (e.g., '2' for 2 beds)
+    $bedno = $fetch['bed_no']; // This will now be a single integer value (e.g., '2' for 2 beds)
 
     // Fetch the room's capacity
     $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
@@ -25,28 +25,28 @@ if (isset($_GET['approve'])) {
     $roomData = mysqli_fetch_assoc($roomResult);
     $roomCapacity = $roomData['capacity'];
 
-    // Determine how many beds are occupied
-    if (strtolower($beds) === 'whole bed') {
-        // If the whole room is reserved, use the room's capacity
-        $bedCount = $roomCapacity;
-    } else {
-        // Otherwise, just use the number of beds directly (as it's now a single number)
-        $bedCount = (int)$beds; // Convert beds to an integer in case it's a string
-    }
+    $bedquery = "SELECT * FROM beds WHERE room_no = '$roomno' and hname = '$hname'";
+    $bedresult = mysqli_query($conn, $roomQuery);
+    $beddata = mysqli_fetch_assoc($roomResult);
 
     // Update the reservation status
     $query = "UPDATE reservation 
               SET res_stat = 'Approved', 
-                  res_duration = '', 
-                  status = 'reserved', 
+                  res_duration = '',
+                  bed_stat = 'Reserved',
                   res_reason = 'Process Completed' 
-              WHERE id = $id";
+              WHERE id = $id and hname = '$hname'";
     $result = mysqli_query($conn, $query);
 
     // Update the current tenant count based on the number of beds or full room reservation
     $query = "UPDATE rooms 
-              SET current_tenant = current_tenant + $bedCount 
-              WHERE room_no = '$roomno'";
+              SET current_tenant = current_tenant + $bedno 
+              WHERE room_no = '$roomno' and hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+
+    $query = "UPDATE beds 
+        SET bed_stat = 'Reserved'
+        WHERE bed_no = '$bedno' and hname = '$hname'";
     $result = mysqli_query($conn, $query);
 
     // Redirect after the update

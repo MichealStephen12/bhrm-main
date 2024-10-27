@@ -430,13 +430,14 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <a class="nav-link" href="about.php">About</a>
                 <a class="nav-link" href="contact.php">Contact</a>
                 <?php  
+                    $hname = $_SESSION['hname'];
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                         echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
+                        echo "<a class='btn' href='boardinghouse.php?hname=$hname'>Back</a>";
                     } 
 
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
                         echo '<a class="nav-link" href="reservation.php?">View Reservation</a>';
-                        echo '<a class="nav-link" href="index.php">Back</a>';
                     }
                 ?>
             </div>
@@ -707,7 +708,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         <div class="button">
                             <?php 
                                 if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == "landlord"){
-                                    echo "<a href='php/roomfunction.php' class='btn'>Add Rooms</a>"; 
+                                    echo "<a href='php/bedfunction.php' class='btn'>Add Beds</a>"; 
                                 }
                             ?>
                         </div>
@@ -747,7 +748,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                             // Prepare query with room type and availability filtering
                             $availability = isset($_GET['availability']) ? $_GET['availability'] : '';
 
-                            $query = "SELECT * FROM beds WHERE hname = '$hname' and roomno = '$roomno'";
+                            $query = "SELECT * FROM beds WHERE hname = '$hname' and roomno = $roomno";
 
                             // Filter by availability if selected
                             if (!empty($availability)) {
@@ -759,6 +760,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
                             if ($result && mysqli_num_rows($result) > 0) {  // Check if there are any results
                                 while ($fetch = mysqli_fetch_assoc($result)) {
+                                    $id = $fetch['id'];
                             ?>
                                 <div class="card">
                                     <img src="<?php echo $fetch['bed_img']?>" width="20%" class="card-img-top" alt="Room Image">
@@ -766,8 +768,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                         <h5>Bed No: <?php echo $fetch['bed_no']?></h5>
                                         <p>Bed Status: <?php echo $fetch['bed_stat']?></p>
                                         <div class="room-btn"> 
-                                            <a href='php/bedfunction.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                                            <a href='php/bedfunction.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>      
+                                            <a href='php/bedfunction.php?bupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
+                                            <a href='php/bedfunction.php?bdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>      
                                         </div>
                                     </div> 
                                 </div>     

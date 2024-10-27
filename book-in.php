@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
     $hname = $_SESSION['hname'];
 
     $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
-              VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedno', 'Pending', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+              VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedno', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
 
     mysqli_query($conn, $query);
 
@@ -162,9 +162,9 @@ if (isset($_POST['submit'])) {
         <div class="sec-content">
                 <h5>Selected Room: <?php echo $_SESSION['roomno'] ?></h5>
                 <img src="<?php echo  $fetch['image'] ?>" alt="">
-                <p>Room Status: <?php echo $fetch['capacity'] ?></p>
-                <p>Room Status: <?php echo $fetch['amenities'] ?></p>
-                <p>Room Status: <?php echo $fetch['price'] ?></p>
+                <p>Room Capacity: <?php echo $fetch['capacity'] ?></p>
+                <p>Room Amenities: <?php echo $fetch['amenities'] ?></p>
+                <p>Bed Price: <?php echo $fetch['price'] ?></p>
                 <p>Room Status: <?php echo $fetch['status'] ?></p>
         </div>
         <div class="sec-content">
