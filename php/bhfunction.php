@@ -76,7 +76,7 @@ if (isset($_POST['submit'])) {
         echo "you cannot upload this type of file";
     }
 
-    $query = "INSERT INTO `bhapplication` (`id`, `owner`, `hname`, `haddress`, `contact_no`, `status`, `landlord`) VALUES ('', '$owner','$hname','$haddress', '$contactno', 'PENDING', '$landlord')";
+    $query = "INSERT INTO `bhapplication` (`id`, `owner`, `hname`, `haddress`, `contact_no`, `status`, `landlord`) VALUES ('', '$owner','$hname','$haddress', '$contactno', 'Pending', '$landlord')";
     mysqli_query($conn, $query);
     $query = "INSERT INTO `documents` (`id`, `documents`, `image`, `hname`) VALUES ('','images/$fileNameNew2', 'images/$fileNameNew', '$hname')";
     mysqli_query($conn, $query);
@@ -108,10 +108,7 @@ if (isset($_GET['approve'])) {
         
         if (mysqli_query($conn, $query_insert)) {
             // Update the status in the bhapplication table
-            $query_update = "UPDATE bhapplication SET Status = 'approved' WHERE hname = '$hname'";
-            mysqli_query($conn, $query_update);
-
-            $query_update = "Delete From bhapplication WHERE hname = '$hname'";
+            $query_update = "UPDATE bhapplication SET Status = 'Approved' WHERE hname = '$hname'";
             mysqli_query($conn, $query_update);
 
             $query_insert = "UPDATE users SET hname = '$hname' where uname = '$landlord'";
@@ -130,17 +127,18 @@ if (isset($_GET['reject'])) {
     $hname = $_GET['reject'];
     
     // Update the status in the bhapplication table
-    $query_update = "UPDATE bhapplication SET Status = 'rejected' WHERE hname = '$hname'";
+    $query_update = "UPDATE bhapplication SET Status = 'Rejected' WHERE hname = '$hname'";
     
     if (mysqli_query($conn, $query_update)) {
 
-        $query_update = "Delete From bhapplication WHERE hname = '$hname'";
+
+        $query_insert = "UPDATE users SET hname = '' where uname = '$landlord'";
+        mysqli_query($conn, $query_insert);
+
+        $query_update = "UPDATE documents SET hname = '' where uname = '$landlord'";
         mysqli_query($conn, $query_update);
 
-        $query_update = "Delete From documents WHERE hname = '$hname'";
-        mysqli_query($conn, $query_update);
-
-        $query_update = "Delete From description WHERE hname = '$hname'";
+        $query_update = "UPDATE description SET hname = '' where uname = '$landlord'";
         mysqli_query($conn, $query_update);
         
         header('Location: ../index.php');

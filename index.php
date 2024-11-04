@@ -171,7 +171,10 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             display: flex;
             flex-direction: column; /* Ensure the flex direction is column */
             justify-content: space-between; /* Align items to the bottom */
-            height: auto;
+            height: 390px;
+            margin-bottom: 30px;
+        }.card:last-child{
+            margin-bottom: 0px;
         }
 
         @media (max-width: 1000px) {

@@ -171,6 +171,53 @@ if (isset($_GET['cancel'])) {
 }
 
 
+if (isset($_GET['end'])) {
+    $hname = $_SESSION['hname'];
+    $id = $_GET['end'];
+
+    // Fetch reservation details including the beds column
+    $query = "SELECT * FROM reservation WHERE id = $id and hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result);
+    $roomno = $fetch['room_no'];
+    $bedno = $fetch['bed_no'];
+
+    // Fetch the room's capacity
+    $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
+    $roomResult = mysqli_query($conn, $roomQuery);
+    $roomData = mysqli_fetch_assoc($roomResult);
+    $roomCapacity = $roomData['capacity'];
+
+    $bedquery = "SELECT * FROM beds WHERE room_no = '$roomno' and hname = '$hname'";
+    $bedresult = mysqli_query($conn, $roomQuery);
+    $beddata = mysqli_fetch_assoc($roomResult);
+
+    // Update the reservation status
+    $query = "UPDATE reservation 
+              SET res_stat = 'Ended', 
+                  res_duration = '',
+                  bed_stat = 'Available',
+                  res_reason = 'Reservation Ended' 
+              WHERE id = $id and hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+
+    $query = "UPDATE rooms 
+            SET current_tenant = current_tenant - 1 
+            WHERE room_no = '$roomno' and hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+
+    // Update the current tenant count based on the number of beds or full room reservation
+    $query = "UPDATE beds 
+        SET bed_stat = 'Available'
+        WHERE bed_no = '$bedno' and hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+
+    // Redirect after the update
+    header('Location: ../reservation.php');
+}
+
+
+
 
 $data = ['id' => '', 'owner' => '', 'hname' => '', 'haddress' => '', 'image' => '', 'price' => '', 'status' => '', 'amenities' => '', 'description' => ''];
 

@@ -15,8 +15,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RESERVATION</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
         .navbar {
             margin: 0 200px;
             background-color: white;
@@ -52,8 +58,20 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
         }.login a{
             color: white;
+            text-decoration: none;
         }
 
         @media (max-width: 768px) {
@@ -77,64 +95,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             }
         }
 
-        table {
-            border-collapse: collapse;
-            margin: 20px 200px 0px 200px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Reject button style */
-        button.reject {
-            background-color: #dc3545; /* Bootstrap danger color */
-        }
-
-        button.reject:hover {
-            background-color: #c82333; /* Darker shade on hover */
-        }
-
-        img {
-            width: 150px; /* Adjust the size of the images */
-            height: auto;
-        }
+        
     </style>
 </head>
 
@@ -148,83 +109,298 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             <a  class="nav-link" href="about.php">About</a>
             <a  class="nav-link" href="contact.php">Contact</a>
             <?php  
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
+                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'admin'){
                     echo '<a  class="nav-link" href="reservation.php">View Reservation</a>';
                 }
             ?>
-            <a  class="nav-link" href="../index.php">Back</a>
+            <?php if (!empty($_SESSION['hname'])): ?>
+                <a  class="nav-link" href="./index.php">Back</a>
+            <?php else: ?>
+            <?php endif; ?>
         </div>
+        <div class="login">
+                <?php
+                    if (empty($_SESSION['uname'])) {
+                        echo '<a href="login.php">Login</a>';
+                        
+                    } else {
+                        echo '<a href="logout.php">Logout</a>';
+                    }
+                ?>
+            </div>
     </nav>
 
 
-    <section> 
-        <div class="content">
-            <table class="table table-bordered table-striped text-center">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>landlord</th>
-                        <th>Boarding House</th>
-                        <th>Address</th>
-                        <th>Description</th>
-                        <th>Images</th>
-                        <th>Documents</th>
-                        <th>Status</th>
-                        <?php  
-                            if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'admin'){
-                                echo '<th>Actions</th>'; 
-                            }else{
-                                echo '';
-                            }
-                        ?>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        $query = "select * 
+    <h1> Pending </h1>
+    <div class="container">
+        <?php 
+        if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
+            $query = "select * 
                         from bhapplication 
                         inner join documents on bhapplication.hname = documents.hname
-                        inner join description on bhapplication.hname = description.hname";
-                        $result = mysqli_query($conn, $query);
-                        while ($fetch = mysqli_fetch_assoc($result)) {
-                        $id = $fetch['id'];
-                        $hname = $fetch['hname'];
-                        ?>          
-                        <tr>
-                            <td><?php echo $fetch['id'] ?></td>
-                            <td><?php echo $fetch['owner'] ?></td>
-                            <td><?php echo $fetch['hname'] ?></td>
-                            <td><?php echo $fetch['haddress'] ?></td>
-                            <td><?php echo $fetch['bh_description'] ?></td>
-                            <td><img src="../<?php echo $fetch['image'] ?>" width='200px'></td>
-                            <td><img src="../<?php echo $fetch['documents'] ?>" width='200px'></td>
-                            <td><?php echo $fetch['status'] ?></td>
-                                
-                            
-                            <td>
-                                <a href="bhfunction.php?approve=<?php echo $hname;?>"><button class="btn btn-warning">Approve</button></a>
-                                <a href="bhfunction.php?reject=<?php echo $hname;?>"><button class="btn btn-danger">Reject</button></a>
-                            </td>
-                            <?php } ?>
-                        </tr>
-                </tbody>
-            </table>
+                        inner join description on bhapplication.hname = description.hname where bhapplication.status = 'PENDING' order by bhapplication.id desc";
+            $result = mysqli_query($conn, $query);
+            while ($fetch = mysqli_fetch_assoc($result)) {
+                $hname = $fetch['hname'];
+        ?>
+        <div class="card">
+            <div class="card-footer">
+                <img src="../<?php echo $fetch['image']; ?>">
+            </div>
+            <div class="card-header">
+                <h5>Boarding House No: <?php echo $fetch['id']; ?></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Boarding House Information:</strong></p>
+                        <p>Name: <?php echo $fetch['hname'] ?></p>
+                        <p>Boarding House Address: <?php echo $fetch['haddress'] ?></p>
+                        <p>Boarding House Description: <?php echo $fetch['bh_description']; ?></p>
+                        <p>Boarding House Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-6">
+                        <p><strong>Landlord Information:</strong></p>
+                        <p>Name: <?php echo $fetch['landlord']; ?></p>
+                        <p>Documents:</p>
+                        <img src="../<?php echo $fetch['documents'] ?>" width='200px'>
+                    </div>
+                </div>
+               
+                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'admin'){ ?>
+                <div class="button-row">
+                    <div class="button-col">
+                        <?php if($fetch['status'] == 'Pending'): ?>
+                            <a href="bhfunction.php?approve=<?php echo $hname;?>"><button >Approve</button></a>
+                            <a href="bhfunction.php?reject=<?php echo $hname;?>"><button class="reject">Reject</button></a> 
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
         </div>
+        <?php 
+            }
+        } 
+        ?>
+    </div>
 
-    </section>
+
+    <h1> Approved </h1>
+    <div class="container">
+        <?php 
+        if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
+            $query = "select * 
+                        from bhapplication 
+                        inner join documents on bhapplication.hname = documents.hname
+                        inner join description on bhapplication.hname = description.hname where bhapplication.status = 'Approved' order by bhapplication.id desc";
+            $result = mysqli_query($conn, $query);
+            while ($fetch = mysqli_fetch_assoc($result)) {
+                $hname = $fetch['hname'];
+        ?>
+        <div class="card">
+            <div class="card-footer">
+                <img src="../<?php echo $fetch['image']; ?>">
+            </div>
+            <div class="card-header">
+                <h5>Boarding House No: <?php echo $fetch['id']; ?></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Boarding House Information:</strong></p>
+                        <p>Name: <?php echo $fetch['hname'] ?></p>
+                        <p>Boarding House Address: <?php echo $fetch['haddress'] ?></p>
+                        <p>Boarding House Description: <?php echo $fetch['bh_description']; ?></p>
+                        <p>Boarding House Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-6">
+                        <p><strong>Landlord Information:</strong></p>
+                        <p>Name: <?php echo $fetch['landlord']; ?></p>
+                        <p>Documents:</p>
+                        <img src="../<?php echo $fetch['documents'] ?>" width='200px'>
+                    </div>
+                </div>
+               
+                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'admin'){ ?>
+                <div class="button-row">
+                    <div class="button-col">
+                        <?php if($fetch['status'] == 'Approved'): ?>
+                            <a href="bhfunction.php?approve=<?php echo $hname;?>"><button disabled>Approve</button></a>
+                            <a href="bhfunction.php?reject=<?php echo $hname;?>"><button class="reject" disabled>Reject</button></a>
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+        <?php 
+            }
+        } 
+        ?>
+    </div>
+
+
+    <h1> Rejected </h1>
+    <div class="container">
+        <?php 
+        if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
+            $query = "select * 
+                        from bhapplication 
+                        inner join documents on bhapplication.hname = documents.hname
+                        inner join description on bhapplication.hname = description.hname where bhapplication.status = 'Rejected' order by bhapplication.id desc";
+            $result = mysqli_query($conn, $query);
+            while ($fetch = mysqli_fetch_assoc($result)) {
+                $hname = $fetch['hname'];
+        ?>
+        <div class="card">
+            <div class="card-footer">
+                <img src="../<?php echo $fetch['image']; ?>">
+            </div>
+            <div class="card-header">
+                <h5>Boarding House No: <?php echo $fetch['id']; ?></h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Boarding House Information:</strong></p>
+                        <p>Name: <?php echo $fetch['hname'] ?></p>
+                        <p>Boarding House Address: <?php echo $fetch['haddress'] ?></p>
+                        <p>Boarding House Description: <?php echo $fetch['bh_description']; ?></p>
+                        <p>Boarding House Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-6">
+                        <p><strong>Landlord Information:</strong></p>
+                        <p>Name: <?php echo $fetch['landlord']; ?></p>
+                        <p>Documents:</p>
+                        <img src="../<?php echo $fetch['documents'] ?>" width='200px'>
+                    </div>
+                </div>
+               
+                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'admin'){ ?>
+                <div class="button-row">
+                    <div class="button-col">
+                        <?php if($fetch['status'] == 'Rejected'): ?>
+                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
+                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a> 
+                        <?php else: ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+        <?php 
+            }
+        } 
+        ?>
+    </div>
+
 
     <style>
-        .content {
-            padding-top: 100px;
-            padding-left: 10%;
-            padding-right: 10%;
+
+        .container{
+            width: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            overflow-y: scroll;
+            height: 750px;
+        }
+
+        .card {
+            margin: 20px;
+            padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-around;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            width: auto;
+        }
+
+        .card-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .card-body {
+            width: auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .card-footer {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+
+        .card-footer img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .reject {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .reject:hover {
+            background-color: #cc0000;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        
+        button:disabled {
+            background-color: #ccc; /* Light gray background */
+            color: #666; /* Darker gray text */
+            border: 1px solid #999; /* Gray border */
+            cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+            opacity: 0.6; /* Slightly transparent */
+        }
+
+        button:hover {
+            background-color: #4CAF50;
+        }
+
+
+        .button-row{
+            margin: auto;
+            grid-column-start: 1;
+            grid-column-end: 3;
+
         }
     </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
