@@ -32,11 +32,9 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         $fetch = mysqli_fetch_assoc($result); 
     }
 }else{
-    $_GET['hname'];
-    $hname = $_GET['hname'];
-    $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname where boardinghouses.hname = '$hname'";
-    $result = mysqli_query($conn, $query);
-    $fetch = mysqli_fetch_assoc($result); 
+    $_SESSION['login_warning'] = true;
+    header('location: index.php');
+    exit(); // Prevent further script execution
 }
 
 ?>

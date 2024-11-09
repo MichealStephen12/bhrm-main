@@ -407,11 +407,11 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <a class="nav-link" href="contact.php">Contact</a>
                 <?php  
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                        echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
+                        echo '<a class="nav-link" href="reservation.php">Reservations</a>';
                     } 
 
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                        echo '<a class="nav-link" href="reservation.php?">View Reservation</a>';
+                        echo '<a class="nav-link" href="reservation.php?">My Reservation</a>';
                     }
                 ?>
             </div>
@@ -939,7 +939,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                                             $query = "UPDATE rooms SET status = 'available' WHERE room_no = $roomno";
                                             mysqli_query($conn, $query);
                                         ?>  
-                                        <a href='beds.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Check for Beds!</a>
+                                        <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book in!</a>
                                     <?php }?>
 
                                         

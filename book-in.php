@@ -3,7 +3,11 @@
 require 'php/connection.php';
 
 if (!empty($_SESSION["hname"])) {
-    $roomno = $_SESSION['roomno'];
+    if (!empty($_SESSION["roomno"])){
+        $roomno = $_SESSION['roomno'];
+    }else{
+        $roomno = $_GET['roomno'];
+    }
     $uname = $_SESSION['uname'];
     
     // Fetch the latest reservation for the user
@@ -32,17 +36,18 @@ if (!empty($_SESSION["hname"])) {
 }
 
 
-
-
-
 if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
-    $bed = $_GET['bed'];
-    $query = "select * from beds where bed_no = '$bed'";
+    if (!empty($_SESSION["roomno"])){
+        $roomno = $_SESSION['roomno'];
+    }else{
+        $roomno = $_GET['roomno'];
+    }
+    $query = "select * from rooms where room_no = '$roomno'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);   
-    $bedno = $fetch['bed_no']; 
-    $bedimg = $fetch['bed_img'];
-    $bedstat = $fetch['bed_stat'];
+    $roomno = $fetch['room_no']; 
+    $roomimg = $fetch['image'];
+    $roomstat = $fetch['status'];
     if($result){
         $uname = $_SESSION['uname'];
         $query = "select * from users where uname = '$uname'";
@@ -73,7 +78,6 @@ if (isset($_POST['submit'])) {
     $tenantstatus = $_POST['tenant_status'];
     $addons = $_POST['addons'];
     $roomno = $_SESSION['roomno'];
-    $bedno = $_GET['bed']; 
     $capacity = $fetch['capacity'];
     $amenities = $fetch['amenities'];
     $image = $fetch['image'];
@@ -81,10 +85,27 @@ if (isset($_POST['submit'])) {
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
 
-    $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
-              VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedno', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+    if (!empty($_POST['specific_beds'])) {
+        $specific_beds = $_POST['specific_beds']; // Array of selected specific beds
+        foreach ($specific_beds as $bedno) {
+            // Insert each selected specific bed
+            $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
+                      VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedno', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+            mysqli_query($conn, $query);
+        }
+    }
 
-    mysqli_query($conn, $query);
+    if (!empty($_POST['multiple_beds'])) {
+        $multiple_beds = $_POST['multiple_beds']; // Array of selected number of beds
+        foreach ($multiple_beds as $bed_count) {
+            for ($i = 1; $i <= $bed_count; $i++) {
+                // Insert each selected bed count as a reservation
+                $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
+                          VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bed_count', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+                mysqli_query($conn, $query);
+            }
+        }
+    }
 
     header("location: thankyou.php");
 }
@@ -254,28 +275,57 @@ if (isset($_POST['submit'])) {
           
         </nav>
 
-    <div class="section1">
-        <div class="sec-content">
-                <h5>Selected Room: <?php echo $_SESSION['roomno'] ?></h5>
-                <img src="<?php echo  $fetch['image'] ?>" alt="">
-                <p>Room Capacity: <?php echo $fetch['capacity'] ?></p>
-                <p>Room Amenities: <?php echo $fetch['amenities'] ?></p>
-                <p>Bed Price: <?php echo $fetch['price'] ?></p>
-                <p>Room Status: <?php echo $fetch['status'] ?></p>
-        </div>
-        <div class="sec-content">
-                <h5>Selected Bed: <?php echo $bedno ?></h5>
-                <img src="<?php echo $bedimg?>" alt="">
-                <h5>Bed Status: <?php echo $bedstat ?></h5>
+    <div class="centering">
+        <div class="section1">
+            <div class="sec-content">
+                    <h5>Selected Room: <?php echo $roomno ?></h5>
+                    <img src="<?php echo  $roomimg ?>" alt="">
+                    <p>Room Capacity: <?php echo $fetch['capacity'] ?></p>
+                    <p>Room Amenities: <?php echo $fetch['amenities'] ?></p>
+                    <p>Bed Price: <?php echo $fetch['price'] ?></p>
+                    <p>Room Status: <?php echo $roomstat ?></p>
+            </div>
+            <?php 
+            if (!empty($_SESSION["roomno"])){
+                $roomno = $_SESSION['roomno'];
+            }else{
+                $roomno = $_GET['roomno'];
+            }
+            $query = "select * from beds where roomno = $roomno";
+            $result = mysqli_query($conn, $query);  
+            while ($fetch = mysqli_fetch_assoc($result)){
+                $bedno = $fetch['bed_no']; 
+                $bedimg = $fetch['bed_img'];
+                $bedstat = $fetch['bed_stat'];
+                $bedprice = $fetch['bed_price'];
+            ?>
+            <div class="sec-content">
+                    <h5>Selected Bed: <?php echo $bedno ?></h5>
+                    <img src="<?php echo $bedimg?>" alt="">
+                    <h5>Bed Status: <?php echo $bedstat ?></h5>
+            </div>
+            <?php } ?>
         </div>
     </div>
 
     <style>
-        .section1{
-            width: auto;
-            place-content: center;  
+
+        .centering {
             display: flex;
+            justify-content: center;
             align-items: center;
+        }
+
+        .section1 {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns for the other .sec-content items */
+            grid-auto-rows: auto;           /* Automatically adjusts the row height */
+            gap: 10px;                      /* Adds spacing between grid items */
+            width: 600px;
+        }
+
+        .section1 .sec-content:first-child {
+            grid-column: span 2;            /* Make the first item span across both columns */
         }
         
         .section1 h5 {
@@ -297,6 +347,8 @@ if (isset($_POST['submit'])) {
             padding: 20px;
         }.sec-content img{
             width: 100%;
+        }.section1 .sec-content img:first-child {
+            width: 50%;        /* Make the first item span across both columns */
         }
     </style>
 
@@ -341,6 +393,64 @@ if (isset($_POST['submit'])) {
             <div class="form-col">
                 <label for="addons">Additional Requests</label>
                 <input type="text" id="addons" name="addons">
+            </div>
+
+            <div class="form-col">
+                <label for="addons">Select Specific Beds</label>
+                <div>
+                    <?php 
+                        if (!empty($_SESSION["roomno"])) {
+                            $roomno = $_SESSION['roomno'];
+                        } else {
+                            $roomno = $_GET['roomno'];
+                        }
+                        $query = "SELECT bed_no, bed_stat FROM beds WHERE roomno = $roomno";
+                        $result = mysqli_query($conn, $query);
+
+                        // Store available beds in an array
+                        $beds = [];
+                        while ($bed = mysqli_fetch_assoc($result)) {
+                            if ($bed['bed_stat'] === 'Available') {
+                                $beds[] = $bed;
+                            }
+                        }
+                    ?>
+                    <?php foreach ($beds as $bed): ?>
+                        <div>
+                            <input type="checkbox" class="bed-checkbox" name="specific_beds[]" value="<?= $bed['bed_no'] ?>" onchange="updateBedCounter(this)"> 
+                            <label for="bed_<?= $bed['bed_no'] ?>">Bed <?= $bed['bed_no'] ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="form-col">
+                <label for="addons">Select Multiple Beds</label>
+                <div>
+                    <?php 
+                        if (!empty($_SESSION["roomno"])) {
+                            $roomno = $_SESSION['roomno'];
+                        } else {
+                            $roomno = $_GET['roomno'];
+                        }
+                        $query = "SELECT bed_no, bed_stat FROM beds WHERE roomno = $roomno";
+                        $result = mysqli_query($conn, $query);
+
+                        // Store available beds in an array
+                        $beds = [];
+                        while ($bed = mysqli_fetch_assoc($result)) {
+                            if ($bed['bed_stat'] === 'Available') {
+                                $beds[] = $bed;
+                            }
+                        }
+                    ?>
+                    <?php for ($i = 2; $i <= count($beds); $i++): ?>
+                        <div>
+                            <input type="checkbox" class="bed-checkbox" name="multiple_beds[]" value="<?= $i ?>" onchange="updateBedCounter(this)"> 
+                            <label for="multiple_bed_<?= $i ?>">Select <?= $i ?> Beds</label>
+                        </div>
+                    <?php endfor; ?>
+                </div>
             </div>
             
             <button type="submit" name="submit">Submit</button>
@@ -430,26 +540,24 @@ if (isset($_POST['submit'])) {
             });
         });
     </script>
-
     
     <script>
-        // Select all checkboxes with the class 'bed-checkbox'
-        const bedCheckboxes = document.querySelectorAll('.bed-checkbox');
+        function updateBedCounter(checkbox) {
+        const checkboxes = document.querySelectorAll('.bed-checkbox');
+        const counter = document.getElementById('bed-counter');
 
-        // Add an event listener to each checkbox
-        bedCheckboxes.forEach((checkbox) => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    // Uncheck all other checkboxes
-                    bedCheckboxes.forEach((cb) => {
-                        if (cb !== this) {
-                            cb.checked = false;
-                        }
-                    });
-                }
-            });
+        // Uncheck all other checkboxes
+        checkboxes.forEach(box => {
+            if (box !== checkbox) {
+                box.checked = false;
+            }
         });
+
+        // Update counter text based on the selected checkbox
+        counter.textContent = checkbox.checked ? '1 bed selected' : 'No bed selected';
+    }
     </script>
+
 
 </body>
 </html>

@@ -333,11 +333,11 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
                     echo '<a class="nav-link" href="php/bhapplications.php">View Applications</a>';
                 }
                 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                    echo '<a class="nav-link" href="reservation.php">View Reservation</a>';
+                    echo '<a class="nav-link" href="reservation.php">Reservations</a>';
                 } 
 
                 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                    echo '<a class="nav-link" href="reservation.php?">View Reservation</a>';
+                    echo '<a class="nav-link" href="reservation.php?">My Reservation</a>';
                 }
                 ?>
             </div>

@@ -161,13 +161,9 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             <a  class="nav-link" href="contact.php">Contact</a>
             <?php  
                 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                    echo '<a  class="nav-link" href="reservation.php">View Reservation</a>';
+                    echo '<a  class="nav-link" href="reservation.php">My Reservation</a>';
                 }
             ?>
-            <?php if (!empty($_SESSION['hname'])): ?>
-                <a  class="nav-link" href="boardinghouse.php?hname=<?php echo $_SESSION['hname'];?>">Back</a>
-            <?php else: ?>
-            <?php endif; ?>
         </div>
         <div class="login">
                 <?php
@@ -183,7 +179,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     
     
 
-    <?php $hname = $_SESSION['hname']; if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
+    <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
         <style>
 
             .back{
