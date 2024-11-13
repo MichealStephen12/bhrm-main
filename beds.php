@@ -6,22 +6,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname where boardinghouses.owner = '$uname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);   
-    echo "
-    <script src='jquery.min.js'></script>
-    <link rel='stylesheet' href='toastr.min.css'/>
-    <script src='toastr.min.js'></script>
-    <script>
-        $(document).ready(function() {
-            // Check if the login message should be displayed
-            " . (isset($_SESSION['login_message_displayed']) ? "toastr.success('Logged in Successfully');" : "") . "
-        });
-    </script>
-    ";
-
-    // Unset the session variable to avoid repeated notifications
-    if (isset($_SESSION['login_message_displayed'])) {
-        unset($_SESSION['login_message_displayed']);
-    }
 }elseif(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
     if (isset($_SESSION['hname'])){
         $_SESSION['roomno'] = $_GET['roomno'];
@@ -37,21 +21,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     exit(); // Prevent further script execution
 }
 
-?>
-
-<?php
-    if (isset($_SESSION['already_booked']) && $_SESSION['already_booked'] === true) {
-        echo "
-        <script src='jquery.min.js'></script>
-        <link rel='stylesheet' href='toastr.min.css' />
-        <script src='toastr.min.js'></script>
-        <script>
-            $(document).ready(function() {
-                toastr.warning('You have already booked a room.');
-            });
-        </script>";
-        unset($_SESSION['already_booked']); 
-    }
 ?>
 
 <!DOCTYPE html>

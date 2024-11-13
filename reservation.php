@@ -65,26 +65,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             padding: 0 10px;
         }
 
-        .login {
-            width: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-        }.login a{
-            color: white;
-        }
-
         @media (max-width: 479px) {
             .navbar {
                 margin: 0;
@@ -133,6 +113,26 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             background-color: #0056b3;
         }
 
+        button.login {
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }.login a{
+            color: white;
+        }
+
         /* Reject button style */
         button.reject {
             background-color: #dc3545; /* Bootstrap danger color */
@@ -168,10 +168,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <div class="login">
                 <?php
                     if (empty($_SESSION['uname'])) {
-                        echo '<a href="php/login.php">Login</a>';
+                        echo '<a href="php/login.php"><button class="login">Login</button></a>';
                         
                     } else {
-                        echo '<a href="php/logout.php">Logout</a>';
+                        echo '<a href="php/logout.php"><button class="login">Logout</button></a>';
                     }
                 ?>
             </div>

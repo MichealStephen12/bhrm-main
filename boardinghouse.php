@@ -44,6 +44,22 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 ?>
 
+<?php
+    if (isset($_SESSION['already_booked']) && $_SESSION['already_booked'] === true) {
+        echo "
+        <script src='jquery.min.js'></script>
+        <link rel='stylesheet' href='toastr.min.css' />
+        <script src='toastr.min.js'></script>
+        <script>
+            $(document).ready(function() {
+                toastr.warning('You have already booked a room.');
+            });
+        </script>";
+        unset($_SESSION['already_booked']); 
+    }
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -463,12 +479,15 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                         border-radius: 10px;
                         padding: 30px;
                         padding-top: 30px;
+                        gap: 10px;
                     }
 
                     canvas{
                         width: 500px;
                         padding: 10px;
                         justify-content: center;
+                        border: solid black 1px;
+                        border-radius: 10px;
                     }
 
                     .chart {
@@ -732,7 +751,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 
                 <div class="form">
-                    <form method="get" action="boardinghouse.php">
+                    <form method="get" action="">
                         <!-- Retain hname in the form -->
                         <input type="hidden" name="hname" value="<?php echo isset($_GET['hname']) ? $_GET['hname'] : $_SESSION['hname']; ?>">
                         <select name="room_type" onchange="this.form.submit()">

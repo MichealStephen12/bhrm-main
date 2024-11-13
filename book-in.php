@@ -9,6 +9,7 @@ if (!empty($_SESSION["hname"])) {
         $roomno = $_GET['roomno'];
     }
     $uname = $_SESSION['uname'];
+    $hname = $_SESSION['hname'];
     
     // Fetch the latest reservation for the user
     $query = "SELECT * FROM reservation WHERE email = '$uname' ORDER BY id DESC LIMIT 1";
@@ -20,7 +21,7 @@ if (!empty($_SESSION["hname"])) {
         if (!empty($fetch['res_stat']) && ($fetch['res_stat'] == 'Pending' || $fetch['res_stat'] == 'Approved')) {
             // Block users with 'Pending' or 'Approved' status in their latest reservation
             $_SESSION['already_booked'] = true;
-            header("location: beds.php?roomno=$roomno");
+            header("location: boardinghouse.php?hname=$hname");
             exit();
         } else if ($fetch['res_stat'] == 'Rejected') {
             // Allow users with 'Rejected' status to proceed
