@@ -335,11 +335,12 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
                 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
                     echo '<a class="nav-link" href="reservation.php">Reservations</a>';
                 } 
-
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                    echo '<a class="nav-link" href="reservation.php?">My Reservation</a>';
-                }
                 ?>
+
+                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'): ?>
+                    <a class="nav-link" href="reservation.php">My Reservation</a>
+                <?php else: ?>
+                <?php endif; ?>
             </div>
             <div class="login">
                 <?php

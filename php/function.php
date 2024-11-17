@@ -11,122 +11,194 @@ if (isset($_GET['approve'])) {
     $hname = $_SESSION['hname'];
     $id = $_GET['approve'];
 
-    // Fetch reservation details including the beds column
+    // Fetch reservation details
     $query = "SELECT * FROM reservation WHERE id = $id and hname = '$hname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
 
     $roomno = $fetch['room_no'];
-    $bedno = $fetch['bed_no']; // This will now be a single integer value (e.g., '2' for 2 beds)
+    $bedno = $fetch['bed_no']; // Contains either "1" or "2 Bed(s)" for example.
 
-    // Fetch the room's capacity
-    $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
-    $roomResult = mysqli_query($conn, $roomQuery);
-    $roomData = mysqli_fetch_assoc($roomResult);
-    $roomCapacity = $roomData['capacity'];
+    // Check if bed_no contains "Bed(s)" (indicating multiple beds)
+    if (strpos($bedno, 'Bed(s)') !== false) {
+        // Extract the number of beds
+        preg_match('/\d+/', $bedno, $matches);
+        $total_beds = intval($matches[0]);
 
-    $bedquery = "SELECT * FROM beds WHERE room_no = '$roomno' and hname = '$hname'";
-    $bedresult = mysqli_query($conn, $roomQuery);
-    $beddata = mysqli_fetch_assoc($roomResult);
+        // Fetch available beds for the room
+        $bedQuery = "SELECT * FROM beds WHERE roomno = '$roomno' AND bed_stat = 'Available' AND hname = '$hname' LIMIT $total_beds";
+        $bedResult = mysqli_query($conn, $bedQuery);
 
-    // Update the reservation status
-    $query = "UPDATE reservation 
-              SET res_stat = 'Approved', 
-                  res_duration = '',
-                  bed_stat = 'Reserved',
-                  res_reason = 'Process Completed' 
-              WHERE id = $id and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+        // Update the status of each selected bed
+        $updatedBeds = 0;
+        while ($bed = mysqli_fetch_assoc($bedResult)) {
+            $bed_id = $bed['id']; // Assuming there's an ID column for beds
+            $updateBedQuery = "UPDATE beds SET bed_stat = 'Reserved' WHERE id = $bed_id AND hname = '$hname'";
+            mysqli_query($conn, $updateBedQuery);
+            $updatedBeds++;
+        }
 
-    $query = "UPDATE beds 
-        SET bed_stat = 'Reserved'
-        WHERE bed_no = '$bedno' and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+        // Verify that all requested beds were updated
+        if ($updatedBeds == $total_beds) {
+            // Update the reservation status
+            $updateReservationQuery = "UPDATE reservation 
+                                        SET res_stat = 'Approved', 
+                                            bed_stat = 'Reserved',
+                                            res_reason = 'Process Completed' 
+                                        WHERE id = $id AND hname = '$hname'";
+            mysqli_query($conn, $updateReservationQuery);
+        } else {
+            // Handle case where not enough beds are available
+            // Example: Redirect back with an error message
+            header('Location: ../reservation.php?error=Not enough beds available.');
+            exit;
+        }
+    } else {
+        // Handle single bed approval
+        $updateBedQuery = "UPDATE beds 
+                           SET bed_stat = 'Reserved' 
+                           WHERE bed_no = '$bedno' AND roomno = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateBedQuery);
+
+        // Update the reservation status
+        $updateReservationQuery = "UPDATE reservation 
+                                    SET res_stat = 'Approved', 
+                                        bed_stat = 'Reserved',
+                                        res_reason = 'Process Completed' 
+                                    WHERE id = $id AND hname = '$hname'";
+        mysqli_query($conn, $updateReservationQuery);
+    }
 
     // Redirect after the update
     header('Location: ../reservation.php');
+    exit;
 }
 
-
-
 if (isset($_GET['reject'])) {
+    $hname = $_SESSION['hname'];
     $id = $_GET['reject'];
 
-    // Fetch the reservation details, including the room number and beds booked
-    $query = "SELECT * FROM reservation WHERE id = $id";
+    // Fetch the reservation details
+    $query = "SELECT * FROM reservation WHERE id = $id AND hname = '$hname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
-    $roomno = $fetch['room_no'];
-    $beds = $fetch['beds']; // Assuming this contains the number of beds booked
 
-    // If 'Whole bed' is stored for full room booking, use the room capacity, otherwise the number of beds
-    if ($beds === 'Whole bed') {
-        // Fetch room capacity for whole room booking
-        $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
-        $roomResult = mysqli_query($conn, $roomQuery);
-        $roomData = mysqli_fetch_assoc($roomResult);
-        $bedCount = $roomData['capacity']; // Use the full room capacity
+    $roomno = $fetch['room_no'];
+    $bedno = $fetch['bed_no']; // e.g., "2 Bed(s)" or single bed number
+
+    // Handle multiple beds or single bed rejection
+    if (strpos($bedno, 'Bed(s)') !== false) {
+        // Extract the total number of beds
+        preg_match('/\d+/', $bedno, $matches);
+        $total_beds = intval($matches[0]);
     } else {
-        // Subtract the number of beds specified
-        $bedCount = (int)$beds; // Convert the string value of beds to an integer
+        $total_beds = 1; // Single bed case
     }
 
     // Update the reservation status to 'Rejected'
-    $query = "UPDATE `reservation` SET `res_stat` = 'Rejected', `res_duration` = '', `status` = 'available', `res_reason` = 'No valid information / No Tenant Came' WHERE id = $id";
-    mysqli_query($conn, $query);
-
-    // Subtract the number of beds from the current tenant count
-    $query = "UPDATE `rooms` SET current_tenant = current_tenant - $bedCount WHERE room_no = '$roomno'";
-    mysqli_query($conn, $query);
+    $updateReservationQuery = "UPDATE reservation 
+                               SET res_stat = 'Rejected', 
+                                   res_reason = 'No valid information / No Tenant Came' 
+                               WHERE id = $id AND hname = '$hname'";
+    mysqli_query($conn, $updateReservationQuery);
 
     // Redirect back to the reservation page
-    header('Location: ../reservation.php');
+    header('Location: ../reservation.php?message=Reservation rejected successfully.');
+    exit;
 }
+
+
 
 
 if (isset($_GET['confirm'])) {
     $hname = $_SESSION['hname'];
     $id = $_GET['confirm'];
 
-    // Fetch reservation details including the beds column
-    $query = "SELECT * FROM reservation WHERE id = $id and hname = '$hname'";
+    // Fetch reservation details
+    $query = "SELECT * FROM reservation WHERE id = $id AND hname = '$hname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
+
     $roomno = $fetch['room_no'];
-    $bedno = $fetch['bed_no'];
+    $bedno = $fetch['bed_no']; // Can contain "1 Bed(s)" or a single number
+    $bedprice = $fetch['bed_price'];
+    $uname = $fetch['email'];
 
-    // Fetch the room's capacity
-    $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
-    $roomResult = mysqli_query($conn, $roomQuery);
-    $roomData = mysqli_fetch_assoc($roomResult);
-    $roomCapacity = $roomData['capacity'];
+    // Handle multiple beds or a single bed
+    if (strpos($bedno, 'Bed(s)') !== false) {
+        // Extract the number of beds
+        preg_match('/\d+/', $bedno, $matches);
+        $total_beds = intval($matches[0]);
 
-    $bedquery = "SELECT * FROM beds WHERE room_no = '$roomno' and hname = '$hname'";
-    $bedresult = mysqli_query($conn, $roomQuery);
-    $beddata = mysqli_fetch_assoc($roomResult);
+        // Fetch available beds for the room
+        $bedQuery = "SELECT * FROM beds WHERE roomno = '$roomno' AND bed_stat = 'Reserved' AND hname = '$hname' LIMIT $total_beds";
+        $bedResult = mysqli_query($conn, $bedQuery);
 
-    // Update the reservation status
-    $query = "UPDATE reservation 
-              SET res_stat = 'Approved', 
-                  res_duration = '',
-                  bed_stat = 'Occupied',
-                  res_reason = 'Process Completed' 
-              WHERE id = $id and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+        // Update the status of each bed and insert payment records
+        $updatedBeds = 0;
+        while ($bed = mysqli_fetch_assoc($bedResult)) {
+            $bed_id = $bed['id']; // Assuming there's an ID column for beds
+            $updateBedQuery = "UPDATE beds SET bed_stat = 'Occupied' WHERE id = $bed_id AND hname = '$hname'";
+            mysqli_query($conn, $updateBedQuery);
 
-    // Update the current tenant count based on the number of beds or full room reservation
-    $query = "UPDATE rooms 
-              SET current_tenant = current_tenant + 1 
-              WHERE room_no = '$roomno' and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+            // Insert payment record
+            $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `hname`) 
+                                   VALUES ('', '$uname', '$roomno', '{$bed['bed_no']}', '$bedprice', 'Not Fully Paid', '$hname')";
+            mysqli_query($conn, $insertPaymentQuery);
 
-    $query = "UPDATE beds 
-        SET bed_stat = 'Occupied'
-        WHERE bed_no = '$bedno' and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+            $updatedBeds++;
+        }
+
+        // Verify that all requested beds were updated
+        if ($updatedBeds == $total_beds) {
+            // Update the reservation status
+            $updateReservationQuery = "UPDATE reservation 
+                                        SET res_stat = 'Confirmed', 
+                                            res_reason = 'Tenant Arrived', 
+                                            bed_stat = 'Occupied' 
+                                        WHERE id = $id AND hname = '$hname'";
+            mysqli_query($conn, $updateReservationQuery);
+
+            // Increment the tenant count in the room
+            $updateRoomQuery = "UPDATE rooms 
+                                SET current_tenant = current_tenant + $total_beds 
+                                WHERE room_no = '$roomno' AND hname = '$hname'";
+            mysqli_query($conn, $updateRoomQuery);
+        } else {
+            // Handle case where not enough beds are reserved
+            header('Location: ../reservation.php?error=Not enough reserved beds for confirmation.');
+            exit;
+        }
+    } else {
+        // Handle single bed confirmation
+        $updateBedQuery = "UPDATE beds 
+                           SET bed_stat = 'Occupied' 
+                           WHERE bed_no = '$bedno' AND roomno = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateBedQuery);
+
+        // Insert payment record for the single bed
+        $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `pay_date`, `hname`) 
+                               VALUES ('', '$uname', '$roomno', '$bedno', '$bedprice', 'Not Fully Paid', '', '$hname')";
+        mysqli_query($conn, $insertPaymentQuery);
+
+        // Update the reservation status
+        $updateReservationQuery = "UPDATE reservation 
+                                    SET res_stat = 'Confirmed', 
+                                        res_reason = 'Tenant Arrived', 
+                                        bed_stat = 'Occupied' 
+                                    WHERE id = $id AND hname = '$hname'";
+        mysqli_query($conn, $updateReservationQuery);
+
+        // Increment the tenant count in the room
+        $updateRoomQuery = "UPDATE rooms 
+                            SET current_tenant = current_tenant + 1 
+                            WHERE room_no = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateRoomQuery);
+    }
 
     // Redirect after the update
     header('Location: ../reservation.php');
+    exit;
 }
 
 
@@ -134,87 +206,140 @@ if (isset($_GET['cancel'])) {
     $hname = $_SESSION['hname'];
     $id = $_GET['cancel'];
 
-    // Fetch reservation details including the beds column
-    $query = "SELECT * FROM reservation WHERE id = $id and hname = '$hname'";
+    // Fetch reservation details
+    $query = "SELECT * FROM reservation WHERE id = $id AND hname = '$hname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
+
     $roomno = $fetch['room_no'];
-    $bedno = $fetch['bed_no'];
+    $bedno = $fetch['bed_no']; // Can contain multiple beds, e.g. "2 Bed(s)" or a single number
+    $total_beds = 0;
 
-    // Fetch the room's capacity
-    $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
-    $roomResult = mysqli_query($conn, $roomQuery);
-    $roomData = mysqli_fetch_assoc($roomResult);
-    $roomCapacity = $roomData['capacity'];
+    // Handle multiple beds or a single bed cancellation
+    if (strpos($bedno, 'Bed(s)') !== false) {
+        // Extract the total number of beds
+        preg_match('/\d+/', $bedno, $matches);
+        $total_beds = intval($matches[0]);
+    } else {
+        $total_beds = 1; // Single bed case
+    }
 
-    $bedquery = "SELECT * FROM beds WHERE room_no = '$roomno' and hname = '$hname'";
-    $bedresult = mysqli_query($conn, $roomQuery);
-    $beddata = mysqli_fetch_assoc($roomResult);
+    // Check that the reservation was confirmed (beds should be 'Reserved')
+    $bedQuery = "SELECT * FROM beds WHERE roomno = '$roomno' AND bed_stat = 'Reserved' AND hname = '$hname' LIMIT $total_beds";
+    $bedResult = mysqli_query($conn, $bedQuery);
+    $reservedBeds = mysqli_num_rows($bedResult);
 
-    // Update the reservation status
-    $query = "UPDATE reservation 
-              SET res_stat = 'Cancelled', 
-                  res_duration = '',
-                  bed_stat = 'Available',
-                  res_reason = 'Reservation Cancelled' 
-              WHERE id = $id and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+    // If the reserved beds count does not match the requested beds, something went wrong
+    if ($reservedBeds != $total_beds) {
+        header('Location: ../reservation.php?error=Mismatch%20in%20reserved%20beds%20for%20cancellation.');
+        exit;
+    }
 
-    // Update the current tenant count based on the number of beds or full room reservation
-    $query = "UPDATE beds 
-        SET bed_stat = 'Available'
-        WHERE bed_no = '$bedno' and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+    // Update the reservation status to 'Cancelled'
+    $updateReservationQuery = "UPDATE reservation 
+                               SET res_stat = 'Cancelled', 
+                                   bed_stat = 'Available',
+                                   res_reason = 'Reservation Cancelled' 
+                               WHERE id = $id AND hname = '$hname'";
+    mysqli_query($conn, $updateReservationQuery);
+
+    // Update the bed statuses to 'Available'
+    while ($bed = mysqli_fetch_assoc($bedResult)) {
+        $bed_id = $bed['id']; // Assuming there's an ID column for beds
+        $updateBedQuery = "UPDATE beds 
+                           SET bed_stat = 'Available' 
+                           WHERE id = $bed_id AND hname = '$hname'";
+        mysqli_query($conn, $updateBedQuery);
+    }
 
     // Redirect after the update
-    header('Location: ../reservation.php');
+    header('Location: ../reservation.php?message=Reservation cancelled successfully.');
+    exit;
 }
+
 
 
 if (isset($_GET['end'])) {
     $hname = $_SESSION['hname'];
     $id = $_GET['end'];
 
-    // Fetch reservation details including the beds column
-    $query = "SELECT * FROM reservation WHERE id = $id and hname = '$hname'";
+    // Fetch reservation details
+    $query = "SELECT * FROM reservation WHERE id = $id AND hname = '$hname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
+
     $roomno = $fetch['room_no'];
-    $bedno = $fetch['bed_no'];
+    $bedno = $fetch['bed_no']; // Can contain "1 Bed(s)" or a single number
 
-    // Fetch the room's capacity
-    $roomQuery = "SELECT capacity FROM rooms WHERE room_no = '$roomno'";
-    $roomResult = mysqli_query($conn, $roomQuery);
-    $roomData = mysqli_fetch_assoc($roomResult);
-    $roomCapacity = $roomData['capacity'];
+    // Handle multiple beds or a single bed
+    if (strpos($bedno, 'Bed(s)') !== false) {
+        // Extract the number of beds
+        preg_match('/\d+/', $bedno, $matches);
+        $total_beds = intval($matches[0]);
 
-    $bedquery = "SELECT * FROM beds WHERE room_no = '$roomno' and hname = '$hname'";
-    $bedresult = mysqli_query($conn, $roomQuery);
-    $beddata = mysqli_fetch_assoc($roomResult);
+        // Fetch occupied beds for the room
+        $bedQuery = "SELECT * FROM beds WHERE roomno = '$roomno' AND bed_stat = 'Occupied' AND hname = '$hname' LIMIT $total_beds";
+        $bedResult = mysqli_query($conn, $bedQuery);
 
-    // Update the reservation status
-    $query = "UPDATE reservation 
-              SET res_stat = 'Ended', 
-                  res_duration = '',
-                  bed_stat = 'Available',
-                  res_reason = 'Reservation Ended' 
-              WHERE id = $id and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+        // Update the status of each bed
+        $updatedBeds = 0;
+        while ($bed = mysqli_fetch_assoc($bedResult)) {
+            $bed_id = $bed['id']; // Assuming there's an ID column for beds
+            $updateBedQuery = "UPDATE beds SET bed_stat = 'Available' WHERE id = $bed_id AND hname = '$hname'";
+            mysqli_query($conn, $updateBedQuery);
+            $updatedBeds++;
+        }
 
-    $query = "UPDATE rooms 
-            SET current_tenant = current_tenant - 1 
-            WHERE room_no = '$roomno' and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+        // Verify that all beds were updated
+        if ($updatedBeds == $total_beds) {
+            // Update the reservation status
+            $updateReservationQuery = "UPDATE reservation 
+                                        SET res_stat = 'Ended', 
+                                            res_reason = 'Reservation Ended', 
+                                            bed_stat = 'Available' 
+                                        WHERE id = $id AND hname = '$hname'";
+            mysqli_query($conn, $updateReservationQuery);
 
-    // Update the current tenant count based on the number of beds or full room reservation
-    $query = "UPDATE beds 
-        SET bed_stat = 'Available'
-        WHERE bed_no = '$bedno' and hname = '$hname'";
-    $result = mysqli_query($conn, $query);
+            // Decrement the tenant count in the room
+            $updateRoomQuery = "UPDATE rooms 
+                                SET current_tenant = current_tenant - $total_beds 
+                                WHERE room_no = '$roomno' AND hname = '$hname'";
+            mysqli_query($conn, $updateRoomQuery);
+        } else {
+            // Handle case where not enough occupied beds are found
+            header('Location: ../reservation.php?error=Not enough occupied beds to end the reservation.');
+            exit;
+        }
+    } else {
+        // Handle single bed ending
+        $updateBedQuery = "UPDATE beds 
+                           SET bed_stat = 'Available' 
+                           WHERE bed_no = '$bedno' AND roomno = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateBedQuery);
+
+        // Update the reservation status
+        $updateReservationQuery = "UPDATE reservation 
+                                    SET res_stat = 'Ended', 
+                                        res_reason = 'Reservation Ended', 
+                                        bed_stat = 'Available' 
+                                    WHERE id = $id AND hname = '$hname'";
+        mysqli_query($conn, $updateReservationQuery);
+
+        // Decrement the tenant count in the room
+        $updateRoomQuery = "UPDATE rooms 
+                            SET current_tenant = current_tenant - 1 
+                            WHERE room_no = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateRoomQuery);
+    }
 
     // Redirect after the update
     header('Location: ../reservation.php');
+    exit;
 }
+
+
+
+
 
 
 

@@ -159,22 +159,20 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             <a  class="nav-link" href="index.php">Home</a>
             <a  class="nav-link" href="about.php">About</a>
             <a  class="nav-link" href="contact.php">Contact</a>
-            <?php  
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                    echo '<a  class="nav-link" href="reservation.php">My Reservation</a>';
+            <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
+                <a  class="nav-link" href="payment.php">Payments</a>
+            <?php endif; ?>
+        </div>
+        <div class="login">
+            <?php
+                if (empty($_SESSION['uname'])) {
+                    echo '<a href="php/login.php"><button class="login">Login</button></a>';
+                    
+                } else {
+                    echo '<a href="php/logout.php"><button class="login">Logout</button></a>';
                 }
             ?>
         </div>
-        <div class="login">
-                <?php
-                    if (empty($_SESSION['uname'])) {
-                        echo '<a href="php/login.php"><button class="login">Login</button></a>';
-                        
-                    } else {
-                        echo '<a href="php/logout.php"><button class="login">Logout</button></a>';
-                    }
-                ?>
-            </div>
     </nav>
     
     
@@ -266,9 +264,11 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         </div>
     <?php endif; ?>
 
-    <?php if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') { ?>
-    <h1> Pending </h1>
-    <?php } ?>
+    <?php if (!empty($_SESSION) && $_SESSION['role'] == 'landlord'): ?>
+        <h1> Pending </h1>
+    <?php else: ?>
+        <h1> Reservation Details </h1>
+    <?php endif; ?>
 
     <div class="container">
         <?php 
@@ -296,11 +296,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bed Information:</strong></p>
+                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Price: <?php echo $fetch['price']; ?></p>
-                        <p>Status: <?php echo $fetch['status']; ?></p>
                     </div>
                 </div>
                 <div class="row">
@@ -355,7 +358,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                <div class="col-md-6">
                         <p><strong>Guest Information:</strong></p>
                         <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
                         <p>Email: <?php echo $fetch['email']; ?></p>
@@ -364,10 +367,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bed Information:</strong></p>
+                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Price: <?php echo $fetch['price']; ?></p>
                     </div>
                 </div>
                 <div class="row">
@@ -382,10 +389,9 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 </div>
             </div>
         </div>
-        <?php 
-            }
-        } 
-        ?>
+        <?php } } ?>
+
+
 
         <?php
         $uname = $_SESSION['uname'];
@@ -428,10 +434,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?></p>
+                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bed Information:</strong></p>
+                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Price: <?php echo $fetch['price']; ?></p>
                     </div>
                 </div>
                 <div class="row">
@@ -446,22 +456,37 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 </div>
             </div>
         </div>
-        <?php 
-            }
-        } 
-        ?>
+        <?php } } ?>
     </div>
 
 
+    <?php 
+        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
+            $hname = $_SESSION['hname'];
 
+            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat = 'Confirmed' order by id desc";
+            $result = mysqli_query($conn, $query);
+            $fetch = mysqli_fetch_assoc($result);
+            $uname = $fetch['email'];
+
+            $query = "SELECT * FROM payments WHERE hname = '$hname' and email = '$uname'";
+            $result = mysqli_query($conn, $query);
+            $fetch = mysqli_fetch_assoc($result);
+            $payment = $fetch['payment'];
+            $paystat = $fetch['pay_stat'];
+            $paydate = $fetch['pay_date'];
+        }
+    ?>
     <?php if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') { ?>
     <h1> Approved </h1>
     <div class="container second-container">
         <?php 
         if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
             $hname = $_SESSION['hname'];
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat = 'Approved'  order by id desc";
+
+            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat IN ('Confirmed', 'Approved') order by id desc";
             $result = mysqli_query($conn, $query);
+            
             while ($fetch = mysqli_fetch_assoc($result)) {
         ?>
         <div class="card">
@@ -482,11 +507,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bed Information:</strong></p>
+                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Price: <?php echo $fetch['price']; ?></p>
-                        <p>Status: <?php echo $fetch['status']; ?></p>
                     </div>
                 </div>
                 <div class="row">
@@ -498,7 +526,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
                         <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
                     </div>
+                    <div class="col-md-6">
+                        <p><strong>Payment Details:</strong></p>
+                        <p>Payment: <?php echo $payment ?></p>
+                        <p>Payment Status: <?php echo $paystat ?></p>
+                        <p>Payment Date: <?php echo $paydate ?></p>
+                    </div>
                 </div>
+                
                 <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
                 <div class="button-row">
                     <div class="button-col">
@@ -520,7 +555,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <?php else: ?>
                         <?php endif; ?>
 
-                        <?php if($fetch['bed_stat'] == 'Occupied' && $fetch['res_stat'] == 'Approved'): ?>
+                        <?php if($fetch['bed_stat'] == 'Occupied' && $fetch['res_stat'] == 'Confirmed'): ?>
                             <a href="php/function.php?end=<?php echo $fetch['id'];?>"><button>End Reservation</button></a>
                         <?php elseif($fetch['res_stat'] == 'Ended'): ?>
                             <a href="php/function.php?end=<?php echo $fetch['id'];?>"><button disabled>End Reservation</button></a>
@@ -536,6 +571,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         } 
         ?>
     </div>
+
+
 
     <h1> Ended </h1>
     <div class="container">
@@ -555,7 +592,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                <div class="col-md-6">
                         <p><strong>Guest Information:</strong></p>
                         <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
                         <p>Email: <?php echo $fetch['email']; ?></p>
@@ -564,11 +601,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bed Information:</strong></p>
+                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Price: <?php echo $fetch['price']; ?></p>
-                        <p>Status: <?php echo $fetch['status']; ?></p>
                     </div>
                 </div>
                 <div class="row">
@@ -625,7 +665,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                <div class="col-md-6">
                         <p><strong>Guest Information:</strong></p>
                         <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
                         <p>Email: <?php echo $fetch['email']; ?></p>
@@ -634,11 +674,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bed Information:</strong></p>
+                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Price: <?php echo $fetch['price']; ?></p>
-                        <p>Status: <?php echo $fetch['status']; ?></p>
                     </div>
                 </div>
                 <div class="row">
@@ -695,7 +738,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                <div class="col-md-6">
                         <p><strong>Guest Information:</strong></p>
                         <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
                         <p>Email: <?php echo $fetch['email']; ?></p>
@@ -704,11 +747,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Selected: Bed <?php echo $fetch['bed_no'];?> </p>
+                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Status: <?php echo $fetch['status']; ?></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bed Information:</strong></p>
+                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
+                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                        <p>Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Price: <?php echo $fetch['price']; ?></p>
-                        <p>Status: <?php echo $fetch['status']; ?></p>
                     </div>
                 </div>
                 <div class="row">
@@ -746,11 +792,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         ?>
     </div>
 
-
-
     <?php } ?>
-    
-
     
 
     <style>
@@ -762,7 +804,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             grid-template-rows: 1fr;
             overflow-y: scroll;
             overflow-x: scroll;
-            height: 630px;
+            height: auto;
         } h1{
             text-align: center;
         }
@@ -775,7 +817,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             grid-template-columns: 1fr 1fr 1fr;
             grid-template-rows: 1fr;
             overflow-y: scroll;
-            height: 700px;
+            overflow-x: scroll;
+            height: auto;
         } 
 
         @media (max-width: 479px){
@@ -786,7 +829,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 grid-template-rows: 1fr;
                 overflow-y: scroll;
                 overflow-x: scroll;
-                height: 700px;
+                height: auto;
             }
         }
 
@@ -799,7 +842,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-            width: auto;
+            width: 550px;
         }
 
         @media (max-width: 479px){

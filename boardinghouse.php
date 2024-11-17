@@ -427,7 +427,9 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     } 
 
                     if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                        echo '<a class="nav-link" href="reservation.php?">My Reservation</a>';
+                        echo '<a class="nav-link" href="reservation.php?">My Reservation</a>
+                               
+                            ';
                     }
                 ?>
             </div>
