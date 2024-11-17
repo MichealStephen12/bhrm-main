@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2024 at 12:36 AM
+-- Generation Time: Nov 17, 2024 at 11:29 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -42,12 +42,14 @@ CREATE TABLE `beds` (
 --
 
 INSERT INTO `beds` (`id`, `roomno`, `bed_img`, `bed_no`, `bed_stat`, `bed_price`, `hname`) VALUES
-(0, 7, 'beds/sdfghdsf.jpg', 1, 'Available', 1000, 'Dodge Boarding House'),
-(2, 8, 'beds/drtd.jpg', 4, 'Available', 1000, 'Dodge Boarding House'),
+(1, 7, 'beds/sdfghdsf.jpg', 1, 'Occupied', 1000, 'Dodge Boarding House'),
+(2, 8, 'beds/drtd.jpg', 4, 'Occupied', 1000, 'Dodge Boarding House'),
 (5, 1, 'beds/sdfghdsf.jpg', 1, 'Available', 1000, 'Alfred Boarding House'),
 (6, 2, 'beds/sdfghdsf.jpg', 1, 'Available', 1000, 'Alfred Boarding House'),
-(7, 7, 'beds/sdfghdsf.jpg', 2, 'Available', 1000, 'Dodge Boarding House'),
-(8, 6, 'beds/drtd.jpg', 1, 'Available', 1000, 'Dodge Boarding House');
+(7, 7, 'beds/sdfghdsf.jpg', 2, 'Occupied', 1000, 'Dodge Boarding House'),
+(8, 6, 'beds/drtd.jpg', 1, 'Occupied', 1000, 'Dodge Boarding House'),
+(9, 2, 'beds/sgsdgs.jpg', 1, 'Occupied', 1000, 'Dodge Boarding House'),
+(10, 1, 'beds/drtd.jpg', 1, 'Available', 1000, 'Jestoni Boarding House');
 
 -- --------------------------------------------------------
 
@@ -159,6 +161,52 @@ INSERT INTO `documents` (`id`, `documents`, `image`, `hname`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` int(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `room_no` int(255) NOT NULL,
+  `bed_no` int(255) NOT NULL,
+  `bed_price` int(255) NOT NULL,
+  `payment` int(255) NOT NULL,
+  `pay_stat` varchar(255) NOT NULL,
+  `pay_date` date DEFAULT NULL,
+  `hname` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `payment`, `pay_stat`, `pay_date`, `hname`) VALUES
+(1, '', 0, 2, 0, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(2, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(3, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(4, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(5, 'user2@gmail.com', 8, 4, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(6, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(7, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(8, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(9, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(10, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(11, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(12, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(13, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(14, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(15, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(16, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(17, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(18, 'user@gmail.com', 7, 2, 0, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(19, 'user@gmail.com', 1, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Jestoni Boarding House'),
+(20, 'user@gmail.com', 7, 1, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(21, 'user@gmail.com', 7, 2, 1000, 0, 'Not Fully Paid', '2024-11-17', 'Dodge Boarding House'),
+(22, 'user1@gmail.com', 8, 4, 1000, 0, 'Not Fully Paid', '0000-00-00', 'Dodge Boarding House');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reservation`
 --
 
@@ -174,6 +222,7 @@ CREATE TABLE `reservation` (
   `addons` varchar(255) NOT NULL,
   `room_no` int(255) NOT NULL,
   `bed_no` varchar(255) NOT NULL,
+  `bed_price` int(255) NOT NULL,
   `bed_stat` varchar(255) NOT NULL,
   `capacity` int(255) NOT NULL,
   `amenities` varchar(255) NOT NULL,
@@ -190,12 +239,17 @@ CREATE TABLE `reservation` (
 -- Dumping data for table `reservation`
 --
 
-INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) VALUES
-(2, 'user', 'user', 'user1@gmail.com', 'Male', '2024-10-29', '2024-11-28', '', 'palihug kog hinlo', 7, '1', 'Occupied', 3, 'ref, computer, oven', 500, 'images/sdfghdsf.jpg', 'available', 'Approved', '', 'Process Completed', 'Dodge Boarding House'),
-(3, 'user', 'user', 'user2@gmail.com', 'Male', '2024-10-29', '2024-11-28', '', 'palihug kog hinlo', 8, '4', 'Available', 3, 'ref, computer, oven', 500, 'images/sdfghdsf.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House'),
-(4, 'user', 'user', 'user@gmail.com', 'Male', '2024-10-29', '2024-11-28', '', 'palihug kog hinlo', 7, '1', 'Available', 3, 'ref, computer, oven', 500, 'images/sdfghdsf.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House'),
-(5, 'user', 'user', 'user3@gmail.com', 'Male', '2024-10-29', '2024-11-28', '', 'palihug kog hinlo', 7, '2', 'Available', 3, 'ref, computer, oven', 500, 'images/sdfghdsf.jpg', 'available', 'Cancelled', '', 'Reservation Cancelled', 'Dodge Boarding House'),
-(6, 'user', 'user', 'user3@gmail.com', 'Male', '2024-10-29', '2024-11-28', '', 'palihug kog hinlo', 7, '2', 'Available', 3, 'ref, computer, oven', 500, 'images/sdfghdsf.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House');
+INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_price`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) VALUES
+(8, 'user', 'user', 'user2@gmail.com', '', '0000-00-00', '0000-00-00', '', '', 8, '4', 1000, 'Available', 3, 'ref, computer, oven', 500, 'images/sdfghdsf.jpg', 'available', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House'),
+(17, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-20', '2024-12-20', '', '', 7, '2 Bed(s)', 1000, 'Available', 6, 'ref, computer, oven', 0, 'images/sdfghdsf.jpg', 'available', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House'),
+(18, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-20', '2024-12-20', '', 'palihug kog hinlo', 7, '2 Bed(s)', 1000, 'Available', 6, 'ref, computer, oven', 0, 'images/sdfghdsf.jpg', 'available', 'Rejected', '1 day', 'No valid information / No Tenant Came', 'Dodge Boarding House'),
+(19, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-20', '2024-12-20', '', 'palihug kog hinlo', 7, '2', 0, 'Available', 6, 'ref, computer, oven', 1000, 'images/sdfghdsf.jpg', 'available', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House'),
+(20, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-20', '2024-12-20', '', 'palihug kog hinlo', 7, '2 Bed(s)', 1000, 'Reserved', 6, 'ref, computer, oven', 0, 'images/sdfghdsf.jpg', 'available', 'Cancelled', '1 day', 'Reservation Cancelled', 'Dodge Boarding House'),
+(21, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-20', '2024-12-20', '', 'palihug kog hinlo', 1, '2 Bed(s)', 1000, 'Available', 6, 'Tv, Wifi, Aircon', 0, 'images/sgsdgs.jpg', 'available', 'Rejected', '1 day', 'No valid information / No Tenant Came', 'Jestoni Boarding House'),
+(22, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-19', '2024-12-19', '', 'palihug kog hinlo', 1, '1', 1000, 'Available', 6, 'Tv, Wifi, Aircon', 0, 'images/sgsdgs.jpg', 'available', 'Cancelled', '1 day', 'Reservation Cancelled', 'Jestoni Boarding House'),
+(23, 'user', 'user', 'user@gmail.com', '', '0000-00-00', '0000-00-00', '', '', 1, '1', 1000, 'Available', 6, 'Tv, Wifi, Aircon', 0, 'images/sgsdgs.jpg', 'available', 'Ended', '1 day', 'Reservation Ended', 'Jestoni Boarding House'),
+(24, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-19', '2024-12-19', '', 'palihug kog hinlo', 7, '2 Bed(s)', 1000, 'Occupied', 6, 'ref, computer, oven', 0, 'images/sdfghdsf.jpg', 'available', 'Confirmed', '1 day', 'Tenant Arrived', 'Dodge Boarding House'),
+(25, 'user', 'user', 'user1@gmail.com', 'Male', '2024-11-20', '2024-12-20', '', 'palihug kog hinlo', 8, '4', 1000, 'Occupied', 1, 'ref, computer, oven', 0, 'images/sdfghdsf.jpg', 'available', 'Confirmed', '1 day', 'Tenant Arrived', 'Dodge Boarding House');
 
 -- --------------------------------------------------------
 
@@ -223,13 +277,13 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `room_no`, `room_type`, `capacity`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`) VALUES
-(2, 5, 'Double Room', 3, 0, 'ref, computer, oven', 'male', 'ground floor', 500, 'images/sdfghdsf.jpg', 'available', 'Dodge Boarding House'),
+(2, 5, 'Double Room', 3, 0, 'ref, computer, oven', 'female', 'ground floor', 500, 'images/sdfghdsf.jpg', 'available', 'Dodge Boarding House'),
 (3, 2, 'Single Room', 4, 0, 'ref, computer, microwave', 'male', 'ground floor', 10000000, 'images/sdfghdsf.jpg', 'available', 'Dodge Boarding House'),
 (4, 1, 'Single Room', 3, 0, 'ref, computer, microwave', 'male', 'ground floor', 10000000, 'images/sdfghdsf.jpg', 'available', 'Alfred Boarding House'),
 (5, 6, 'Quadrouple Room', 3, 0, 'Tv, Wifi, Aircon', 'male', 'ground floor', 10000000, 'images/sdfghdsf.jpg', 'available', 'Dodge Boarding House'),
 (6, 7, 'Tripple Room', 6, 2, 'Tv, Wifi, Aircon', 'male', 'ground floor', 10000000, 'images/sdfghdsf.jpg', 'available', 'Dodge Boarding House'),
 (7, 1, 'Single Room', 6, 0, 'Tv, Wifi, Aircon', 'male', 'ground floor', 10000000, 'images/sgsdgs.jpg', 'available', 'Jestoni Boarding House'),
-(8, 8, 'Double Room', 1, 0, 'Tv, Wifi, Aircon', 'male', 'ground floor', 500, 'images/drtd.jpg', 'available', 'Dodge Boarding House'),
+(8, 8, 'Double Room', 1, 1, 'Tv, Wifi, Aircon', 'male', 'ground floor', 500, 'images/drtd.jpg', 'available', 'Dodge Boarding House'),
 (9, 2, 'Quadrouple Room', 4, 0, 'lababo', 'male', 'ground floor', 500, 'images/drtd.jpg', 'available', 'Alfred Boarding House');
 
 -- --------------------------------------------------------
@@ -305,6 +359,12 @@ ALTER TABLE `documents`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `reservation`
 --
 ALTER TABLE `reservation`
@@ -330,7 +390,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `beds`
 --
 ALTER TABLE `beds`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `bhapplication`
@@ -357,10 +417,16 @@ ALTER TABLE `documents`
   MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `rooms`
