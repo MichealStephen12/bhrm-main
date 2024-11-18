@@ -360,7 +360,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             }
         } 
         ?>
-    </div>
 
         
         
@@ -417,16 +416,15 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
 
         <?php
-        $uname = $_SESSION['uname'];
-        $query = "SELECT * FROM boardinghouses order by id desc";
-        $result = mysqli_query($conn, $query);
-        $fetch = mysqli_fetch_assoc($result);
-        $hname = $fetch['hname'];
+            $uname = $_SESSION['uname'];
+            $query = "SELECT * FROM boardinghouses order by id desc";
+            $result = mysqli_query($conn, $query);
+            $fetch = mysqli_fetch_assoc($result);
+            $hname = $fetch['hname'];
 
-        $query = "SELECT * FROM reservation where email = '$uname' and hname = '$hname' order by id desc";
-        $result = mysqli_query($conn, $query);
-        $fetch = mysqli_fetch_assoc($result)
-
+            $query = "SELECT * FROM reservation where email = '$uname' and hname = '$hname' order by id desc";
+            $result = mysqli_query($conn, $query);
+            $fetch = mysqli_fetch_assoc($result)
         ?>
 
         <?php 
