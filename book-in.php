@@ -29,6 +29,9 @@ if (!empty($_SESSION["hname"])) {
         } else if ($fetch['res_stat'] == 'Cancelled') {
             // Allow users with 'Rejected' status to proceed
             unset($_SESSION['already_booked']);
+        }   else if ($fetch['res_stat'] == 'Ended') {
+            // Allow users with 'Rejected' status to proceed
+            unset($_SESSION['already_booked']);
         }
     } else {
         // Handle no results case

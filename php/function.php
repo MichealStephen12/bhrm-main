@@ -270,6 +270,7 @@ if (isset($_GET['end'])) {
 
     $roomno = $fetch['room_no'];
     $bedno = $fetch['bed_no']; // Can contain "1 Bed(s)" or a single number
+    $email = $fetch['email']; // Get the email associated with the reservation
 
     // Handle multiple beds or a single bed
     if (strpos($bedno, 'Bed(s)') !== false) {
@@ -305,6 +306,10 @@ if (isset($_GET['end'])) {
                                 SET current_tenant = current_tenant - $total_beds 
                                 WHERE room_no = '$roomno' AND hname = '$hname'";
             mysqli_query($conn, $updateRoomQuery);
+
+            // Delete the associated payment record
+            $deletePaymentQuery = "DELETE FROM payments WHERE email = '$email' AND hname = '$hname'";
+            mysqli_query($conn, $deletePaymentQuery);
         } else {
             // Handle case where not enough occupied beds are found
             header('Location: ../reservation.php?error=Not enough occupied beds to end the reservation.');
@@ -330,12 +335,17 @@ if (isset($_GET['end'])) {
                             SET current_tenant = current_tenant - 1 
                             WHERE room_no = '$roomno' AND hname = '$hname'";
         mysqli_query($conn, $updateRoomQuery);
+
+        // Delete the associated payment record
+        $deletePaymentQuery = "DELETE FROM payments WHERE email = '$email' AND hname = '$hname'";
+        mysqli_query($conn, $deletePaymentQuery);
     }
 
     // Redirect after the update
     header('Location: ../reservation.php');
     exit;
 }
+
 
 
 

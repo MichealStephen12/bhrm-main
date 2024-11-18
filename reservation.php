@@ -264,6 +264,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         </div>
     <?php endif; ?>
 
+
+
     <?php if (!empty($_SESSION) && $_SESSION['role'] == 'landlord'): ?>
         <h1> Pending </h1>
     <?php else: ?>
@@ -274,9 +276,26 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <?php 
         if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
             $hname = $_SESSION['hname'];
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat = 'Pending'  order by id desc";
+            $query = "SELECT * FROM reservation WHERE hname = '$hname' AND res_stat = 'Pending' ORDER BY id ASC";
             $result = mysqli_query($conn, $query);
             while ($fetch = mysqli_fetch_assoc($result)) {
+                $bed_no = $fetch['bed_no'];
+                $room_no = $fetch['room_no'];
+
+                // Check if the bed is already reserved or occupied
+                $checkReservationQuery = "SELECT COUNT(*) AS count FROM reservation 
+                                        WHERE bed_no = '$bed_no' AND room_no = '$room_no' 
+                                        AND hname = '$hname' AND res_stat = 'Approved'";
+                $reservationResult = mysqli_query($conn, $checkReservationQuery);
+                $reservationData = mysqli_fetch_assoc($reservationResult);
+
+                $checkBedsQuery = "SELECT bed_stat FROM beds 
+                                WHERE bed_no = '$bed_no' AND roomno = '$room_no' 
+                                AND hname = '$hname'";
+                $bedsResult = mysqli_query($conn, $checkBedsQuery);
+                $bedsData = mysqli_fetch_assoc($bedsResult);
+
+                $isReserved = $reservationData['count'] > 0 || ($bedsData && $bedsData['bed_stat'] == 'Reserved');
         ?>
         <div class="card">
             <div class="card-footer">
@@ -319,16 +338,18 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
                 <div class="button-row">
                     <div class="button-col">
-                        <?php if($fetch['res_stat'] == 'Approved'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a>   
-                        <?php elseif($fetch['res_stat'] == 'Pending'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>  
-                        <?php elseif($fetch['res_stat'] == 'Rejected'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a> 
+                        <?php if ($isReserved): ?>
+                            <!-- Disable buttons if the bed is reserved or occupied -->
+                            <button disabled>Approve</button>
+                            <a href="php/function.php?reject=<?php echo $fetch['id']; ?>"><button class="reject">Reject</button></a>
                         <?php else: ?>
+                            <?php if ($fetch['res_stat'] == 'Pending'): ?>
+                                <a href="php/function.php?approve=<?php echo $fetch['id']; ?>"><button>Approve</button></a>
+                                <a href="php/function.php?reject=<?php echo $fetch['id']; ?>"><button class="reject">Reject</button></a>
+                            <?php else: ?>
+                                <button disabled>Approve</button>
+                                <button class="reject" disabled>Reject</button>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -339,6 +360,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             }
         } 
         ?>
+    </div>
+
         
         
         <?php 
@@ -463,18 +486,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <?php 
         if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
             $hname = $_SESSION['hname'];
-
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat = 'Confirmed' order by id desc";
+        
+            // Fetch all reservations with 'Confirmed' or 'Approved' status
+            $query = "SELECT * FROM reservation WHERE hname = '$hname' AND res_stat IN ('Confirmed', 'Approved') ORDER BY id DESC";
             $result = mysqli_query($conn, $query);
-            $fetch = mysqli_fetch_assoc($result);
-            $uname = $fetch['email'];
-
-            $query = "SELECT * FROM payments WHERE hname = '$hname' and email = '$uname'";
-            $result = mysqli_query($conn, $query);
-            $fetch = mysqli_fetch_assoc($result);
-            $payment = $fetch['payment'];
-            $paystat = $fetch['pay_stat'];
-            $paydate = $fetch['pay_date'];
         }
     ?>
     <?php if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') { ?>
@@ -482,12 +497,17 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <div class="container second-container">
         <?php 
         if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-            $hname = $_SESSION['hname'];
-
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat IN ('Confirmed', 'Approved') order by id desc";
-            $result = mysqli_query($conn, $query);
-            
             while ($fetch = mysqli_fetch_assoc($result)) {
+                $uname = $fetch['email'];
+
+                // Fetch payment details for the current reservation email
+                $paymentQuery = "SELECT * FROM payments WHERE hname = '$hname' AND email = '$uname' ORDER BY id DESC LIMIT 1";
+                $paymentResult = mysqli_query($conn, $paymentQuery);
+                $paymentData = mysqli_fetch_assoc($paymentResult);
+
+                $payment = $paymentData['payment'] ?? 'No Payment Data';
+                $paystat = $paymentData['pay_stat'] ?? 'No Payment Status';
+                $paydate = $paymentData['pay_date'] ?? 'No Payment Date';
         ?>
         <div class="card">
             <div class="card-footer">

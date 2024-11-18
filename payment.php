@@ -314,7 +314,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord') { ?>
                 <div class="button-row">
                     <div class="button-col">
-                        <a href=""><button>Edit</button></a>
+                    <a href="php/payfunction.php?id=<?php echo $fetch['id']; ?>"><button>Edit</button></a>
                     </div>
                 </div>
                 <?php } ?>
