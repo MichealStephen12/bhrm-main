@@ -111,7 +111,7 @@ if (isset($_GET['approve'])) {
             $query_update = "UPDATE bhapplication SET Status = 'Approved' WHERE hname = '$hname'";
             mysqli_query($conn, $query_update);
 
-            $query_insert = "UPDATE users SET hname = '$hname' where uname = '$landlord'";
+            $query_insert = "UPDATE users SET hname = '$hname' where uname = '$owner'";
             mysqli_query($conn, $query_insert);
             
             header('Location: ../index.php');
