@@ -70,7 +70,7 @@ if (isset($_GET['approve'])) {
     }
 
     // Redirect after the update
-    header('Location: ../reservation.php');
+    header('Location: ../managereservation.php');
     exit;
 }
 
@@ -103,7 +103,7 @@ if (isset($_GET['reject'])) {
     mysqli_query($conn, $updateReservationQuery);
 
     // Redirect back to the reservation page
-    header('Location: ../reservation.php?message=Reservation rejected successfully.');
+    header('Location: ../managereservation.php?message=Reservation rejected successfully.');
     exit;
 }
 
@@ -123,6 +123,10 @@ if (isset($_GET['confirm'])) {
     $bedno = $fetch['bed_no']; // Can contain "1 Bed(s)" or a single number
     $bedprice = $fetch['bed_price'];
     $uname = $fetch['email'];
+    $fname = $fetch['fname'];
+    $lname = $fetch['lname'];
+    $gender = $fetch['gender'];
+    $date_in = date('Y-m-d'); // Current date as the check-in date
 
     // Handle multiple beds or a single bed
     if (strpos($bedno, 'Bed(s)') !== false) {
@@ -134,26 +138,32 @@ if (isset($_GET['confirm'])) {
         $bedQuery = "SELECT * FROM beds WHERE roomno = '$roomno' AND bed_stat = 'Reserved' AND hname = '$hname' LIMIT $total_beds";
         $bedResult = mysqli_query($conn, $bedQuery);
 
-        // Update the status of each bed and insert payment records
+        // Update the status of each bed
         $updatedBeds = 0;
         while ($bed = mysqli_fetch_assoc($bedResult)) {
-            $bed_id = $bed['id']; // Assuming there's an ID column for beds
+            $bed_id = $bed['id'];
             $updateBedQuery = "UPDATE beds SET bed_stat = 'Occupied' WHERE id = $bed_id AND hname = '$hname'";
             mysqli_query($conn, $updateBedQuery);
-
-            // Insert payment record
-            $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `hname`) 
-                                   VALUES ('', '$uname', '$roomno', '{$bed['bed_no']}', '$bedprice', 'Not Fully Paid', '$hname')";
-            mysqli_query($conn, $insertPaymentQuery);
 
             $updatedBeds++;
         }
 
         // Verify that all requested beds were updated
         if ($updatedBeds == $total_beds) {
+            // Insert a single payment record for the whole reservation (not per bed)
+            $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `hname`) 
+                                   VALUES ('', '$uname', '$roomno', '$bedno', '$bedprice', 'Not Fully Paid', '$hname')";
+            mysqli_query($conn, $insertPaymentQuery);
+
+            // Insert a single report record for the reservation as a whole
+            $insertReportQuery = "INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `pay_date`, `date_in`, `date_out`, `room_no`, `bed_no`, `hname`) 
+                                  VALUES ('', '$fname', '$lname', '$gender', '$uname', '', '$date_in', NULL, '$roomno', '$bedno', '$hname')";
+            mysqli_query($conn, $insertReportQuery);
+
             // Update the reservation status
             $updateReservationQuery = "UPDATE reservation 
                                         SET res_stat = 'Confirmed', 
+                                            res_duration = '', 
                                             res_reason = 'Tenant Arrived', 
                                             bed_stat = 'Occupied' 
                                         WHERE id = $id AND hname = '$hname'";
@@ -166,7 +176,7 @@ if (isset($_GET['confirm'])) {
             mysqli_query($conn, $updateRoomQuery);
         } else {
             // Handle case where not enough beds are reserved
-            header('Location: ../reservation.php?error=Not enough reserved beds for confirmation.');
+            header('Location: ../managereservation.php?error=Not enough reserved beds for confirmation.');
             exit;
         }
     } else {
@@ -181,10 +191,16 @@ if (isset($_GET['confirm'])) {
                                VALUES ('', '$uname', '$roomno', '$bedno', '$bedprice', 'Not Fully Paid', '', '$hname')";
         mysqli_query($conn, $insertPaymentQuery);
 
+        // Insert report record for the single bed
+        $insertReportQuery = "INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `pay_date`, `date_in`, `date_out`, `room_no`, `bed_no`, `hname`) 
+                              VALUES ('', '$fname', '$lname', '$gender', '$uname', '', '$date_in', NULL, '$roomno', '$bedno', '$hname')";
+        mysqli_query($conn, $insertReportQuery);
+
         // Update the reservation status
         $updateReservationQuery = "UPDATE reservation 
                                     SET res_stat = 'Confirmed', 
                                         res_reason = 'Tenant Arrived', 
+                                        res_duration = '', 
                                         bed_stat = 'Occupied' 
                                     WHERE id = $id AND hname = '$hname'";
         mysqli_query($conn, $updateReservationQuery);
@@ -197,9 +213,12 @@ if (isset($_GET['confirm'])) {
     }
 
     // Redirect after the update
-    header('Location: ../reservation.php');
+    header('Location: ../managereservation.php');
     exit;
 }
+
+
+
 
 
 if (isset($_GET['cancel'])) {
@@ -231,7 +250,7 @@ if (isset($_GET['cancel'])) {
 
     // If the reserved beds count does not match the requested beds, something went wrong
     if ($reservedBeds != $total_beds) {
-        header('Location: ../reservation.php?error=Mismatch%20in%20reserved%20beds%20for%20cancellation.');
+        header('Location: ../managereservation.php?error=Mismatch%20in%20reserved%20beds%20for%20cancellation.');
         exit;
     }
 
@@ -253,7 +272,7 @@ if (isset($_GET['cancel'])) {
     }
 
     // Redirect after the update
-    header('Location: ../reservation.php?message=Reservation cancelled successfully.');
+    header('Location: ../managereservation.php?message=Reservation cancelled successfully.');
     exit;
 }
 
@@ -269,8 +288,19 @@ if (isset($_GET['end'])) {
     $fetch = mysqli_fetch_assoc($result);
 
     $roomno = $fetch['room_no'];
-    $bedno = $fetch['bed_no']; // Can contain "1 Bed(s)" or a single number
-    $email = $fetch['email']; // Get the email associated with the reservation
+    $bedno = $fetch['bed_no'];
+    $email = $fetch['email'];
+
+    // Fetch the most recent payment for this reservation
+    $paymentQuery = "SELECT * FROM payments 
+                     WHERE email = '$email' AND room_no = '$roomno' AND hname = '$hname' 
+                     ORDER BY id DESC LIMIT 1"; // Fetch the latest payment record
+    $paymentResult = mysqli_query($conn, $paymentQuery);
+    $paymentData = mysqli_fetch_assoc($paymentResult);
+
+    $payment = $paymentData['payment']; // Get the final payment amount
+    $pay_date = $paymentData['pay_date']; // Get the payment date
+    $date_out = date('Y-m-d'); // Use the current date for the end of reservation
 
     // Handle multiple beds or a single bed
     if (strpos($bedno, 'Bed(s)') !== false) {
@@ -282,18 +312,16 @@ if (isset($_GET['end'])) {
         $bedQuery = "SELECT * FROM beds WHERE roomno = '$roomno' AND bed_stat = 'Occupied' AND hname = '$hname' LIMIT $total_beds";
         $bedResult = mysqli_query($conn, $bedQuery);
 
-        // Update the status of each bed
         $updatedBeds = 0;
         while ($bed = mysqli_fetch_assoc($bedResult)) {
-            $bed_id = $bed['id']; // Assuming there's an ID column for beds
+            $bed_id = $bed['id'];
             $updateBedQuery = "UPDATE beds SET bed_stat = 'Available' WHERE id = $bed_id AND hname = '$hname'";
             mysqli_query($conn, $updateBedQuery);
             $updatedBeds++;
         }
 
-        // Verify that all beds were updated
         if ($updatedBeds == $total_beds) {
-            // Update the reservation status
+            // Update reservation status
             $updateReservationQuery = "UPDATE reservation 
                                         SET res_stat = 'Ended', 
                                             res_reason = 'Reservation Ended', 
@@ -301,28 +329,22 @@ if (isset($_GET['end'])) {
                                         WHERE id = $id AND hname = '$hname'";
             mysqli_query($conn, $updateReservationQuery);
 
-            // Decrement the tenant count in the room
+            // Decrement tenant count
             $updateRoomQuery = "UPDATE rooms 
                                 SET current_tenant = current_tenant - $total_beds 
                                 WHERE room_no = '$roomno' AND hname = '$hname'";
             mysqli_query($conn, $updateRoomQuery);
-
-            // Delete the associated payment record
-            $deletePaymentQuery = "DELETE FROM payments WHERE email = '$email' AND hname = '$hname'";
-            mysqli_query($conn, $deletePaymentQuery);
         } else {
-            // Handle case where not enough occupied beds are found
-            header('Location: ../reservation.php?error=Not enough occupied beds to end the reservation.');
+            header('Location: ../managereservation.php?error=Not enough occupied beds to end the reservation.');
             exit;
         }
     } else {
-        // Handle single bed ending
+        // Handle single bed
         $updateBedQuery = "UPDATE beds 
                            SET bed_stat = 'Available' 
                            WHERE bed_no = '$bedno' AND roomno = '$roomno' AND hname = '$hname'";
         mysqli_query($conn, $updateBedQuery);
 
-        // Update the reservation status
         $updateReservationQuery = "UPDATE reservation 
                                     SET res_stat = 'Ended', 
                                         res_reason = 'Reservation Ended', 
@@ -330,22 +352,37 @@ if (isset($_GET['end'])) {
                                     WHERE id = $id AND hname = '$hname'";
         mysqli_query($conn, $updateReservationQuery);
 
-        // Decrement the tenant count in the room
         $updateRoomQuery = "UPDATE rooms 
                             SET current_tenant = current_tenant - 1 
                             WHERE room_no = '$roomno' AND hname = '$hname'";
         mysqli_query($conn, $updateRoomQuery);
-
-        // Delete the associated payment record
-        $deletePaymentQuery = "DELETE FROM payments WHERE email = '$email' AND hname = '$hname'";
-        mysqli_query($conn, $deletePaymentQuery);
     }
 
-    // Redirect after the update
-    header('Location: ../reservation.php');
+    // Fetch the corresponding report ID using the email, room_no, and hname
+    $reportQuery = "SELECT * FROM reports 
+                    WHERE email = '$email' AND room_no = '$roomno' AND hname = '$hname' 
+                    ORDER BY id DESC LIMIT 1"; // Get the latest report
+    $reportResult = mysqli_query($conn, $reportQuery);
+    $reportData = mysqli_fetch_assoc($reportResult);
+    $report_id = $reportData['id']; // Get the ID of the latest report
+
+    // Update the report using the report ID
+    $updateReportQuery = "UPDATE reports 
+                          SET payment = '$payment', 
+                              pay_date = '$pay_date', 
+                              date_out = '$date_out' 
+                          WHERE id = $report_id AND hname = '$hname'";
+    mysqli_query($conn, $updateReportQuery);
+
+    // Delete the processed payment record
+    $deletePaymentQuery = "DELETE FROM payments 
+                           WHERE email = '$email' AND room_no = '$roomno' AND hname = '$hname'";
+    mysqli_query($conn, $deletePaymentQuery);
+
+    // Redirect after processing
+    header('Location: ../managereservation.php');
     exit;
 }
-
 
 
 

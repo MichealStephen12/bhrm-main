@@ -30,9 +30,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 }
 
 
-
-
-
 if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
     header('location: boardinghouse.php');
 }
@@ -154,14 +151,17 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             }
         }
 
-        .section2{
+        .section2 {
+            margin: auto;
             background-color: white;
             padding: 30px;
             display: flex;
             border-radius: 10px;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: center; /* Align items to the left */
+            gap: 30px; /* Add spacing between items */
         }
+
 
         .card{
             width: 320px;

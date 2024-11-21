@@ -48,7 +48,7 @@ if (isset($_POST['submit'])) {
                                 ('','$roomno','beds/$fileNameNew','$bedno','$bedstat', '$bedprice', '$hname')";
     mysqli_query($conn, $query);
 
-    header("location: ../beds.php?roomno=$roomno");
+    header("location: ../managebeds.php?roomno=$roomno");
 }
 
 $data = ['id' => '', 'room_no' => '', 'bed_img' => '', 'bed_no' => '', 'bed_stat' => '', 'bed_price' => ''];
@@ -70,7 +70,7 @@ if (isset($_GET['bdelete'])) {
     $query = "DELETE FROM beds WHERE id = $id and hname = '$hname' and roomno = $roomno";
     $result = mysqli_query($conn, $query);
     if ($result) {
-        header("location: ../beds.php?roomno=$roomno");
+        header("location: ../managebeds.php?roomno=$roomno");
     }
 }
 
@@ -149,7 +149,7 @@ if(isset($_POST['update'])){
                             <div class="row">
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Room No:</label>
-                                    <input type="text" name="roomno" value="<?php echo $_SESSION['roomno']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                    <input type="text" name="roomno" value="<?php echo $_SESSION['roomno']; ?>"  placeholder="Enter here.." class="form-control" readonly>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Bed Image:</label>
@@ -166,7 +166,7 @@ if(isset($_POST['update'])){
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Bed Status:</label>
-                                    <input type="text" name="bedstat" value="<?php echo $data['bed_stat']; ?>"  placeholder="Enter here.." class="form-control" required>
+                                    <input type="text" name="bedstat" value="Available"  placeholder="Enter here.." class="form-control" readonly>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Bed Price:</label>
@@ -179,7 +179,7 @@ if(isset($_POST['update'])){
                                     <?php else: ?>
                                     <input type="submit" name="submit" value="Submit" class="btn btn-warning">
                                     <?php endif; ?>
-                                    <a href="../boardinghouse.php" class="btn btn-secondary">Back</a>
+                                    <a href="../managebeds.php?roomno=<?php echo $_SESSION['roomno'] ?>" class="btn btn-secondary">Back</a>
                                 </div>
                             </div>
                         </form>

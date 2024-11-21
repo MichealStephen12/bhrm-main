@@ -30,61 +30,110 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
         body {
             margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            color: black;
-        } 
-
-        .navbar {
-            margin: 0 200px;
-            background-color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-family: Arial, sans-serif;
+            margin-left: 220px; /* Offset for the navbar */
         }
 
-        .navbar a {
-            color: black;
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 220px;
+            background-color: white;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
         .navbar-brand img {
             width: 80px;
             height: 80px;
+            border-radius: 50%;
+            border: 2px solid #f4f4f4;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand img:hover {
+            transform: scale(1.1);
         }
 
         .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: auto;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            align-items: left;
+            flex-grow: 1;
+        }
+
+        .nav-links li {
+            margin-bottom: 15px;
         }
 
         .nav-link {
             color: black;
             text-decoration: none;
-            padding: 0 10px;
+            font-size: 16px;
+            padding: 10px 15px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        @media (max-width: 479px) {
+        .nav-link:hover {
+            background-color: #f0f0f0;
+            color: #007bff;
+        }
+
+        .login {
+            text-align: center;
+            margin-top: -10px; /* Adjusting to move the logout button up */
+        }
+
+        .login .btn {
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login .btn:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
             .navbar {
-                margin: 0;
-                padding: 10px 20px;
-                flex-direction: column;
+                width: 180px;
+                padding: 15px 10px;
             }
 
-            .nav-links {
-                flex-direction: column;
-                margin-top: 10px;
+            .navbar-brand img {
+                width: 60px;
+                height: 60px;
             }
 
             .nav-link {
-                padding: 5px 0;
+                font-size: 14px;
             }
 
-            .login {
-                margin-top: 10px;
+            body {
+                margin-left: 180px;
             }
         }
+
 
         button {
             background-color: #007BFF;
@@ -153,27 +202,20 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 <body>
     <nav class="navbar">
         <a class="navbar-brand" href="#">
-            <img src="images/logo.png" alt="">
+            <img src="images/logo.png" alt="Logo">
         </a>
-        <div class="nav-links">
-            <a  class="nav-link" href="index.php">Home</a>
-            <a  class="nav-link" href="about.php">About</a>
-            <a  class="nav-link" href="contact.php">Contact</a>
-            <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
-                <a  class="nav-link" href="reservation.php">Reservations</a>
-            <?php endif; ?>
-        </div>
+        <ul class="nav-links">
+            <li><a class="nav-link" href="dashboard.php">Dashboard</a></li>
+            <li><a class="nav-link" href="manageroom.php">Manage Rooms</a></li>
+            <li><a class="nav-link" href="managereservation.php">Reservations</a></li>
+            <li><a class="nav-link" href="payment.php">Payments</a></li>
+            <li><a class="nav-link" href="reports.php">Reports</a></li>
+        </ul>
         <div class="login">
-            <?php
-                if (empty($_SESSION['uname'])) {
-                    echo '<a href="php/login.php"><button class="login">Login</button></a>';
-                    
-                } else {
-                    echo '<a href="php/logout.php"><button class="login">Logout</button></a>';
-                }
-            ?>
+            <a class="btn" href="php/logout.php">Logout</a>
         </div>
     </nav>
+
     
     
 
@@ -213,7 +255,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         </style>
         <div class="back">
             <div>
-                <a class='btn' href='boardinghouse.php'>Back</a>
+                <a class='btn' href='managereservation.php'>Back</a>
             </div>     
         </div>
         

@@ -296,83 +296,181 @@ if (isset($_POST['submit'])) {
           
         </nav>
 
-    <div class="centering">
-        <div class="section1">
-            <div class="sec-content">
-                    <h5>Selected Room: <?php echo $roomno ?></h5>
-                    <img src="<?php echo  $roomimg ?>" alt="">
-                    <p>Room Capacity: <?php echo $roomcapacity ?></p>
-                    <p>Room Status: <?php echo $roomstat ?></p>
-            </div>
-            <?php 
-            $hname = $_SESSION['hname'];
-            if (!empty($_SESSION["roomno"])){
-                $roomno = $_SESSION['roomno'];
-            }else{
-                $roomno = $_GET['roomno'];
-            }
-            $query = "select * from beds where roomno = $roomno and hname = '$hname'";
-            $result = mysqli_query($conn, $query);  
-            while ($fetch = mysqli_fetch_assoc($result)){
-                $bedno = $fetch['bed_no']; 
-                $bedimg = $fetch['bed_img'];
-                $bedstat = $fetch['bed_stat'];
-                $bedprice = $fetch['bed_price'];
-            ?>
-            <div class="sec-content">
-                    <h5>Selected Bed: <?php echo $bedno ?></h5>
-                    <img src="<?php echo $bedimg ?>" alt="">
-                    <p>Bed Status: <?php echo $bedstat ?></p>
-                    <p>Bed Price: <?php echo $bedprice ?> / Month</p>
-            </div>
-            <?php } ?>
-        </div>
-    </div>
-
-    <style>
-
-        .centering {
-            display: flex;
+        <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
             justify-content: center;
             align-items: center;
         }
 
-        .section1 {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two columns for the other .sec-content items */
-            grid-auto-rows: auto;           /* Automatically adjusts the row height */
-            gap: 10px;                      /* Adds spacing between grid items */
-            width: 600px;
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            max-width: 600px;
+            max-height: 80%;
+            width: 90%;
+            overflow-y: auto; /* Enables scrolling inside the modal */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .section1 .sec-content:first-child {
-            grid-column: span 2;            /* Make the first item span across both columns */
-        }
-        
-        .section1 h5 {
-            font-size: 22px;
-            margin: 10px;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky; /* Keeps header visible while scrolling */
+            top: 0;
+            background-color: white;
+            z-index: 10;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
-        .section1 p {
-            margin: 10px;
+        .modal-header h2 {
+            margin: 0;
         }
 
-        .sec-content{
+        .close {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: black;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .modal-body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            border: 1px solid black;
-            border-radius: 10px;
-            margin: 20px;
-            width: auto;
-            padding: 20px;
-        }.sec-content img{
+            align-items: center;
+        }
+
+        .room-details {
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .bed-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
             width: 100%;
-        }.section1 .sec-content img:first-child {
-            width: 50%;        /* Make the first item span across both columns */
+        }
+
+        .bed-card {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .bed-card img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+
+        .preview-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .preview-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .centering {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
         }
     </style>
+
+    <div class="centering">
+        <button id="previewButton" class="preview-btn">Preview</button>
+    </div>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Room Details</h2>
+                <button class="close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="room-details">
+                    <h5>Selected Room: <?php echo $roomno ?></h5>
+                    <img src="<?php echo $roomimg ?>" alt="Room Image">
+                    <p>Room Capacity: <?php echo $roomcapacity ?></p>
+                    <p>Room Status: <?php echo $roomstat ?></p>
+                </div>
+                <div class="bed-details">
+                    <?php 
+                    $hname = $_SESSION['hname'];
+                    if (!empty($_SESSION["roomno"])) {
+                        $roomno = $_SESSION['roomno'];
+                    } else {
+                        $roomno = $_GET['roomno'];
+                    }
+                    $query = "SELECT * FROM beds WHERE roomno = $roomno AND hname = '$hname'";
+                    $result = mysqli_query($conn, $query);  
+                    while ($fetch = mysqli_fetch_assoc($result)) {
+                        $bedno = $fetch['bed_no']; 
+                        $bedimg = $fetch['bed_img'];
+                        $bedstat = $fetch['bed_stat'];
+                        $bedprice = $fetch['bed_price'];
+                    ?>
+                    <div class="bed-card">
+                        <h5>Bed No: <?php echo $bedno ?></h5>
+                        <img src="<?php echo $bedimg ?>" alt="Bed Image">
+                        <p>Bed Status: <?php echo $bedstat ?></p>
+                        <p>Bed Price: <?php echo $bedprice ?> / Month</p>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('previewButton').addEventListener('click', function () {
+            document.getElementById('infoModal').style.display = 'flex';
+        });
+
+        document.getElementById('closeModal').addEventListener('click', function () {
+            document.getElementById('infoModal').style.display = 'none';
+        });
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+
+
+
+
+
+    
 
     <div class="form">
         <form method="post">
@@ -410,7 +508,7 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="form-col">
                 <label for="dateout">Date out</label>
-                <input type="date" id="dateout" name="dateout" readonly>
+                <input type="date" id="dateout" name="dateout">
             </div>
             <div class="form-col">
                 <label for="addons">Additional Requests</label>

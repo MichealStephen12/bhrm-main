@@ -50,7 +50,7 @@ if (isset($_POST['submit'])) {
             if (empty($_SESSION['hname'])){
                 header("Location: bhfunction.php");
             }else{
-                header("Location: ../boardinghouse.php");
+                header("Location: ../dashboard.php");
             }
             exit;
         }

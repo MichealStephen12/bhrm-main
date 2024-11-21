@@ -30,11 +30,25 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
         body {
             margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            color: black;
-        } 
+            font-family: Arial, sans-serif;
+            margin-left: 220px; /* Offset for the navbar */
+        }
 
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: black;
+        }
+
+        .background {
+            background-image: url(images/a2.png);
+            background-size: cover;  /* Ensure the image covers the entire container */
+            background-position: center; /* Position the background image centrally */
+            background-repeat: no-repeat;  /* Prevent the background from repeating */
+            min-height: auto;  /* Ensure the section is at least the height of the viewport */
+        }
+        
         .navbar {
             margin: 0 200px;
             background-color: white;
@@ -65,7 +79,17 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             padding: 0 10px;
         }
 
-        @media (max-width: 479px) {
+        .login{
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }.login a{
+            color: white;
+        }
+
+        @media (max-width: 768px) {
             .navbar {
                 margin: 0;
                 padding: 10px 20px;
@@ -153,69 +177,43 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 <body>
     <nav class="navbar">
         <a class="navbar-brand" href="#">
-            <img src="images/logo.png" alt="">
+            <img src="images/logo.png" alt="Logo">
         </a>
         <div class="nav-links">
-            <a  class="nav-link" href="index.php">Home</a>
-            <a  class="nav-link" href="about.php">About</a>
-            <a  class="nav-link" href="contact.php">Contact</a>
-            <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
-                <a  class="nav-link" href="payment.php">Payments</a>
-            <?php endif; ?>
-        </div>
-        <div class="login">
-            <?php
-                if (empty($_SESSION['uname'])) {
-                    echo '<a href="php/login.php"><button class="login">Login</button></a>';
-                    
-                } else {
-                    echo '<a href="php/logout.php"><button class="login">Logout</button></a>';
+            <a class="nav-link" href="index.php">Home</a>
+            <a class="nav-link" href="about.php">About</a>
+            <a class="nav-link" href="contact.php">Contact</a>
+            <?php  
+                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
+                    echo '<a class="nav-link" href="reservation.php">Reservations</a>';
+                } 
+
+                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
+                    echo '<a class="nav-link" href="reservation.php?">My Reservation</a>
+                            
+                        ';
                 }
             ?>
         </div>
+        <div class="login">
+            <?php
+                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
+                    echo '<a class="btn" href="php/logout.php">Logout</a>';
+                } 
+                if (empty($_SESSION["uname"])){
+                    echo '<a class="btn" href="php/login.php">Login</a>';
+                }
+                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
+                    echo '<a class="btn" href="php/logout.php">Logout</a>';
+                }
+            ?>
+        </div>
+        
     </nav>
     
     
 
     <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
-        <style>
-
-            .back{
-                height: 100px;
-                display: flex;
-                justify-content: right;
-                align-items: center;
-                margin-right: 300px;
-            }.back a{
-                height: auto;
-            }
-        
-            @media (max-width: 479px){
-                .back{
-                    height: 100px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-right: 0;
-                }.back a{
-                    height: auto;
-                }
-            }
-            
-            .btn{
-                color: rgb(255, 255, 255);
-                padding: 10px 20px;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
-                background-color: #007bff;
-            }
-        </style>
-        <div class="back">
-            <div>
-                <a class='btn' href='boardinghouse.php'>Back</a>
-            </div>     
-        </div>
         
     <?php else: ?>
         <style>
@@ -265,104 +263,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <?php endif; ?>
 
 
-
-    <?php if (!empty($_SESSION) && $_SESSION['role'] == 'landlord'): ?>
-        <h1> Pending </h1>
-    <?php else: ?>
-        <h1> Reservation Details </h1>
-    <?php endif; ?>
-
-    <div class="container">
-        <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-            $hname = $_SESSION['hname'];
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' AND res_stat = 'Pending' ORDER BY id ASC";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)) {
-                $bed_no = $fetch['bed_no'];
-                $room_no = $fetch['room_no'];
-
-                // Check if the bed is already reserved or occupied
-                $checkReservationQuery = "SELECT COUNT(*) AS count FROM reservation 
-                                        WHERE bed_no = '$bed_no' AND room_no = '$room_no' 
-                                        AND hname = '$hname' AND res_stat = 'Approved'";
-                $reservationResult = mysqli_query($conn, $checkReservationQuery);
-                $reservationData = mysqli_fetch_assoc($reservationResult);
-
-                $checkBedsQuery = "SELECT bed_stat FROM beds 
-                                WHERE bed_no = '$bed_no' AND roomno = '$room_no' 
-                                AND hname = '$hname'";
-                $bedsResult = mysqli_query($conn, $checkBedsQuery);
-                $bedsData = mysqli_fetch_assoc($bedsResult);
-
-                $isReserved = $reservationData['count'] > 0 || ($bedsData && $bedsData['bed_stat'] == 'Reserved');
-        ?>
-        <div class="card">
-            <div class="card-footer">
-                <img src="<?php echo $fetch['image']; ?>">
-            </div>
-            <div class="card-header">
-                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Guest Information:</strong></p>
-                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
-                        <p>Email: <?php echo $fetch['email']; ?></p>
-                        <p>Gender: <?php echo $fetch['gender']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Room Information:</strong></p>
-                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
-                        <p>Room Status: <?php echo $fetch['status']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Bed Information:</strong></p>
-                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
-                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Reservation Details:</strong></p>
-                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
-                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
-                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
-                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
-                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
-                    </div>
-                </div>
-                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
-                <div class="button-row">
-                    <div class="button-col">
-                        <?php if ($isReserved): ?>
-                            <!-- Disable buttons if the bed is reserved or occupied -->
-                            <button disabled>Approve</button>
-                            <a href="php/function.php?reject=<?php echo $fetch['id']; ?>"><button class="reject">Reject</button></a>
-                        <?php else: ?>
-                            <?php if ($fetch['res_stat'] == 'Pending'): ?>
-                                <a href="php/function.php?approve=<?php echo $fetch['id']; ?>"><button>Approve</button></a>
-                                <a href="php/function.php?reject=<?php echo $fetch['id']; ?>"><button class="reject">Reject</button></a>
-                            <?php else: ?>
-                                <button disabled>Approve</button>
-                                <button class="reject" disabled>Reject</button>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-        </div>
-        <?php 
-            }
-        } 
-        ?>
-
-        
-        
+    <div class="container">    
         <?php 
         if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && !empty($_SESSION['hname'])) {
             $uname = $_SESSION['uname'];
@@ -480,338 +381,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <?php } } ?>
     </div>
 
-
-    <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-            $hname = $_SESSION['hname'];
-        
-            // Fetch all reservations with 'Confirmed' or 'Approved' status
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' AND res_stat IN ('Confirmed', 'Approved') ORDER BY id DESC";
-            $result = mysqli_query($conn, $query);
-        }
-    ?>
-    <?php if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') { ?>
-    <h1> Approved </h1>
-    <div class="container second-container">
-        <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-            while ($fetch = mysqli_fetch_assoc($result)) {
-                $uname = $fetch['email'];
-
-                // Fetch payment details for the current reservation email
-                $paymentQuery = "SELECT * FROM payments WHERE hname = '$hname' AND email = '$uname' ORDER BY id DESC LIMIT 1";
-                $paymentResult = mysqli_query($conn, $paymentQuery);
-                $paymentData = mysqli_fetch_assoc($paymentResult);
-
-                $payment = $paymentData['payment'] ?? 'No Payment Data';
-                $paystat = $paymentData['pay_stat'] ?? 'No Payment Status';
-                $paydate = $paymentData['pay_date'] ?? 'No Payment Date';
-        ?>
-        <div class="card">
-            <div class="card-footer">
-                <img src="<?php echo $fetch['image']; ?>">
-            </div>
-            <div class="card-header">
-                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Guest Information:</strong></p>
-                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
-                        <p>Email: <?php echo $fetch['email']; ?></p>
-                        <p>Gender: <?php echo $fetch['gender']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Room Information:</strong></p>
-                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
-                        <p>Room Status: <?php echo $fetch['status']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Bed Information:</strong></p>
-                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
-                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Reservation Details:</strong></p>
-                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
-                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
-                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
-                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
-                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Payment Details:</strong></p>
-                        <p>Payment: <?php echo $payment ?></p>
-                        <p>Payment Status: <?php echo $paystat ?></p>
-                        <p>Payment Date: <?php echo $paydate ?></p>
-                    </div>
-                </div>
-                
-                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
-                <div class="button-row">
-                    <div class="button-col">
-                        <?php if($fetch['res_stat'] == 'Pending'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>  
-                        <?php elseif($fetch['res_stat'] == 'Rejected'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a> 
-                        <?php else: ?>
-                        <?php endif; ?>
-
-                        <?php if($fetch['bed_stat'] == 'Reserved'): ?>
-                            <a href="php/function.php?confirm=<?php echo $fetch['id'];?>"><button>Confirm</button></a>
-                            <a href="php/function.php?cancel=<?php echo $fetch['id'];?>"><button class="reject">Cancel</button></a> 
-                        <?php elseif($fetch['bed_stat'] == 'Occupied'): ?>
-                            <a href="php/function.php?confirm=<?php echo $fetch['id'];?>"><button disabled>Confirm</button></a>
-                            <a href="php/function.php?cancel=<?php echo $fetch['id'];?>"><button class="reject" disabled>Cancel</button></a> 
-                        <?php else: ?>
-                        <?php endif; ?>
-
-                        <?php if($fetch['bed_stat'] == 'Occupied' && $fetch['res_stat'] == 'Confirmed'): ?>
-                            <a href="php/function.php?end=<?php echo $fetch['id'];?>"><button>End Reservation</button></a>
-                        <?php elseif($fetch['res_stat'] == 'Ended'): ?>
-                            <a href="php/function.php?end=<?php echo $fetch['id'];?>"><button disabled>End Reservation</button></a>
-                        <?php else: ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-        </div>
-        <?php 
-            }
-        } 
-        ?>
-    </div>
-
-
-
-    <h1> Ended </h1>
-    <div class="container">
-        <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-            $hname = $_SESSION['hname'];
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat = 'Ended'  order by id desc";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)) {
-        ?>
-        <div class="card">
-            <div class="card-footer">
-                <img src="<?php echo $fetch['image']; ?>">
-            </div>
-            <div class="card-header">
-                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                <div class="col-md-6">
-                        <p><strong>Guest Information:</strong></p>
-                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
-                        <p>Email: <?php echo $fetch['email']; ?></p>
-                        <p>Gender: <?php echo $fetch['gender']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Room Information:</strong></p>
-                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
-                        <p>Room Status: <?php echo $fetch['status']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Bed Information:</strong></p>
-                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
-                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Reservation Details:</strong></p>
-                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
-                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
-                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
-                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
-                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
-                    </div>
-                </div>
-                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
-                <div class="button-row">
-                    <div class="button-col">
-                        <?php if($fetch['res_stat'] == 'Approved'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a>   
-                        <?php elseif($fetch['res_stat'] == 'Pending'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>  
-                        <?php elseif($fetch['res_stat'] == 'Rejected'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a> 
-                        <?php else: ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-        </div>
-        <?php 
-            }
-        } 
-        ?>
-    </div>
-
-
-    <h1> Rejected </h1>
-    <div class="container">
-        <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-            $hname = $_SESSION['hname'];
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat = 'Rejected'  order by id desc";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)) {
-        ?>
-        <div class="card">
-            <div class="card-footer">
-                <img src="<?php echo $fetch['image']; ?>">
-            </div>
-            <div class="card-header">
-                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                <div class="col-md-6">
-                        <p><strong>Guest Information:</strong></p>
-                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
-                        <p>Email: <?php echo $fetch['email']; ?></p>
-                        <p>Gender: <?php echo $fetch['gender']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Room Information:</strong></p>
-                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
-                        <p>Room Status: <?php echo $fetch['status']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Bed Information:</strong></p>
-                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
-                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Reservation Details:</strong></p>
-                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
-                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
-                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
-                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
-                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
-                    </div>
-                </div>
-                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
-                <div class="button-row">
-                    <div class="button-col">
-                        <?php if($fetch['res_stat'] == 'Approved'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a>   
-                        <?php elseif($fetch['res_stat'] == 'Pending'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>  
-                        <?php elseif($fetch['res_stat'] == 'Rejected'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a> 
-                        <?php else: ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-        </div>
-        <?php 
-            }
-        } 
-        ?>
-    </div>
-
-
-    <h1> Cancelled </h1>
-    <div class="container">
-        <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {
-            $hname = $_SESSION['hname'];
-            $query = "SELECT * FROM reservation WHERE hname = '$hname' and res_stat = 'Cancelled'  order by id desc";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)) {
-        ?>
-        <div class="card">
-            <div class="card-footer">
-                <img src="<?php echo $fetch['image']; ?>">
-            </div>
-            <div class="card-header">
-                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                <div class="col-md-6">
-                        <p><strong>Guest Information:</strong></p>
-                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
-                        <p>Email: <?php echo $fetch['email']; ?></p>
-                        <p>Gender: <?php echo $fetch['gender']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Room Information:</strong></p>
-                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
-                        <p>Room Status: <?php echo $fetch['status']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Bed Information:</strong></p>
-                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
-                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Reservation Details:</strong></p>
-                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
-                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
-                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
-                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
-                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
-                    </div>
-                </div>
-                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
-                <div class="button-row">
-                    <div class="button-col">
-                        <?php if($fetch['res_stat'] == 'Approved'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a>   
-                        <?php elseif($fetch['res_stat'] == 'Pending'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject">Reject</button></a>  
-                        <?php elseif($fetch['res_stat'] == 'Rejected'): ?>
-                            <a href="php/function.php?approve=<?php echo $fetch['id'];?>"><button disabled>Approve</button></a>
-                            <a href="php/function.php?reject=<?php echo $fetch['id'];?>"><button class="reject" disabled>Reject</button></a> 
-                        <?php else: ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-        </div>
-        <?php 
-            }
-        } 
-        ?>
-    </div>
-
-    <?php } ?>
-    
 
     <style>
         .container{
