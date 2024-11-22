@@ -81,7 +81,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             background-size: cover;  /* Ensure the image covers the entire container */
             background-position: center; /* Position the background image centrally */
             background-repeat: no-repeat;  /* Prevent the background from repeating */
-            min-height: 100vh;  /* Ensure the section is at least the height of the viewport */
+            min-height: 120vh;  /* Ensure the section is at least the height of the viewport */
         }
 
         .content-background{
@@ -536,7 +536,9 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
     
         </div>
 
-        <footer class="footer">
+    </div>
+    
+    <footer class="footer">
             <div class="container">
                 <div class="row">
                     <div class="footer-col">
@@ -567,7 +569,6 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
                 <p class="footer-bottom-text">© 2024 Your Company Name. All Rights Reserved.</p>
             </div>
         </footer>
-    </div>
 
     <script src="chart.min.js"></script>
 

@@ -34,107 +34,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             margin-left: 220px; /* Offset for the navbar */
         }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 220px;
-            background-color: white;
-            padding: 20px 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-
-        .navbar-brand {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .navbar-brand img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 2px solid #f4f4f4;
-            transition: transform 0.3s ease;
-        }
-
-        .navbar-brand img:hover {
-            transform: scale(1.1);
-        }
-
-        .nav-links {
-            list-style: none;
-            padding: 0;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: left;
-            flex-grow: 1;
-        }
-
-        .nav-links li {
-            margin-bottom: 15px;
-        }
-
-        .nav-link {
-            color: black;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 10px 15px;
-            display: block;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .nav-link:hover {
-            background-color: #f0f0f0;
-            color: #007bff;
-        }
-
-        .login {
-            text-align: center;
-            margin-top: -10px; /* Adjusting to move the logout button up */
-        }
-
-        .login .btn {
-            color: white;
-            background-color: #007bff;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
-
-        .login .btn:hover {
-            background-color: #0056b3;
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                width: 180px;
-                padding: 15px 10px;
-            }
-
-            .navbar-brand img {
-                width: 60px;
-                height: 60px;
-            }
-
-            .nav-link {
-                font-size: 14px;
-            }
-
-            body {
-                margin-left: 180px;
-            }
-        }
-
-
         button {
             background-color: #007BFF;
             color: white;
@@ -200,25 +99,9 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     </style>
 
 <body>
-    <nav class="navbar">
-        <a class="navbar-brand" href="#">
-            <img src="images/logo.png" alt="Logo">
-        </a>
-        <ul class="nav-links">
-            <li><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-            <li><a class="nav-link" href="manageroom.php">Manage Rooms</a></li>
-            <li><a class="nav-link" href="managereservation.php">Reservations</a></li>
-            <li><a class="nav-link" href="payment.php">Payments</a></li>
-            <li><a class="nav-link" href="reports.php">Reports</a></li>
-        </ul>
-        <div class="login">
-            <a class="btn" href="php/logout.php">Logout</a>
-        </div>
-    </nav>
+    <?php include 'navigationbar.php'; ?>
 
     
-    
-
     <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
         <style>
 

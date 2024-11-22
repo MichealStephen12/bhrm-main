@@ -1,19 +1,21 @@
 <?php
 require 'connection.php';
 
+// Ensure the session is active and the user is authenticated
 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     echo '';
 } else {
     header("location: ../index.php");
 }
 
+// Handle room addition
 if (isset($_POST['submit'])) {
     $roomno = $_POST['roomno'];
     $roomtype = $_POST['roomtype'];
     $capacity = $_POST['capacity'];
     
     // Get the selected amenities as an array
-    $amenities = isset($_POST['amenities']) ? implode(', ', $_POST['amenities']) : ''; // Join them as a string with commas
+    $amenities = isset($_POST['amenities']) ? implode(', ', $_POST['amenities']) : '';
     
     $tenanttype = $_POST['tenanttype'];
     $roomfloor = $_POST['roomfloor'];
@@ -36,12 +38,9 @@ if (isset($_POST['submit'])) {
     if (in_array($fileactualext, $allowed)) {
         if ($fileError === 0) {
             if ($fileSize < 1000000) {
-                $fileNameNew = $fileName;
+                $fileNameNew = uniqid('', true) . '.' . $fileactualext;
                 $fileDestination = '../images/' . $fileNameNew;
-                if ($fileNameNew > 0) {
-                    move_uploaded_file($fileTmpName, $fileDestination);
-                    header("location: ../boardinghouse.php");
-                }
+                move_uploaded_file($fileTmpName, $fileDestination);
             } else {
                 echo "Your file is too big.";
             }
@@ -53,7 +52,7 @@ if (isset($_POST['submit'])) {
     // Get the house name from the session
     $hname = $_SESSION['hname'];
 
-    // Insert the room data along with amenities into the database
+    // Insert the room data into the database
     $query = "INSERT INTO `rooms`(`id`, `room_no`, `capacity`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`) VALUES 
                 ('', '$roomno', '$capacity', '$amenities', '$tenanttype', '$roomfloor', '$price', 'images/$fileNameNew', '$status', '$hname')";
 
@@ -62,21 +61,23 @@ if (isset($_POST['submit'])) {
     header("location: ../manageroom.php");
 }
 
-
-
+// Initialize data array for room details
 $data = ['id' => '', 'room_no' => '', 'room_type' => '', 'capacity' => '', 'amenities' => '', 'price' => '', 'image' => '', 'status'=>''];
+$amenitiesSelected = []; // Default to an empty array
 
-if(isset($_GET['rupdate'])){
+// Handle room update
+if (isset($_GET['rupdate'])) {
     $id = $_GET['rupdate'];
 
     $query = "SELECT * FROM `rooms` WHERE id = $id";
     $result = mysqli_query($conn, $query);
     $data = mysqli_fetch_assoc($result);
 
-    $amenitiesSelected = explode(', ', $data['amenities']); 
+    // Extract amenities as an array
+    $amenitiesSelected = isset($data['amenities']) ? explode(', ', $data['amenities']) : [];
 }
 
-// Delete rooms
+// Handle room deletion
 if (isset($_GET['rdelete'])) {
     $id = $_GET['rdelete'];
     $query = "DELETE FROM rooms WHERE id = $id";
@@ -86,13 +87,14 @@ if (isset($_GET['rdelete'])) {
     }
 }
 
+// Handle room update form submission
 if (isset($_POST['update'])) {
     $id = $_GET['rupdate'];
     $roomno = $_POST['roomno'];
     $roomtype = $_POST['roomtype'];
     $capacity = $_POST['capacity'];
     
-    // Convert selected amenities array to a comma-separated string
+    // Convert selected amenities to a string
     $amenities = isset($_POST['amenities']) ? implode(', ', $_POST['amenities']) : '';
     
     $tenanttype = $_POST['tenanttype'];
@@ -100,7 +102,7 @@ if (isset($_POST['update'])) {
     $price = $_POST['price'];
     $status = $_POST['status'];
 
-    // Handle image upload as previously
+    // Handle image upload
     $fileNameNew = null;
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
         $fileName = $_FILES['image']['name'];
@@ -134,12 +136,10 @@ if (isset($_POST['update'])) {
     
     mysqli_query($conn, $query);
 
-    // Redirect to manageroom.php after update
     header("location: ../manageroom.php");
 }
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
