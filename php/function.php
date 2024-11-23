@@ -395,15 +395,17 @@ $data = ['id' => '', 'owner' => '', 'hname' => '', 'haddress' => '', 'image' => 
 
 
 if (isset($_GET['edit'])) {
-    $house = $_GET['edit'];
+    $id = $_GET['edit'];
 
-    $query = "SELECT * FROM `boardinghouses` WHERE hname = '$house'";
+    $query = "SELECT * FROM `boardinghouses` WHERE id = $id";
     $result = mysqli_query($conn, $query);
     $data = mysqli_fetch_assoc($result);
+    $hname = $data['hname'];
+    $owner = $data['owner'];
 }
 
 if (isset($_POST['update'])) {
-    $house = $_GET['edit'];
+    $id = $_GET['edit'];
     $landlord = $_POST['landlord'];
     $hname = $_POST['hname'];
     $haddress = $_POST['haddress'];
@@ -438,21 +440,22 @@ if (isset($_POST['update'])) {
         echo "you cannot upload this type of file";
     }
 
-    $query = "select * from boardinghouses where hname = '$house'";
+    $query = "UPDATE `boardinghouses` SET `owner`='$owner', `hname`='$hname', `haddress`='$haddress', `contact_no`='$contactno', `landlord`='$landlord' WHERE owner = '$owner'";
     $result = mysqli_query($conn, $query);
-    $fetch = mysqli_fetch_assoc($result);
-    $hname = $fetch['hname'];
-    $owner = $fetch['owner'];
+    if($result){
+        $query = "UPDATE `documents` SET `hname`='$hname', `image`= 'images/$fileNameNew' where owner = '$owner'";
+        mysqli_query($conn, $query);
+    }
 
-    $query = "UPDATE `boardinghouses` SET `owner`='$owner', `hname`='$hname', `haddress`='$haddress', `contact_no`='$contactno', `landlord`='$landlord'  WHERE hname = '$house'";
+    $query = "UPDATE `users` SET `hname`='$hname' WHERE uname = '$owner'";
     mysqli_query($conn, $query);
 
 
-    $query = "UPDATE `documents` SET `image`= 'images/$fileNameNew' where hname = '$hname'";
-    mysqli_query($conn, $query);
+ 
 
     header("location: ../index.php");
 }
+
 
 if (isset($_GET['delete'])) {
     $hname = $_GET['delete'];
@@ -478,6 +481,7 @@ if (isset($_GET['delete'])) {
     header("location: ../index.php");
 }
 
+
 ?>
 
 <!DOCTYPE html>
@@ -486,7 +490,7 @@ if (isset($_GET['delete'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Room</title>
+    <title>Update <?php echo $data['hname']; ?></title>
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="register.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -497,7 +501,7 @@ if (isset($_GET['delete'])) {
     </style>
 
 </head>
-
+        <?php ?>
 <body>
     <div class="container-fluid">
         <div class="row" style="padding-top: 5%;">

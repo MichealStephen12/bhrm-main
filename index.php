@@ -403,8 +403,8 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
                         <p>Contact Number: <?php echo $fetch["contact_no"]; ?></p>
                         <p>Address: <?php echo $fetch["haddress"]; ?></p>
                         <div class="bh-btn">
-                            <a href="php/function.php?edit=<?php echo $hname; ?>" class="button">Update</a>
-                            <a href="php/function.php?delete=<?php echo $hname; ?>" class="button">Delete</a>
+                            <a href="php/function.php?edit=<?php echo $id; ?>" class="button">Update</a>
+                            <a href="php/function.php?delete=<?php echo $id; ?>" class="button">Delete</a>
                         </div>
                     </div> 
                 </div>
