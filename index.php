@@ -81,7 +81,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             background-size: cover;  /* Ensure the image covers the entire container */
             background-position: center; /* Position the background image centrally */
             background-repeat: no-repeat;  /* Prevent the background from repeating */
-            min-height: 120vh;  /* Ensure the section is at least the height of the viewport */
+            min-height: 110vh;  /* Ensure the section is at least the height of the viewport */
         }
 
         .content-background{
@@ -91,65 +91,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             height: auto;
         }
 
-        .navbar {
-            margin: 0 200px;
-            background-color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar a {
-            color: black;
-        }
-
-        .navbar-brand img {
-            width: 80px;
-            height: 80px;
-        }
-
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: black;
-            text-decoration: none;
-            padding: 0 10px;
-        }
-
-        .login {
-            width: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }.login a{
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                margin: 0;
-                padding: 10px 20px;
-                flex-direction: column;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                margin-top: 10px;
-            }
-
-            .nav-link {
-                padding: 5px 0;
-            }
-
-            .login {
-                margin-top: 10px;
-            }
-        }
+        
 
         .section2 {
             margin: auto;
@@ -320,40 +262,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
 
 <body>
     <div class="background">
-        <nav class="navbar">
-            <a class="navbar-brand" href="#">
-                <img src="images/logo.png" alt="Logo">
-            </a>
-            <div class="nav-links">
-                <a class="nav-link" href="index.php">Home</a>
-                <a class="nav-link" href="about.php">About Us</a>
-                <a class="nav-link" href="contact.php">Contact</a>
-                <?php
-                if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') {
-                    echo '<a class="nav-link" href="php/bhapplications.php">View Applications</a>';
-                }
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                    echo '<a class="nav-link" href="reservation.php">Reservations</a>';
-                } 
-                ?>
-
-                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'): ?>
-                    <a class="nav-link" href="reservation.php">My Reservation</a>
-                <?php else: ?>
-                <?php endif; ?>
-            </div>
-            <div class="login">
-                <?php
-                    if (empty($_SESSION['uname'])) {
-                        echo '<a class="button" href="php/login.php">Login</a>';
-                        
-                    } else {
-                        echo '<a class="button" href="php/logout.php">Logout</a>';
-                    }
-                ?>
-            </div>
-
-        </nav>
+        <?php include 'navbar.php'; ?>
 
         <div class="content-background">
             <?php if(!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin'): ?>

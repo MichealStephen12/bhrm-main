@@ -48,67 +48,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             background-repeat: no-repeat;  /* Prevent the background from repeating */
             min-height: auto;  /* Ensure the section is at least the height of the viewport */
         }
-        
-        .navbar {
-            margin: 0 200px;
-            background-color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar a {
-            color: black;
-        }
-
-        .navbar-brand img {
-            width: 80px;
-            height: 80px;
-        }
-
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: black;
-            text-decoration: none;
-            padding: 0 10px;
-        }
-
-        .login{
-            width: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-        }.login a{
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                margin: 0;
-                padding: 10px 20px;
-                flex-direction: column;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                margin-top: 10px;
-            }
-
-            .nav-link {
-                padding: 5px 0;
-            }
-
-            .login {
-                margin-top: 10px;
-            }
-        }
 
         button {
             background-color: #007BFF;
@@ -175,41 +114,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     </style>
 
 <body>
-    <nav class="navbar">
-        <a class="navbar-brand" href="#">
-            <img src="images/logo.png" alt="Logo">
-        </a>
-        <div class="nav-links">
-            <a class="nav-link" href="index.php">Home</a>
-            <a class="nav-link" href="about.php">About</a>
-            <a class="nav-link" href="contact.php">Contact</a>
-            <?php  
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                    echo '<a class="nav-link" href="reservation.php">Reservations</a>';
-                } 
-
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                    echo '<a class="nav-link" href="reservation.php?">My Reservation</a>
-                            
-                        ';
-                }
-            ?>
-        </div>
-        <div class="login">
-            <?php
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                    echo '<a class="btn" href="php/logout.php">Logout</a>';
-                } 
-                if (empty($_SESSION["uname"])){
-                    echo '<a class="btn" href="php/login.php">Login</a>';
-                }
-                if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                    echo '<a class="btn" href="php/logout.php">Logout</a>';
-                }
-            ?>
-        </div>
-        
-    </nav>
+    <?php include 'navbar.php'; ?>
     
     
 

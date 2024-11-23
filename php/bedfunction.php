@@ -114,7 +114,7 @@ if(isset($_POST['update'])){
     $query = "UPDATE `beds` SET `id`=$id,`roomno`='$roomno',`bed_img`='beds/$fileNameNew',`bed_no`='$bedno',`bed_stat`='$bedstat',`bed_price`='$bedprice',`hname`='$hname' WHERE id = $id and hname = '$hname' and roomno = $roomno";
     mysqli_query($conn, $query);
 
-    header("location: ../beds.php?roomno=$roomno");
+    header("location: ../managebeds.php?roomno=$roomno");
 }
 ?>
 
@@ -124,8 +124,6 @@ if(isset($_POST['update'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADDROOM</title>
-    <link rel="stylesheet" href="register.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         body {
             background-color: #e6e6e6; /* Background color */
@@ -133,63 +131,244 @@ if(isset($_POST['update'])){
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row" style="padding-top: 5%;">
-            <div class="col-md-4"></div>
-            <div class="col-md-4" style="text-align: center; background-color: #a9a9a9; border-radius: 20px; padding: 10px;">
-                <div class="row">
-                    <div class="col-md-12" style="padding-bottom: 15px;">
-                        <img src="../images/logo.png" height="100px">
-                    </div>
-                    <div class="col-md-12">
-                        <span style="font-weight: 100; font-size: 17px;">Add Rooms</span>
-                    </div>
-                    <div class="col-md-12">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Room No:</label>
-                                    <input type="text" name="roomno" value="<?php echo $_SESSION['roomno']; ?>"  placeholder="Enter here.." class="form-control" readonly>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Bed Image:</label>
-                                    <input type="file" name="image" value="<?php echo $data['bed_img'];?>" placeholder="Enter here.." class="form-control" >
-                                </div>
-                                <?php if($data['id'] != '') :  ?>
-                                <div class="col-md-12" style="padding: 10px 20px 10px 20px;">
-                                    <img src="../<?php echo $data['bed_img'];?>" value="<?php echo $data['bed_img'];?>" height="100" width="100" alt="">
-                                </div>
-                                <?php endif; ?>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Bed No:</label>
-                                    <input type="text" name="bedno" value="<?php echo $data['bed_no']; ?>"  placeholder="Enter here.." class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Bed Status:</label>
-                                    <input type="text" name="bedstat" value="Available"  placeholder="Enter here.." class="form-control" readonly>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Bed Price:</label>
-                                    <input type="text" name="bedprice" value="<?php echo $data['bed_price']; ?>"  placeholder="Enter here.." class="form-control" required>
-                                </div>
+    <?php include '../navigationbar.php'; ?>
+
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Rooms</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
         
-                                <div class="col-md-12" style="text-align: center; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <?php if($data['id'] != '') :  ?>
-                                    <input type="submit" name="update" value="Update" class="btn btn-warning">
-                                    <?php else: ?>
-                                    <input type="submit" name="submit" value="Submit" class="btn btn-warning">
-                                    <?php endif; ?>
-                                    <a href="../managebeds.php?roomno=<?php echo $_SESSION['roomno'] ?>" class="btn btn-secondary">Back</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin-left: 220px; /* Offset for the navbar */
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Center vertically */
+        }
+
+        .form-container {
+            width: 40%;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-container img {
+            height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .form-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            width: calc(100% - 20px); /* Ensure it doesn't exceed container */
+            padding: 10px;
+            margin: 0 auto;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            box-sizing: border-box; /* Include padding and border in width */
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="file"]:focus {
+            border-color: #f0ad4e;
+            background-color: #fff;
+            outline: none;
+        }
+
+        .image-preview img {
+            height: 100px;
+            width: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-top: 10px;
+        }
+
+        .form-actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-actions input[type="submit"],
+        .form-actions a {
+            display: inline-block;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-actions input[type="submit"] {
+            background-color: #007bff; /* Blue color */
+        }
+
+        .form-actions input[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: scale(1.05);
+        }
+
+        .form-actions a {
+            background-color: #6c757d;
+        }
+
+        .form-actions a:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .form-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .form-title {
+                font-size: 20px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="file"] {
+                width: calc(100% - 20px); /* Maintain consistent width */
+            }
+        }
+    </style>
+
+
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <img src="../images/logo.png" alt="Logo">
+            <div class="form-title">Add Rooms</div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="roomno">Room No:</label>
+                    <input 
+                        type="text" 
+                        id="roomno" 
+                        name="roomno" 
+                        value="<?php echo $_SESSION['roomno']; ?>" 
+                        placeholder="Enter here.." 
+                        readonly>
                 </div>
-            </div>
-            <div class="col-md-4"></div>
+                <div class="form-group">
+                    <label for="image">Bed Image:</label>
+                    <input 
+                        type="file" 
+                        id="image" 
+                        name="image" 
+                        value="<?php echo $data['bed_img']; ?>" 
+                        placeholder="Enter here..">
+                </div>
+                <?php if ($data['id'] != '') : ?>
+                <div class="image-preview">
+                    <img src="../<?php echo $data['bed_img']; ?>" value="<?php echo $data['bed_img']; ?>" alt="Bed Image">
+                </div>
+                <?php endif; ?>
+                <div class="form-group">
+                    <label for="bedno">Bed No:</label>
+                    <input 
+                        type="text" 
+                        id="bedno" 
+                        name="bedno" 
+                        value="<?php echo $data['bed_no']; ?>" 
+                        placeholder="Enter here.." 
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="bedstat">Bed Status:</label>
+                    <input 
+                        type="text" 
+                        id="bedstat" 
+                        name="bedstat" 
+                        value="Available" 
+                        placeholder="Enter here.." 
+                        readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bedprice">Bed Price:</label>
+                    <input 
+                        type="text" 
+                        id="bedprice" 
+                        name="bedprice" 
+                        value="<?php echo $data['bed_price']; ?>" 
+                        placeholder="Enter here.." 
+                        required>
+                </div>
+                <div class="form-actions">
+                    <?php if ($data['id'] != '') : ?>
+                    <input 
+                        type="submit" 
+                        name="update" 
+                        value="Update">
+                    <?php else: ?>
+                    <input 
+                        type="submit" 
+                        name="submit" 
+                        value="Submit">
+                    <?php endif; ?>
+                    <a href="../managebeds.php?roomno=<?php echo $_SESSION['roomno']; ?>">Back</a>
+                </div>
+            </form>
         </div>
     </div>
+</body>
+</html>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
 </body>
 </html>

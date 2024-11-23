@@ -12,6 +12,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
         $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname where boardinghouses.hname = '$hname'";
         $result = mysqli_query($conn, $query);
         $fetch = mysqli_fetch_assoc($result); 
+        $img = $fetch['image'];
         echo "
         <script src='jquery.min.js'></script>
         <link rel='stylesheet' href='toastr.min.css'/>
@@ -94,66 +95,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
             min-height: auto;  /* Ensure the section is at least the height of the viewport */
         }
         
-        .navbar {
-            margin: 0 200px;
-            background-color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .navbar a {
-            color: black;
-        }
-
-        .navbar-brand img {
-            width: 80px;
-            height: 80px;
-        }
-
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: black;
-            text-decoration: none;
-            padding: 0 10px;
-        }
-
-        .login{
-            width: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-        }.login a{
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                margin: 0;
-                padding: 10px 20px;
-                flex-direction: column;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                margin-top: 10px;
-            }
-
-            .nav-link {
-                padding: 5px 0;
-            }
-
-            .login {
-                margin-top: 10px;
-            }
-        }
 
         .content-background{
             background-color: white;
@@ -409,41 +350,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
     </style>
 <body>
     <div class="background">
-        <nav class="navbar">
-            <a class="navbar-brand" href="#">
-                <img src="images/logo.png" alt="Logo">
-            </a>
-            <div class="nav-links">
-                <a class="nav-link" href="index.php">Home</a>
-                <a class="nav-link" href="about.php">About</a>
-                <a class="nav-link" href="contact.php">Contact</a>
-                <?php  
-                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                        echo '<a class="nav-link" href="reservation.php">Reservations</a>';
-                    } 
-
-                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                        echo '<a class="nav-link" href="reservation.php?">My Reservation</a>
-                               
-                            ';
-                    }
-                ?>
-            </div>
-            <div class="login">
-                <?php
-                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){
-                        echo '<a class="btn" href="php/logout.php">Logout</a>';
-                    } 
-                    if (empty($_SESSION["uname"])){
-                        echo '<a class="btn" href="php/login.php">Login</a>';
-                    }
-                    if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'user'){
-                        echo '<a class="btn" href="php/logout.php">Logout</a>';
-                    }
-                ?>
-            </div>
-          
-        </nav>
+        <?php include 'navbar.php'; ?>
 
 
         <div class="content-background">
@@ -489,7 +396,11 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
 
                 </style>
                 <div class="secrow1">
-                    <img src="<?php echo $fetch["image"] ?>">
+                    <?php if(!empty($_SESSION['uname'])): ?>
+                    <img src="<?php echo $img ?>">
+                    <?php else: ?>
+                    <img src="<?php echo $fetch['image'] ?>">
+                    <?php endif; ?>
                 </div>
                 <div class="secrow2">
                     <div class="text-box">

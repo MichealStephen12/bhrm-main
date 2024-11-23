@@ -199,16 +199,16 @@
 
     <nav class="navbar">
         <a class="navbar-brand" href="#">
-            <img src="images/logo.png" alt="Logo">
+            <img src="/bhrm-main/images/logo.png" alt="Logo">
         </a>
         <ul class="nav-links">
         <div class="li-background">
             <li class="dropdown">
-                <img src="images/profile-placeholder.png" alt="Profile">
+                <img src="/bhrm-main/beds/dfghdfh.jpg" alt="Profile">
             </li>
             <li class="dropdown">
                 <div class="dropdown-toggle">
-                    <span class="username"><?php echo $fetch['fname']; ?></span>
+                    <span class="username"> Welcome <?php echo $fetch['fname']; ?></span>
                     <span>▼</span>
                 </div>
                 <div class="dropdown-menu">
