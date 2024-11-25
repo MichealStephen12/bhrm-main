@@ -51,10 +51,11 @@ if (isset($_POST['submit'])) {
 
     // Get the house name from the session
     $hname = $_SESSION['hname'];
+    $owner = $_SESSION['uname'];
 
     // Insert the room data into the database
-    $query = "INSERT INTO `rooms`(`id`, `room_no`, `capacity`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`) VALUES 
-                ('', '$roomno', '$capacity', '$amenities', '$tenanttype', '$roomfloor', '$price', 'images/$fileNameNew', '$status', '$hname')";
+    $query = "INSERT INTO `rooms`(`id`, `room_no`, `capacity`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`, `owner`) VALUES 
+                ('', '$roomno', '$capacity', '$amenities', '$tenanttype', '$roomfloor', '$price', 'images/$fileNameNew', '$status', '$hname', '$owner')";
 
     mysqli_query($conn, $query);
 

@@ -443,8 +443,24 @@ if (isset($_POST['update'])) {
     $query = "UPDATE `boardinghouses` SET `owner`='$owner', `hname`='$hname', `haddress`='$haddress', `contact_no`='$contactno', `landlord`='$landlord' WHERE owner = '$owner'";
     $result = mysqli_query($conn, $query);
     if($result){
+        $query = "UPDATE `beds` SET `hname`='$hname' where owner = '$owner'";
+        mysqli_query($conn, $query);
+
+        $query = "UPDATE `description` SET `hname`='$hname' where owner = '$owner'";
+        mysqli_query($conn, $query);
+
         $query = "UPDATE `documents` SET `hname`='$hname', `image`= 'images/$fileNameNew' where owner = '$owner'";
         mysqli_query($conn, $query);
+
+        $query = "UPDATE `reports` SET `hname`='$hname' where owner = '$owner'";
+        mysqli_query($conn, $query);
+
+        $query = "UPDATE `reservation` SET `hname`='$hname' where owner = '$owner'";
+        mysqli_query($conn, $query);
+
+        $query = "UPDATE `rooms` SET `hname`='$hname' where owner = '$owner'";
+        mysqli_query($conn, $query);
+
     }
 
     $query = "UPDATE `users` SET `hname`='$hname' WHERE uname = '$owner'";
@@ -458,9 +474,9 @@ if (isset($_POST['update'])) {
 
 
 if (isset($_GET['delete'])) {
-    $hname = $_GET['delete'];
+    $id = $_GET['delete'];
 
-    $query = "select * from boardinghouses where hname = '$hname'";
+    $query = "select * from boardinghouses where id = $id";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
     $hname = $fetch['hname'];

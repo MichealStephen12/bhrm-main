@@ -111,7 +111,10 @@ if (isset($_GET['approve'])) {
             $query_update = "UPDATE bhapplication SET Status = 'Approved' WHERE hname = '$hname'";
             mysqli_query($conn, $query_update);
 
-            $query_insert = "UPDATE documents SET hname = '$hname' where uname = '$owner'";
+            $query_insert = "UPDATE documents SET hname = '$hname', owner = '$owner' where hname = '$hname'";
+            mysqli_query($conn, $query_insert);
+
+            $query_insert = "UPDATE description SET hname = '$hname', owner = '$owner' where hname = '$hname'";
             mysqli_query($conn, $query_insert);
 
             $query_insert = "UPDATE users SET hname = '$hname' where uname = '$owner'";

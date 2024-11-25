@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
                 $fileDestination = '../beds/' . $fileNameNew;
                 if ($fileNameNew > 0) {
                     move_uploaded_file($fileTmpName, $fileDestination);
-                    header("location: ../boardinghouse.php");
+                    header("location: ../managebeds.php?roomno=$roomno");
                 }
             } else {
                 echo "your file is too big.";
@@ -44,8 +44,9 @@ if (isset($_POST['submit'])) {
 
     $hname = $_SESSION['hname'];
     $roomno = $_SESSION['roomno'];
-    $query = "INSERT INTO `beds`(`id`, `roomno`, `bed_img`, `bed_no`, `bed_stat`, `bed_price`, `hname`) VALUES 
-                                ('','$roomno','beds/$fileNameNew','$bedno','$bedstat', '$bedprice', '$hname')";
+    $owner = $_SESSION['uname'];
+    $query = "INSERT INTO `beds`(`id`, `roomno`, `bed_img`, `bed_no`, `bed_stat`, `bed_price`, `hname`, `owner`) VALUES 
+                                ('','$roomno','beds/$fileNameNew','$bedno','$bedstat', '$bedprice', '$hname', '$owner')";
     mysqli_query($conn, $query);
 
     header("location: ../managebeds.php?roomno=$roomno");
@@ -100,7 +101,7 @@ if(isset($_POST['update'])){
                 $fileDestination = '../beds/' . $fileNameNew;
                 if ($fileNameNew > 0) {
                     move_uploaded_file($fileTmpName, $fileDestination);
-                    header("location: ../boardinghouse.php");
+                    header("location: ../managebeds.php?roomno=$roomno");
                 }
             } else {
                 echo "your file is too big.";
