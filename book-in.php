@@ -103,12 +103,18 @@ if (isset($_POST['submit'])) {
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
 
+    $query = "select * from boardinghouses where hname = '$hname'";
+    $result = mysqli_query($conn, $query);
+    $fetch = mysqli_fetch_assoc($result);
+    $owner = $fetch['owner'];
+
+
     if (!empty($_POST['specific_beds'])) {
         $specific_beds = $_POST['specific_beds']; // Array of selected specific beds
         foreach ($specific_beds as $bedno) {
             // Insert each selected specific bed
-            $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `bed_price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
-                      VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedno', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+            $query = "INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `bed_price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
+                      VALUES ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$bedno', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname', '$owner')";
             mysqli_query($conn, $query);
         }
     }
@@ -121,9 +127,9 @@ if (isset($_POST['submit'])) {
     
         // Single insert with the total beds in the `bed_no` or a custom field
         $query = "INSERT INTO `reservation` 
-                  (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `bed_price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`) 
+                  (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_stat`, `capacity`, `amenities`, `bed_price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
                   VALUES 
-                  ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$total_beds Bed(s)', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname')";
+                  ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$total_beds Bed(s)', 'Available', '$capacity', '$amenities', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname', '$owner')";
     
         mysqli_query($conn, $query);
     }

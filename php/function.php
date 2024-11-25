@@ -126,6 +126,7 @@ if (isset($_GET['confirm'])) {
     $fname = $fetch['fname'];
     $lname = $fetch['lname'];
     $gender = $fetch['gender'];
+    $owner = $fetch['owner'];
     $date_in = date('Y-m-d'); // Current date as the check-in date
 
     // Handle multiple beds or a single bed
@@ -151,8 +152,8 @@ if (isset($_GET['confirm'])) {
         // Verify that all requested beds were updated
         if ($updatedBeds == $total_beds) {
             // Insert a single payment record for the whole reservation (not per bed)
-            $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `hname`) 
-                                   VALUES ('', '$uname', '$roomno', '$bedno', '$bedprice', 'Not Fully Paid', '$hname')";
+            $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `hname`, `owner`) 
+                                   VALUES ('', '$uname', '$roomno', '$bedno', '$bedprice', 'Not Fully Paid', '$hname', '$owner')";
             mysqli_query($conn, $insertPaymentQuery);
 
             // Insert a single report record for the reservation as a whole
@@ -187,8 +188,8 @@ if (isset($_GET['confirm'])) {
         mysqli_query($conn, $updateBedQuery);
 
         // Insert payment record for the single bed
-        $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `pay_date`, `hname`) 
-                               VALUES ('', '$uname', '$roomno', '$bedno', '$bedprice', 'Not Fully Paid', '', '$hname')";
+        $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `pay_stat`, `pay_date`, `hname`, `owner`) 
+                               VALUES ('', '$uname', '$roomno', '$bedno', '$bedprice', 'Not Fully Paid', '', '$hname', '$owner')";
         mysqli_query($conn, $insertPaymentQuery);
 
         // Insert report record for the single bed
