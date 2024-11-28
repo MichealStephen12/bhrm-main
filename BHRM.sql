@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 25, 2024 at 04:09 AM
+-- Generation Time: Nov 28, 2024 at 09:57 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -43,10 +43,10 @@ CREATE TABLE `beds` (
 --
 
 INSERT INTO `beds` (`id`, `roomno`, `bed_img`, `bed_no`, `bed_stat`, `bed_price`, `hname`, `owner`) VALUES
-(1, 1, 'beds/67400efec6c107.72247498.jpg', 1, 'Available', 1000, 'Dodge BH', 'dodge@gmail.com'),
-(2, 1, 'beds/67400efec6c107.72247498.jpg', 2, 'Available', 1000, 'Dodge BH', 'dodge@gmail.com'),
-(3, 1, 'beds/sgsdgs.jpg', 3, 'Available', 1000, 'Dodge BH', 'dodge@gmail.com'),
-(4, 2, 'beds/gasda.jpg', 1, 'Available', 1000, 'Dodge BH', 'dodge@gmail.com');
+(1, 1, 'beds/67400efec6c107.72247498.jpg', 1, 'Occupied', 1000, 'Dodge BH', 'dodge@gmail.com'),
+(2, 1, 'beds/67400efec6c107.72247498.jpg', 2, 'Occupied', 1000, 'Dodge BH', 'dodge@gmail.com'),
+(3, 1, 'beds/sgsdgs.jpg', 3, 'Occupied', 1000, 'Dodge BH', 'dodge@gmail.com'),
+(4, 2, 'beds/gasda.jpg', 1, 'Occupied', 1000, 'Dodge BH', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -163,6 +163,14 @@ CREATE TABLE `payments` (
   `owner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_no`, `bed_price`, `payment`, `pay_stat`, `pay_date`, `hname`, `owner`) VALUES
+(7, 'user@gmail.com', 1, 3, 1000, 600, 'Partially Paid', '2024-11-28', 'Dodge BH', 'dodge@gmail.com'),
+(8, 'user2@gmail.com', 2, 1, 1000, 600, 'Partially Paid', '2024-11-29', 'Dodge BH', 'dodge@gmail.com');
+
 -- --------------------------------------------------------
 
 --
@@ -195,7 +203,9 @@ INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `payment`, `pa
 (3, 'user', 'user', 'Male', 'user@gmail.com', 0, '0000-00-00', '2024-11-25', '2024-11-25', 1, 3, 'Dodge BH', ''),
 (4, 'user', 'user', 'Male', 'user@gmail.com', 0, '0000-00-00', '2024-11-25', '2024-11-25', 1, 3, 'Dodge BH', ''),
 (5, 'user', 'user', 'Male', 'user@gmail.com', 0, '0000-00-00', '2024-11-25', '2024-11-25', 1, 3, 'Dodge BH', ''),
-(6, 'user', 'user', 'Male', 'user@gmail.com', 0, '0000-00-00', '2024-11-25', '2024-11-25', 1, 3, 'Dodge BH', '');
+(6, 'user', 'user', 'Male', 'user@gmail.com', 0, '0000-00-00', '2024-11-25', '2024-11-25', 1, 3, 'Dodge BH', ''),
+(7, 'user', 'user', 'Male', 'user@gmail.com', 0, '0000-00-00', '2024-11-28', NULL, 1, 3, 'Dodge BH', ''),
+(8, 'Dodge', 'Ackkerman', 'Male', 'user2@gmail.com', 0, '0000-00-00', '2024-11-28', NULL, 2, 1, 'Dodge BH', '');
 
 -- --------------------------------------------------------
 
@@ -234,12 +244,14 @@ CREATE TABLE `reservation` (
 --
 
 INSERT INTO `reservation` (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `bed_no`, `bed_price`, `bed_stat`, `capacity`, `amenities`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) VALUES
-(1, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-23', '2024-12-23', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi', 0, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge BH', 'dodge@gmail.com'),
-(2, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-28', '2024-12-28', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge BH', ''),
-(3, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-29', '2024-12-29', '', 'palihug kog hinlo', 1, '3', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge BH', 'dodge@gmail.com'),
-(4, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-28', '2024-12-28', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge BH', ''),
-(5, 'user', 'user', 'user@gmail.com', 'Male', '2024-12-05', '2025-01-04', '', '', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge BH', ''),
-(6, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-28', '2024-12-28', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Ended', '', 'Reservation Ended', 'Dodge BH', 'dodge@gmail.com');
+(1, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-23', '2024-12-23', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi', 0, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Ended', '', 'Reservation Ended', 'Dodge BH', 'dodge@gmail.com'),
+(2, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-28', '2024-12-28', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Ended', '', 'Reservation Ended', 'Dodge BH', ''),
+(3, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-29', '2024-12-29', '', 'palihug kog hinlo', 1, '3', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Ended', '', 'Reservation Ended', 'Dodge BH', 'dodge@gmail.com'),
+(4, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-28', '2024-12-28', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Ended', '', 'Reservation Ended', 'Dodge BH', ''),
+(5, 'user', 'user', 'user@gmail.com', 'Male', '2024-12-05', '2025-01-04', '', '', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Ended', '', 'Reservation Ended', 'Dodge BH', ''),
+(6, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-28', '2024-12-28', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Available', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Ended', '', 'Reservation Ended', 'Dodge BH', 'dodge@gmail.com'),
+(7, 'user', 'user', 'user@gmail.com', 'Male', '2024-11-29', '2024-12-29', '', 'palihug kog hinlo', 1, '3 Bed(s)', 1000, 'Occupied', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Confirmed', '', 'Tenant Arrived', 'Dodge BH', 'dodge@gmail.com'),
+(8, 'Dodge', 'Ackkerman', 'user2@gmail.com', 'Male', '2024-11-29', '2024-12-29', '', 'palihug kog hinlo', 2, '1', 1000, 'Occupied', 3, 'wifi, tv, afasf', 0, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Confirmed', '', 'Tenant Arrived', 'Dodge BH', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -267,8 +279,8 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `room_no`, `capacity`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`, `owner`) VALUES
-(1, 1, 3, 0, 'wifi, tv, afasf', 'male', 'ground floor', 1000, 'images/673fdeb1a44f30.60824496.jpg', 'available', 'Dodge BH', 'dodge@gmail.com'),
-(2, 2, 3, 0, 'wifi', 'male', 'ground floor', 1000, 'images/673fdf57bba517.83684901.jpg', 'available', 'Dodge BH', 'dodge@gmail.com'),
+(1, 1, 3, 3, 'wifi, tv, afasf', 'male', 'ground floor', 1000, 'images/673fdeb1a44f30.60824496.jpg', 'Full', 'Dodge BH', 'dodge@gmail.com'),
+(2, 2, 3, 1, 'wifi', 'male', 'ground floor', 1000, 'images/673fdf57bba517.83684901.jpg', 'available', 'Dodge BH', 'dodge@gmail.com'),
 (3, 3, 3, 0, 'wifi, bedsheets', 'male', 'ground floor', 1000, 'images/6743e5676e5f17.95594161.jpg', 'available', 'Dodge BH', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
@@ -279,6 +291,7 @@ INSERT INTO `rooms` (`id`, `room_no`, `capacity`, `current_tenant`, `amenities`,
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
   `fname` varchar(50) NOT NULL,
   `lname` varchar(50) NOT NULL,
   `uname` varchar(50) NOT NULL,
@@ -291,13 +304,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fname`, `lname`, `uname`, `pass`, `role`, `hname`) VALUES
-(1, 'admin', 'admin', 'admin@gmail.com', 'yes', 'admin', ''),
-(2, 'Dodge', 'Suico', 'dodge@gmail.com', 'yes', 'landlord', 'Dodge BH'),
-(3, 'user', 'user', 'user@gmail.com', 'yes', 'user', ''),
-(4, 'user', 'user', 'user1@gmail.com', 'yes', 'user', ''),
-(5, 'Jestoni', 'Villarta', 'Jestoni@gmail.com', 'yes', 'landlord', 'Jestoni Boarding House'),
-(6, 'khemark', 'ocariza', 'khemark@gmail.com', 'yes', 'landlord', 'tenazas BH');
+INSERT INTO `users` (`id`, `image`, `fname`, `lname`, `uname`, `pass`, `role`, `hname`) VALUES
+(1, '', 'admin', 'admin', 'admin@gmail.com', 'yes', 'admin', ''),
+(2, '', 'Dodge', 'Suico', 'dodge@gmail.com', 'yes', 'landlord', 'Dodge BH'),
+(3, '', 'user', 'user', 'user@gmail.com', 'yes', 'user', ''),
+(4, '', 'user', 'user', 'user1@gmail.com', 'yes', 'user', ''),
+(5, '', 'Jestoni', 'Villarta', 'Jestoni@gmail.com', 'yes', 'landlord', 'Jestoni Boarding House'),
+(6, '', 'khemark', 'ocariza', 'khemark@gmail.com', 'yes', 'landlord', 'tenazas BH'),
+(10, 'profiles/67482e80035f67.15900201.jpg', 'Dodge', 'Ackkerman', 'user2@gmail.com', 'yes', 'user', '');
 
 --
 -- Indexes for dumped tables
@@ -401,19 +415,19 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -425,7 +439,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
