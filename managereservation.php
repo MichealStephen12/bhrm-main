@@ -368,6 +368,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <?php } } ?>
     </div>
 
+    
 
     <?php 
         if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {

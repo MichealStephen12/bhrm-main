@@ -12,6 +12,32 @@ if (isset($_POST['submit'])) {
     $pass = $_POST['pass'];
     $conpassword = $_POST['confirmpassword'];
 
+    $_FILES['image'];
+
+    $fileName = $_FILES['image']['name'];
+    $fileTmpName = $_FILES['image']['tmp_name'];
+    $fileSize = $_FILES['image']['size'];
+    $fileError = $_FILES['image']['error'];
+    $fileType = $_FILES['image']['type'];
+
+    $fileExt = explode('.', $fileName);
+    $fileactualext = strtolower(end($fileExt));
+    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
+
+    if (in_array($fileactualext, $allowed)) {
+        if ($fileError === 0) {
+            if ($fileSize < 1000000) {
+                $fileNameNew = uniqid('', true) . '.' . $fileactualext;
+                $fileDestination = '../profiles/' . $fileNameNew;
+                move_uploaded_file($fileTmpName, $fileDestination);
+            } else {
+                echo "Your file is too big.";
+            }
+        }
+    } else {
+        echo "You cannot upload this type of file.";
+    }
+
     $query = "SELECT * FROM `users` WHERE uname = '$uname'";
     $result = mysqli_query($conn, $query);
     $errors = array();
@@ -40,7 +66,8 @@ if (isset($_POST['submit'])) {
         $error_messages = implode("\\n", $errors); // Combine error messages into a single string
         echo "<script>alert('$error_messages');</script>"; // Display the alert button with error messages
     } else {
-        $query = "INSERT INTO `users`(`id`, `fname`, `lname`, `uname`, `pass`, `role`) VALUES ('','$fname','$lname','$uname','$pass', 'user')";
+        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `uname`, `pass`, `role`) VALUES 
+                                    ('', 'profiles/$fileNameNew','$fname','$lname','$uname','$pass', 'user')";
         mysqli_query($conn, $query);
         echo "<script>alert('Successfully added the information.');</script>"; // Display success message in an alert button
     }    
@@ -141,7 +168,11 @@ if (isset($_POST['submit'])) {
     <div class="container">
         <img src="../images/logo.png" alt="Logo">
         <span>Registration Form</span>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Picture</label>
+                <input type="file" name="image" value="">
+            </div>
             <div class="form-group">
                 <label for="fname">First Name</label>
                 <input type="text" id="fname" name="fname" placeholder="First Name" required>

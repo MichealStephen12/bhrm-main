@@ -169,6 +169,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
 
     <div class="container">    
+        
         <?php 
         if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && !empty($_SESSION['hname'])) {
             $uname = $_SESSION['uname'];
@@ -214,6 +215,31 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
                         <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
                     </div>
+                    <?php
+                        $uname = $_SESSION['uname'];
+                        $hname = $_SESSION['hname'];
+                        $query = "SELECT * FROM payments WHERE email = '$uname' AND hname = '$hname' ORDER BY id DESC";
+                        $result = mysqli_query($conn, $query);
+
+                        // Check if there are any payments
+                        if (mysqli_num_rows($result) > 0) {
+                            // Fetch payment data
+                            $fetch = mysqli_fetch_assoc($result);
+                            $payment = $fetch['payment'];
+                            $paydate = $fetch['pay_date'];
+                            $paystat = $fetch['pay_stat'];
+                    ?>
+                        <div class="col-md-6">
+                            <p><strong>Payment Details:</strong></p>
+                            <p>Payment: <?php echo $payment . ' PHP'; ?></p>
+                            <p>Payment Date: <?php echo $paydate; ?></p>
+                            <p>Payment Status: <?php echo $paystat; ?></p>
+                        </div>
+                    <?php } else { ?>
+                        <div class="col-md-6">
+                            <p><strong>No payments found for your account.</strong></p>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -239,6 +265,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             $query = "SELECT * FROM reservation WHERE email = '$uname' order by id desc";
             $result = mysqli_query($conn, $query);
             while ($fetch = mysqli_fetch_assoc($result)) {
+                $hname = $fetch['hname'];
         ?>
         <div class="card">
             <div class="card-footer">
@@ -280,7 +307,32 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
                         <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
                     </div>
+                    <?php
+                        $uname = $_SESSION['uname'];
+                        $query = "SELECT * FROM payments WHERE email = '$uname' AND hname = '$hname' ORDER BY id DESC";
+                        $result = mysqli_query($conn, $query);
+
+                        // Check if there are any payments
+                        if (mysqli_num_rows($result) > 0) {
+                            // Fetch payment data
+                            $fetch = mysqli_fetch_assoc($result);
+                            $payment = $fetch['payment'];
+                            $paydate = $fetch['pay_date'];
+                            $paystat = $fetch['pay_stat'];
+                    ?>
+                        <div class="col-md-6">
+                            <p><strong>Payment Details:</strong></p>
+                            <p>Payment: <?php echo $payment . ' PHP'; ?></p>
+                            <p>Payment Date: <?php echo $paydate; ?></p>
+                            <p>Payment Status: <?php echo $paystat; ?></p>
+                        </div>
+                    <?php } else { ?>
+                        <div class="col-md-6">
+                            <p><strong>No payments found for your account.</strong></p>
+                        </div>
+                    <?php } ?>
                 </div>
+                
             </div>
         </div>
         <?php } } ?>

@@ -212,7 +212,7 @@
                     <a href="settings.php">Settings</a>
                     <a href="php/logout.php">Logout</a>
                 </div>
-                <img src="beds/67400e8b022e03.70586927.jpg" alt="Profile Image" class="profile-img">
+                <img src="<?php echo $fetch['image']?>" alt="Profile Image" class="profile-img">
 
             </div>
             <?php endif; ?>
