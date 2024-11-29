@@ -513,23 +513,32 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                             height: auto;
                                         }
                                     </style>
-                                    <div class="room-btn">
-                                    <?php 
-                                        if ($tenantcount == $capacity){ 
-                                            $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno";
-                                            mysqli_query($conn, $query);
-                                        ?>
-                                            
-                                        <?php }
-                                        else if ($tenantcount <= $capacity){
-                                            $query = "UPDATE rooms SET status = 'available' WHERE room_no = $roomno";
-                                            mysqli_query($conn, $query);
-                                        ?>  
-                                        <a href='book-in.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Book Now!</a>
-                                    <?php }?>
+                                        <div class="room-btn">
+                                        <?php 
+                                            if ($tenantcount == $capacity) { 
+                                                $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno and hname = '$hname'";
+                                                mysqli_query($conn, $query);
+                                            } else if ($tenantcount <= $capacity) {
+                                                $query = "UPDATE rooms SET status = 'available' WHERE room_no = $roomno and hname = '$hname'";
+                                                mysqli_query($conn, $query);
 
-                                        
-                                    </div>
+                                                // Check if the room has beds
+                                                $bedQuery = "SELECT COUNT(*) as bed_count FROM beds WHERE roomno = $roomno and hname = '$hname'";
+                                                $bedResult = mysqli_query($conn, $bedQuery);
+                                                $bedData = mysqli_fetch_assoc($bedResult);
+
+                                                if ($bedData['bed_count'] > 0) {
+                                                    // Display "Book Now!" if the room has beds
+                                                    ?>
+                                                    <a href='book-in.php?roomno=<?php echo $roomno; ?>' class='btn btn-warning'>Book Now!</a>
+                                                    <?php 
+                                                } else {
+                                                    // Message for no beds
+                                                    echo "<p>No beds available in this room.</p>";
+                                                }
+                                            }
+                                            ?>
+                                        </div>
                                     </div>
                                 </div>
                         

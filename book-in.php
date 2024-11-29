@@ -55,18 +55,6 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     $roomstat = $fetch['status'];
     $roomcapacity = $fetch['capacity'];
     if($result){
-        $hname = $_SESSION['hname'];
-        if (!empty($_SESSION["roomno"])){
-            $roomno = $_SESSION['roomno'];
-        }else{
-            $roomno = $_GET['roomno'];
-        }
-        $query = "select * from beds where roomno = '$roomno' and hname = '$hname'";
-        $result = mysqli_query($conn, $query);
-        $fetch = mysqli_fetch_assoc($result);
-        $bedprice = $fetch['bed_price'];
-    }
-    if($result){
         $uname = $_SESSION['uname'];
         $query = "select * from users where uname = '$uname'";
         $result = mysqli_query($conn, $query);
@@ -199,7 +187,7 @@ if (isset($_POST['submit'])) {
 <div class="background">
        
 
-        <style>
+    <style>
         .modal {
             display: none;
             position: fixed;
@@ -306,6 +294,8 @@ if (isset($_POST['submit'])) {
             margin: 20px;
         }
     </style>
+
+
 
     <div class="centering">
         <button id="previewButton" class="preview-btn">Preview</button>

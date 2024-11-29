@@ -28,9 +28,9 @@
 
     /* Navbar Container */
     .navbar {
-        margin: 0 200px;
-        background-color: #fff;
-        padding: 10px 0;
+        
+        background-color: #343a40;
+        padding-top: 10;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -52,7 +52,7 @@
     }
 
     .nav-link {
-        color: black;
+        color: white;
         text-decoration: none;
         padding: 10px 15px;
         transition: color 0.3s ease, transform 0.3s ease;
@@ -70,7 +70,7 @@
         position: relative;
        
     }.login a{
-        color: white;
+        color: black;
     }
 
     .button{
@@ -79,7 +79,7 @@
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
-        background-color: #007bff;
+        background-color: #ffc107;
         margin-right: 20px;
     }
 
@@ -101,7 +101,7 @@
 
     .profile-dropdown span {
         font-weight: bold;
-        color: #333;
+        color: white;
         margin-right: 10px; /* Ensures there is space before the dropdown */
     }
 

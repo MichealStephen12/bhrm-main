@@ -34,7 +34,7 @@
             left: 0;
             height: 100%;
             width: 220px;
-            background-color: white;
+            background-color: #b7b3b3;
             padding: 20px 15px;
             display: flex;
             flex-direction: column;
@@ -204,7 +204,7 @@
         <ul class="nav-links">
         <div class="li-background">
             <li class="dropdown">
-                <img src="/bhrm-main/beds/dfghdfh.jpg" alt="Profile">
+                <img src="<?php echo $fetch['image']?>" alt="Profile">
             </li>
             <li class="dropdown">
                 <div class="dropdown-toggle">
@@ -218,8 +218,6 @@
                 </div>
             </li>
         </div>
-
-            
             <li><a class="nav-link active" href="dashboard.php">Dashboard</a></li>
             <li><a class="nav-link" href="manageroom.php">Manage Rooms</a></li>
             <li><a class="nav-link" href="managereservation.php">Reservations</a></li>

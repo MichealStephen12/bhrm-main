@@ -169,8 +169,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
 
     <div class="container">    
-        
-        <?php 
+    <?php 
         if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && !empty($_SESSION['hname'])) {
             $uname = $_SESSION['uname'];
             $hname = $_SESSION['hname'];
@@ -244,7 +243,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             </div>
         </div>
         <?php } } ?>
-
 
 
         <?php
