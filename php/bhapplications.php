@@ -22,28 +22,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             background-color: #f8f9fa;
         }
 
-        .navbar {
-            background-color: #343a40;
-        }
-
-        .navbar-brand img {
-            border-radius: 50%;
-        }
-
-        .navbar .nav-link {
-            color: white;
-            font-weight: 500;
-        }
-
-        .navbar .nav-link:hover {
-            color: #adb5bd;
-        }
-
-        .navbar .btn {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
         h2 {
             color: #495057;
             font-weight: 700;
@@ -70,36 +48,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark px-4">
-        <a class="navbar-brand" href="#">
-            <img src="../images/logo.png" alt="Logo" width="80" height="80">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-                <?php if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'admin'): ?>
-                    <li class="nav-item"><a class="nav-link" href="reservation.php">View Reservation</a></li>
-                <?php endif; ?>
-                <?php if (!empty($_SESSION["hname"])): ?>
-                    <li class="nav-item"><a class="nav-link" href="./index.php">Back</a></li>
-                <?php endif; ?>
-            </ul>
-            <div class="ms-3">
-                <?php
-                if (empty($_SESSION['uname'])) {
-                    echo '<a href="login.php" class="btn btn-primary">Login</a>';
-                } else {
-                    echo '<a href="logout.php" class="btn btn-danger">Logout</a>';
-                }
-                ?>
-            </div>
-        </div>
-    </nav>
+    <?php include '../navadmin.php'; ?>
 
     <div class="container my-5">
         <!-- Pending Section -->

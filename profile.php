@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
         $uname = $_POST['uname'];
+        $pass = $_POST['pass'];
         $new_password = !empty($_POST['pass']) ? password_hash($_POST['pass'], PASSWORD_DEFAULT) : $fetch['pass'];
 
         // Initialize image variables
@@ -60,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // If a new image was uploaded, update the image in the query
         $imageQuery = $fileNameNew ? ", `image` = './profiles/$fileNameNew'" : "";
 
-        $update_query = "UPDATE users SET fname='$fname', lname='$lname', uname='$uname', pass='$new_password' $imageQuery WHERE uname = '$uname'";
+        $update_query = "UPDATE users SET fname='$fname', lname='$lname', uname='$uname', pass='$pass' $imageQuery WHERE uname = '$uname'";
         if (mysqli_query($conn, $update_query)) {
             echo "<p>Profile updated successfully!</p>";
             // Optionally refresh the page to show updated data
@@ -144,6 +145,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
     <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == 'user'): ?>
         <?php include 'navbar.php'; ?>
+
+        <div class="profile-container">
+            <img src="<?php echo $fetch['image']; ?>" alt="Profile Picture">
+            
+            <!-- Toggle Edit Mode -->
+            <?php if (isset($_POST['edit_profile'])): ?>
+                <form method="POST" enctype="multipart/form-data">
+                    <label>Profile Picture:</label>
+                    <input type="file" name="image">
+                    <label>First Name:</label>
+                    <input type="text" name="fname" value="<?php echo $fetch['fname']; ?>" required>
+                    <label>Last Name:</label>
+                    <input type="text" name="lname" value="<?php echo $fetch['lname']; ?>" required>
+                    <label>Email:</label>
+                    <input type="text" name="uname" value="<?php echo $fetch['uname']; ?>" required>
+                    <label>Password:</label>
+                    <input type="password" name="pass" placeholder="Enter a new password">
+                    <label>Role:</label>
+                    <input type="text" value="<?php echo $fetch['role']; ?>" readonly>
+                    <button type="submit" name="save_changes">Save Changes</button>
+                    <button type="submit" name="cancel_edit">Cancel</button>
+                </form>
+            <?php else: ?>
+                <div>
+                    <p><strong>First Name:</strong> <?php echo $fetch['fname']; ?></p>
+                    <p><strong>Last Name:</strong> <?php echo $fetch['lname']; ?></p>
+                    <p><strong>Email:</strong> <?php echo $fetch['uname']; ?></p>
+                    <p><strong>Role:</strong> <?php echo $fetch['role']; ?></p>
+                    <form method="POST">
+                        <button type="submit" name="edit_profile">Edit Profile</button>
+                    </form>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == 'landlord'): ?>
+        <?php include 'navigationbar.php'; ?>
+
+        <div class="profile-container">
+            <img src="<?php echo $fetch['image']; ?>" alt="Profile Picture">
+            
+            <!-- Toggle Edit Mode -->
+            <?php if (isset($_POST['edit_profile'])): ?>
+                <form method="POST" enctype="multipart/form-data">
+                    <label>Profile Picture:</label>
+                    <input type="file" name="image">
+                    <label>First Name:</label>
+                    <input type="text" name="fname" value="<?php echo $fetch['fname']; ?>" required>
+                    <label>Last Name:</label>
+                    <input type="text" name="lname" value="<?php echo $fetch['lname']; ?>" required>
+                    <label>Email:</label>
+                    <input type="text" name="uname" value="<?php echo $fetch['uname']; ?>" required>
+                    <label>Password:</label>
+                    <input type="password" name="pass" placeholder="Enter a new password">
+                    <label>Role:</label>
+                    <input type="text" value="<?php echo $fetch['role']; ?>" readonly>
+                    <button type="submit" name="save_changes">Save Changes</button>
+                    <button type="submit" name="cancel_edit">Cancel</button>
+                </form>
+            <?php else: ?>
+                <div>
+                    <p><strong>First Name:</strong> <?php echo $fetch['fname']; ?></p>
+                    <p><strong>Last Name:</strong> <?php echo $fetch['lname']; ?></p>
+                    <p><strong>Email:</strong> <?php echo $fetch['uname']; ?></p>
+                    <p><strong>Role:</strong> <?php echo $fetch['role']; ?></p>
+                    <form method="POST">
+                        <button type="submit" name="edit_profile">Edit Profile</button>
+                    </form>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == 'admin'): ?>
+        <?php include 'navadmin.php'; ?>
 
         <div class="profile-container">
             <img src="<?php echo $fetch['image']; ?>" alt="Profile Picture">

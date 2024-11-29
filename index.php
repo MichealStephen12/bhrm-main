@@ -136,40 +136,40 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             margin-bottom: 8px;
         }
 
-        /* General Button Styles */
-.button {
-    background-color: #ffc107; /* Default color for buttons */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
+                /* General Button Styles */
+        .button {
+            background-color: #ffc107; /* Default color for buttons */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
 
-/* Default hover effect (for non-specific buttons) */
-.button:hover {
-    background-color: #ffc107;
-}
+        /* Default hover effect (for non-specific buttons) */
+        .button:hover {
+            background-color: #ffc107;
+        }
 
-/* Specific styles for Delete button */
-.button.delete {
-    background-color: #dc3545; /* Default red for delete button */
-}
+        /* Specific styles for Delete button */
+        .button.delete {
+            background-color: #dc3545; /* Default red for delete button */
+        }
 
-.button.delete:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
+        .button.delete:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
 
-/* Specific styles for Update button */
-.button.update {
-    background-color: #28a745; /* Default green for update button */
-}
+        /* Specific styles for Update button */
+        .button.update {
+            background-color: #28a745; /* Default green for update button */
+        }
 
-.button.update:hover {
-    background-color: #218838; /* Darker green on hover */
-}
+        .button.update:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
 
         /* Footer */
         .footer {
@@ -191,21 +191,21 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
 
 <body>
     <div class="background">
-        <?php include 'navbar.php'; ?>
+        
+        <?php 
+            if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin'){
+                include 'navadmin.php'; 
+            }else{
+                include 'navbar.php';
+            }   
+        ?>
 
         <div class="content-background">
-            <!-- Admin Dashboard -->
-            <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') : ?>
-                <div class="chart-section">
-                    <h3>Total Landlords</h3>
-                    <canvas id="landlordChart"></canvas>
-                </div>
-            <?php else : ?>
-                <div class="text-center py-4">
-                    <h1>Welcome to Maranding Boarding House Center</h1>
-                    <p>Discover the best boarding houses around Maranding. Choose your preferred place and enjoy your stay.</p>
-                </div>
-            <?php endif; ?>
+
+            <div class="text-center py-4">
+                <h1>Welcome to Maranding Boarding House Center</h1>
+                <p>Discover the best boarding houses around Maranding. Choose your preferred place and enjoy your stay.</p>
+            </div>
 
             <!-- Cards Section -->
             <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -281,30 +281,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         </p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('landlordChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Landlords'],
-                datasets: [{
-                    label: 'Number of Landlords',
-                    data: [<?php echo $landlordCount; ?>],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
+    
 </body>
 
 </html>
