@@ -274,6 +274,8 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         });
     </script>
 
+
+
     <footer class="footer">
         <p>© 2024 Your Company Name. All Rights Reserved.</p>
         <p>
@@ -281,7 +283,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         </p>
     </footer>
 
-    
-</body>
+    <?php include 'chat.php'?>
+</body> 
 
 </html>

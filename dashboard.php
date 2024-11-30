@@ -269,6 +269,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         </div>                  
     </div>
 
+    
+
     <script src="chart.min.js"></script>
 
     <script>
@@ -364,6 +366,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         renderCharts();
 
     </script>
+
+    <?php include 'chat.php'; ?>
     
 </body>
 </html>
