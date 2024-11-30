@@ -9,6 +9,8 @@ if (isset($_GET['id'])) {
     $query = "SELECT * FROM payments WHERE id = $id";
     $result = mysqli_query($conn, $query);
     $payment = mysqli_fetch_assoc($result);
+    $email = $payment['email'];
+    $hname = $payment['hname'];
 
     if (!$payment) {
         echo "Payment not found.";
@@ -33,12 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pay_stat = $payment_amount >= $bed_price ? 'Fully Paid' : 'Partially Paid';
     }
 
+    
     // Update the payment record
     $updateQuery = "UPDATE payments SET 
                     payment = $payment_amount, 
                     pay_stat = '$pay_stat', 
                     pay_date = '$pay_date' 
-                    WHERE id = $id";
+                    WHERE id = $id and email = '$email' and hname = '$hname'";
 
     if (mysqli_query($conn, $updateQuery)) {
         header('Location: ../payment.php');

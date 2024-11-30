@@ -300,6 +300,7 @@ if (isset($_GET['end'])) {
     $paymentData = mysqli_fetch_assoc($paymentResult);
 
     $payment = $paymentData['payment']; // Get the final payment amount
+    $pay_stat = $paymentData['pay_stat'];
     $pay_date = $paymentData['pay_date']; // Get the payment date
     $date_out = date('Y-m-d'); // Use the current date for the end of reservation
 
@@ -326,7 +327,10 @@ if (isset($_GET['end'])) {
             $updateReservationQuery = "UPDATE reservation 
                                         SET res_stat = 'Ended', 
                                             res_reason = 'Reservation Ended', 
-                                            bed_stat = 'Available' 
+                                            bed_stat = 'Available',
+                                            payment = '$payment',
+                                            pay_stat = '$pay_stat',
+                                            pay_date = '$pay_date'
                                         WHERE id = $id AND hname = '$hname'";
             mysqli_query($conn, $updateReservationQuery);
 
@@ -349,7 +353,10 @@ if (isset($_GET['end'])) {
         $updateReservationQuery = "UPDATE reservation 
                                     SET res_stat = 'Ended', 
                                         res_reason = 'Reservation Ended', 
-                                        bed_stat = 'Available' 
+                                        bed_stat = 'Available',
+                                        payment = '$payment',
+                                        pay_stat = '$pay_stat',
+                                        pay_date = '$pay_date'
                                     WHERE id = $id AND hname = '$hname'";
         mysqli_query($conn, $updateReservationQuery);
 

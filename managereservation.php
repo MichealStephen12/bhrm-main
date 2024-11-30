@@ -525,6 +525,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
                         <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
                     </div>
+
+                    <div class="col-md-6">
+                        <p><strong>Payment Details:</strong></p>
+                        <p>Payment: <?php echo $fetch['payment']; ?></p>
+                        <p>Date: <?php echo $fetch['pay_date']; ?></p>
+                        <p>Payment Status: <?php echo $fetch['pay_stat']; ?></p>
+                    </div>
+                    
                 </div>
                 <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord'){ ?>
                 <div class="button-row">
