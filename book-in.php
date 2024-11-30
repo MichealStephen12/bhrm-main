@@ -56,6 +56,13 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     $roomcapacity = $fetch['capacity'];
     if($result){
         $uname = $_SESSION['uname'];
+        $query = "select * from beds where roomno = '$roomno' and hname = '$hname'";
+        $result = mysqli_query($conn, $query);
+        $fetch = mysqli_fetch_assoc($result);
+        $bedprice = $fetch['bed_price'];
+    }
+    if($result){
+        $uname = $_SESSION['uname'];
         $query = "select * from users where uname = '$uname'";
         $result = mysqli_query($conn, $query);
         $fetch = mysqli_fetch_assoc($result);

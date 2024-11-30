@@ -209,7 +209,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Bed Information:</strong></p>
                         <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
+                        <p>Bed Rent: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                     </div>
                 </div>
@@ -283,7 +283,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Bed Information:</strong></p>
                         <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
+                        <p>Bed Rent: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                     </div>
                 </div>
@@ -349,7 +349,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Bed Information:</strong></p>
                         <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
+                        <p>Bed Rent: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                     </div>
                 </div>
@@ -419,7 +419,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Bed Information:</strong></p>
                         <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
+                        <p>Bed Rent: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                     </div>
                 </div>
@@ -512,7 +512,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Bed Information:</strong></p>
                         <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?> / Month</p>
+                        <p>Bed Rent: <?php echo $fetch['bed_price']; ?> / Month</p>
                         <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                     </div>
                 </div>
