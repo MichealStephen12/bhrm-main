@@ -17,6 +17,18 @@
             $fetch = mysqli_fetch_assoc($result);
 
         } // Fallback to 'Guest' if session is not set
+
+
+        // Get the landlord's email (the logged-in user)
+        
+        $hname = $_SESSION['hname'];
+
+        // Query to count new reservations
+        $query = "SELECT COUNT(*) AS new_reservations FROM reservation WHERE hname = '$hname' AND res_stat = 'Pending'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_assoc($result);
+        $newReservations = $row['new_reservations'];
+
     ?>
 
 <!DOCTYPE html>
@@ -220,7 +232,7 @@
         </div>
             <li><a class="nav-link active" href="dashboard.php">Dashboard</a></li>
             <li><a class="nav-link" href="manageroom.php">Manage Rooms</a></li>
-            <li><a class="nav-link" href="managereservation.php">Reservations</a></li>
+            <li><a class="nav-link" href="managereservation.php">Reservations  (<?php echo $newReservations; ?>) </span></a></li>
             <li><a class="nav-link" href="payment.php">Payments</a></li>
             <li><a class="nav-link" href="reports.php">Reports</a></li>
         </ul>
