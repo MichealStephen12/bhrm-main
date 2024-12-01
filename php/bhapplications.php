@@ -104,6 +104,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
                             <p class="card-text">Address: <?php echo $fetch['haddress']; ?></p>
                             <p class="card-text">Description: <?php echo $fetch['bh_description']; ?></p>
+                            <p class="card-text">Documents:</p>
+                            <img src="../<?php echo $fetch['documents']; ?>" class="card-img-top" alt="Boarding House">
                             <span class="badge bg-success">Approved</span>
                         </div>
                         <div class="card-footer text-center">

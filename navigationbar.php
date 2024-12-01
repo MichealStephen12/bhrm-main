@@ -214,22 +214,22 @@
             <img src="/bhrm-main/images/logo.png" alt="Logo">
         </a>
         <ul class="nav-links">
-        <div class="li-background">
-            <li class="dropdown">
-                <img src="<?php echo $fetch['image']?>" alt="Profile">
-            </li>
-            <li class="dropdown">
-                <div class="dropdown-toggle">
-                    <span class="username"> Welcome <?php echo $fetch['fname']; ?></span>
-                    <span>▼</span>
-                </div>
-                <div class="dropdown-menu">
-                    <a href="profile.php">Profile</a>
-                    <a href="settings.php">Settings</a>
-                    <a href="php/logout.php">Logout</a>
-                </div>
-            </li>
-        </div>
+            <div class="li-background">
+                <li class="dropdown">
+                    <img src="<?php echo $fetch['image']?>" alt="Profile">
+                </li>
+                <li class="dropdown">
+                    <div class="dropdown-toggle">
+                        <span class="username"> Welcome <?php echo $fetch['fname']; ?></span>
+                        <span>▼</span>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="profile.php">Profile</a>
+                        <a href="settings.php">Settings</a>
+                        <a href="php/logout.php">Logout</a>
+                    </div>
+                </li>
+            </div>
             <li><a class="nav-link active" href="dashboard.php">Dashboard</a></li>
             <li><a class="nav-link" href="manageroom.php">Manage Rooms</a></li>
             <li><a class="nav-link" href="managereservation.php">Reservations  (<?php echo $newReservations; ?>) </span></a></li>
