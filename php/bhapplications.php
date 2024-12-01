@@ -37,6 +37,16 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             transform: scale(1.02);
         }
 
+        .card-title {
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            font-weight: 600; /* Slightly bold text for emphasis */
+            color: #495057;
+        }
+
         .card .btn {
             font-size: 0.85rem;
         }
@@ -55,7 +65,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <h2 class="text-center mb-4">Pending Applications</h2>
         <div class="row gy-4">
             <?php 
-            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.*
+            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
                       FROM bhapplication 
                       INNER JOIN documents ON bhapplication.hname = documents.hname
                       INNER JOIN description ON bhapplication.hname = description.hname 
@@ -69,8 +79,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <img src="../<?php echo $fetch['image']; ?>" class="card-img-top" alt="Boarding House">
                         <div class="card-body">
                             <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
-                            <p class="card-text">Address: <?php echo $fetch['haddress']; ?></p>
-                            <p class="card-text">Description: <?php echo $fetch['bh_description']; ?></p>
+                            <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
+                            <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
                             <span class="badge bg-warning text-dark">Pending</span>
                         </div>
                         <?php if ($_SESSION["role"] == "admin"): ?>
@@ -88,7 +98,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <h2 class="text-center my-4">Approved Applications</h2>
         <div class="row gy-4">
             <?php 
-            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.*
+            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
                       FROM bhapplication 
                       INNER JOIN documents ON bhapplication.hname = documents.hname
                       INNER JOIN description ON bhapplication.hname = description.hname 
@@ -102,10 +112,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <img src="../<?php echo $fetch['image']; ?>" class="card-img-top" alt="Boarding House">
                         <div class="card-body">
                             <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
-                            <p class="card-text">Address: <?php echo $fetch['haddress']; ?></p>
-                            <p class="card-text">Description: <?php echo $fetch['bh_description']; ?></p>
-                            <p class="card-text">Documents:</p>
-                            <img src="../<?php echo $fetch['documents']; ?>" class="card-img-top" alt="Boarding House">
+                            <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
+                            <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
+                            <p class="card-text"><strong>Documents:</strong></p>
+                            <img src="../<?php echo $fetch['documents']; ?>" class="card-img-top" alt="Documents">
                             <span class="badge bg-success">Approved</span>
                         </div>
                         <div class="card-footer text-center">
@@ -120,7 +130,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <h2 class="text-center my-4">Rejected Applications</h2>
         <div class="row gy-4">
             <?php 
-            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.*
+            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
                       FROM bhapplication 
                       INNER JOIN documents ON bhapplication.hname = documents.hname
                       INNER JOIN description ON bhapplication.hname = description.hname 
@@ -134,8 +144,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <img src="../<?php echo $fetch['image']; ?>" class="card-img-top" alt="Boarding House">
                         <div class="card-body">
                             <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
-                            <p class="card-text">Address: <?php echo $fetch['haddress']; ?></p>
-                            <p class="card-text">Description: <?php echo $fetch['bh_description']; ?></p>
+                            <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
+                            <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
                             <span class="badge bg-danger">Rejected</span>
                         </div>
                         <div class="card-footer text-center">

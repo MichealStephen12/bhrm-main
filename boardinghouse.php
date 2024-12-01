@@ -223,7 +223,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            background-color: #007bff;
+            background-color: #ffcc00;
         }
 
         .section3{

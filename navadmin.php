@@ -17,6 +17,13 @@
             $fetch = mysqli_fetch_assoc($result);
 
         } // Fallback to 'Guest' if session is not set
+
+
+        // Query to count new reservations
+        $query = "SELECT COUNT(*) AS new_application FROM bhapplication WHERE status = 'Pending'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_assoc($result);
+        $newReservations = $row['new_application'];
     ?>
 
 <!DOCTYPE html>
@@ -34,7 +41,7 @@
             left: 0;
             height: 100%;
             width: 220px;
-            background-color: #b7b3b3;
+            background-color: #343a40;
             padding: 20px 15px;
             display: flex;
             flex-direction: column;
@@ -76,7 +83,7 @@
         }
 
         .nav-link {
-            color: black;
+            color: white;
             text-decoration: none;
             font-size: 16px;
             padding: 10px 15px;
@@ -87,7 +94,7 @@
 
         .nav-link:hover,
         .nav-link.active {
-            background-color: #007bff;
+            background-color: #ffc107;
             color: white;
         }
 
@@ -213,15 +220,15 @@
                     <span>▼</span>
                 </div>
                 <div class="dropdown-menu">
-                    <a href="profile.php">Profile</a>
+                    <a href="/bhrm-main/profile.php">Profile</a>
                     <a href="settings.php">Settings</a>
-                    <a href="php/logout.php">Logout</a>
+                    <a href="/bhrm-main/php/logout.php">Logout</a>
                 </div>
             </li>
         </div>
             <li><a class="nav-link active" href="/bhrm-main/dashboardadmin.php">Dashboard</a></li>
             <li><a class="nav-link" href="/bhrm-main/index.php">Manage Boarding House</a></li>
-            <li><a class="nav-link" href="/bhrm-main/php/bhapplications.php">Applications</a></li>
+            <li><a class="nav-link" href="/bhrm-main/php/bhapplications.php">Applications (<?php echo $newReservations; ?>)</a></li>
         </ul>
     </nav>
 

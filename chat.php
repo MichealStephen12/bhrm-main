@@ -19,7 +19,7 @@
 
 /* Floating circular button */
 #chat-btn {
-    background-color: #007bff;
+    background-color: #ffc107;
     color: white;
     border: none;
     border-radius: 50%;
@@ -138,7 +138,7 @@
 
 /* Sent message styles (aligned to the right) */
 #message-container .sent {
-    background-color: #007bff;
+    background-color: #ffc107;
     color: white;
     align-self: flex-end;
     border-radius: 15px 15px 0 15px; /* Rounded right side */
@@ -186,7 +186,7 @@
 
 /* Styling for the send button */
 #chat-box button {
-    background-color: #007bff;
+    background-color: #ffc107;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -198,7 +198,7 @@
 
 /* Hover effect for the send button */
 #chat-box button:hover {
-    background-color: #0056b3;
+    background-color: #dc3545;
 }
 
 /* Smooth transition for chat box visibility */

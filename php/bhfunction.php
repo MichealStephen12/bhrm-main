@@ -161,161 +161,98 @@ if (isset($_GET['reject'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Boarding House</title>
-</head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: sans-serif;
-        }
-        
-        a{
-            text-decoration: none;
-            color: black;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            color: black;
+            background-color: #f7f7f7;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
         }
 
-        .navbar {
-            height: 70px;
-            margin: 0 200px;
-            background-color: white;
-            border-radius: 5px;
-            border: inset black 1px;
-            padding: 10px;
+        nav {
+            background-color: #343a40;
+            padding: 5px;
+            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .navbar a {
-            color: black;
-        }
-
-        .navbar-brand img {
+        nav .navbar-brand img {
             width: 80px;
             height: 80px;
         }
 
-        .nav-links {
+        nav .nav-links {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            gap: 20px;
         }
 
-        .nav-link {
-            color: black;
-            text-decoration: none;
-            padding: 0 10px;
-        }
-
-        .login {
-            width: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }.login a{
+        nav .nav-links a {
             color: white;
+            text-decoration: none;
+            font-weight: 500;
         }
 
-        @media (max-width: 768px) {
-            .navbar {
-                margin: 0;
-                padding: 10px 20px;
-                flex-direction: column;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                margin-top: 10px;
-            }
-
-            .nav-link {
-                padding: 5px 0;
-            }
-
-            .login {
-                margin-top: 10px;
-            }
+        nav .login a {
+            background-color: #ffc107;
+            padding: 10px 15px;
+            border-radius: 25px;
+            color: white;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
         }
 
-        .section0{
-            margin: 40px 200px 90px 200px;
+        nav .login a:hover {
+            background-color: #d68918;
+        }
+
+        .section0 {
             display: grid;
-            grid-template-columns: 600px 600px;
-            justify-content: center;
-            box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.1);
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            margin: 40px auto;
+            gap: 30px;
         }
 
-        .section1 {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
+        .section1, .section2 {
+            background-color: #b5afaf;
+            padding: 30px;
             border-radius: 8px;
-            
-            display: flex;
-            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .thank-you-message {
-            background-color: #f7f7f7;
-            padding: 20px;
+            background-color: #eafaf1;
+            padding: 25px;
             border-radius: 8px;
             text-align: center;
-            max-width: 600px;
-            margin: 30px auto;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            color: black;
+            margin-bottom: 20px;
         }
 
         .thank-you-message h2 {
             font-size: 24px;
             margin-bottom: 10px;
-            color: #4CAF50;
         }
 
         .thank-you-message p {
             font-size: 16px;
-            margin: 10px 0;
-        }
-
-        .thank-you-message p:last-child {
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .section2 {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 30px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            display: block;
-            margin: 0 auto 20px;
-            height: 100px;
-        }
-
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
+            margin: 5px 0;
         }
 
         .form-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
         .form-group {
@@ -324,78 +261,107 @@ if (isset($_GET['reject'])) {
         }
 
         .form-group label {
-            margin-bottom: 5px;
             font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
 
         .form-group input[type="text"],
         .form-group input[type="file"] {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f9f9f9;
         }
 
         .form-group button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            border: none;
+            padding: 12px 18px;
+            background-color: #ffc107;
             color: white;
+            border: none;
             font-weight: bold;
-            border-radius: 4px;
+            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .form-group button:hover {
-            background-color: #ec971f;
+            background-color: #d68918;
         }
 
         .form-group a {
             text-align: center;
             color: #333;
+            font-size: 16px;
             text-decoration: none;
-            margin-top: 10px;
-            display: block;
         }
 
         .form-group a:hover {
             text-decoration: underline;
         }
 
-        .button{
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
+        .logo {
+            display: block;
+            margin: 0 auto 30px;
+            width: 120px;
+            height: 120px;
         }
 
+        .title {
+            font-size: 28px;
+            font-weight: 500;
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .section0 {
+                grid-template-columns: 1fr;
+                margin: 20px;
+            }
+
+            nav .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-container {
+                gap: 15px;
+            }
+        }
     </style>
+</head>
 <body>
-    <nav class="navbar">
+    <nav>
         <a class="navbar-brand" href="#">
-            <img src="../images/logo.png" alt="Logo" width="80" height="80">
+            <img src="../images/logo.png" alt="Logo">
         </a>
         <div class="nav-links">
-            <a class="nav-link" href="about.php">About Us</a>
-            <a class="nav-link" href="contact.php">Contact</a>
-        </div>
-        <div class="login">
+            <a href="php/bhfunction.php">Home</a>
+            <a href="about.php">About Us</a>
+            <a href="contact.php">Contact</a>
+            <a href="/bhrm-main/bhapplication.php">My Applications</a>
+            </div>
+                <div class="login">
             <?php
                 if (!empty($_SESSION['uname'])) {
-                    echo '<a class="button" href="logout.php">Logout</a>';
+                    echo '<a href="php/logout.php" class="logout">Logout</a>';
                 } else {
-                    echo '<a class="button" href="login.php">Login</a>';
+                    echo '<a href="php/login.php">Login</a>';
                 }
             ?>
+
         </div>
     </nav>
-
 
     <div class="section0">
         <div class="section1">
             <div class="thank-you-message">
                 <h2>Thank You for Registering as a Landlord!</h2>
-                <p>Dear <?php echo $fetch['fname']?>,</p>
+                <p>Dear <?php echo $fetch['fname']; ?>,</p>
                 <p>We appreciate your interest in becoming a landlord with us. Your application is under review, and we will notify you via email once it's processed.</p>
                 <p>At [Website/Platform Name], we are committed to providing a platform that benefits both landlords and tenants. If you have any questions in the meantime, feel free to reach out to us.</p>
                 <p>Thank you for choosing us to showcase your property. We look forward to working with you!</p>
@@ -408,9 +374,9 @@ if (isset($_GET['reject'])) {
             <div class="title">Add Boarding House</div>
             <form method="post" enctype="multipart/form-data" class="form-container">
                 <div class="form-group">
-                    <label for="name">Landlord Name</label>
+                    <label for="landlord">Landlord Name</label>
                     <input type="text" id="landlord" name="landlord" placeholder="Enter here.." required>
-                </div>    
+                </div>
                 <div class="form-group">
                     <label for="name">House Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter here.." required>
@@ -420,7 +386,7 @@ if (isset($_GET['reject'])) {
                     <input type="text" id="address" name="address" placeholder="Enter here.." required>
                 </div>
                 <div class="form-group">
-                    <label for="address">Contact Number</label>
+                    <label for="contactno">Contact Number</label>
                     <input type="text" id="contactno" name="contactno" placeholder="Enter here.." required>
                 </div>
                 <div class="form-group">
@@ -432,7 +398,7 @@ if (isset($_GET['reject'])) {
                     <input type="file" id="image" name="image" required>
                 </div>
                 <div class="form-group">
-                    <label for="image2">Provide Required Documents for BH verification</label>
+                    <label for="image2">Provide Required Documents for BH Verification</label>
                     <input type="file" id="image2" name="image2" required>
                 </div>
                 <div class="form-group">
@@ -440,9 +406,7 @@ if (isset($_GET['reject'])) {
                 </div>
                 <div class="form-group">
                     <?php 
-                        if ($_SESSION['role'] == 'landlord'){
-                            echo '';
-                        }else{
+                        if ($_SESSION['role'] != 'landlord'){
                             echo '<a href="../index.php">Back</a>';
                         }
                     ?>
@@ -450,7 +414,5 @@ if (isset($_GET['reject'])) {
             </form>
         </div>
     </div>
-    
-
 </body>
 </html>

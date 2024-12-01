@@ -174,7 +174,7 @@ if (isset($_POST['submit'])) {
 
         button {
             grid-column: span 2;
-            background-color: #007bff;
+            background-color: #ffaa00;
             border: none;
             padding: 15px;
             border-radius: 5px;
@@ -185,7 +185,7 @@ if (isset($_POST['submit'])) {
         }
 
         button:hover {
-            background-color: #ffaa00;
+            background-color: #bb7d01;
         }
     </style>
 <body>
@@ -284,7 +284,7 @@ if (isset($_POST['submit'])) {
 
         .preview-btn {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #ffaa00;
             color: white;
             border: none;
             border-radius: 5px;
@@ -292,7 +292,7 @@ if (isset($_POST['submit'])) {
         }
 
         .preview-btn:hover {
-            background-color: #0056b3;
+            background-color: #bb7d01;
         }
 
         .centering {

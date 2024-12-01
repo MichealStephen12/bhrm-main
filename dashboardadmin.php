@@ -1,8 +1,9 @@
 <?php
 
-require 'php/connection.php';
+include 'php/connection.php';
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,8 @@ require 'php/connection.php';
     <title>Document</title>
 </head>
 <body>
-    <?php include 'navadmin.php'; ?>
+    <?php include 'navadmin.php' ?>
 
+    
 </body>
 </html>

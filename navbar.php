@@ -59,7 +59,7 @@
     }
 
     .nav-link:hover {
-        color: #007BFF;  /* Color change on hover */
+        color: #ffc107;  /* Color change on hover */
         transform: scale(1.05);  /* Slight scale effect */
     }
 
