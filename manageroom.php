@@ -243,9 +243,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const actionButtons = document.querySelectorAll('.action-button');
@@ -275,9 +272,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         });
     });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     
 </body>
 </html>

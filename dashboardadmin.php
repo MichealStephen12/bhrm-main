@@ -2,7 +2,7 @@
 require 'php/connection.php';
 
 // Fetch the total landlords
-$query_landlords = "SELECT COUNT(*) as total_landlords FROM landlords";
+$query_landlords = "SELECT COUNT(*) as total_landlords FROM users where role = 'landlord'";
 $result_landlords = mysqli_query($conn, $query_landlords);
 $total_landlords = mysqli_fetch_assoc($result_landlords)['total_landlords'];
 

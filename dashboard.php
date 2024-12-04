@@ -26,6 +26,37 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     header('location: index.php');
 }
 
+
+
+
+    $reservationQuery = "SELECT COUNT(*) as total_reservations FROM reservation";
+    $reservationResult = mysqli_query($conn, $reservationQuery);
+    $reservationData = mysqli_fetch_assoc($reservationResult);
+    $totalReservations = $reservationData['total_reservations'];
+
+    // Fetch total tenants
+    $tenantQuery = "SELECT COUNT(*) as total_tenants FROM users WHERE role = 'user'";
+    $tenantResult = mysqli_query($conn, $tenantQuery);
+    $tenantData = mysqli_fetch_assoc($tenantResult);
+    $totalTenants = $tenantData['total_tenants'];
+
+    // Fetch total rooms
+    $totalRoomsQuery = "SELECT COUNT(*) as total_rooms FROM rooms";
+    $totalRoomsResult = mysqli_query($conn, $totalRoomsQuery);
+    $totalRoomsData = mysqli_fetch_assoc($totalRoomsResult);
+    $totalRooms = $totalRoomsData['total_rooms'];
+
+    // Fetch total available rooms
+    $availableRoomsQuery = "SELECT COUNT(*) as available_rooms FROM rooms WHERE status = 'Available'";
+    $availableRoomsResult = mysqli_query($conn, $availableRoomsQuery);
+    $availableRoomsData = mysqli_fetch_assoc($availableRoomsResult);
+    $availableRooms = $availableRoomsData['available_rooms'];
+
+    $totalPaymentsQuery = "SELECT SUM(payment) as total_payments FROM reports";
+    $totalPaymentsResult = mysqli_query($conn, $totalPaymentsQuery);
+    $totalPaymentsData = mysqli_fetch_assoc($totalPaymentsResult);
+    $totalPayments = $totalPaymentsData['total_payments'] ?? 0;
+
 ?>
 
 
@@ -35,250 +66,177 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rooms</title>
-
-</head>
-<!-- Bootstrap CSS -->
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Custom CSS */
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: sans-serif;
+        .chart-container {
+            position: relative;
+            width: 100%;
         }
-        
-        a{
-            text-decoration: none;
-            color: black;
-            
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            margin-left: 220px; /* Offset for the navbar */
-        }
-
-        .content-background{
-            background-color: white;
-            margin: 60px 200px 90px 200px;
-            border-radius: 10px;
-        }
-
-      
-        
     </style>
+</head>
+
 <body>
     <?php include 'navigationbar.php'; ?>
+    <?php include 'chat.php'; ?>
 
-    <div class="content-background">
-        <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
-        <?php else: ?>
-        <div class="back">
-            <div>
-                <?php 
-                    if(empty($_SESSION['uname'])){
-                        echo '<a class="btn" href="index.php">Back</a>';
-                    }else{
-                        echo '<a class="btn" href="index.php">Back</a>';
-                    }
-                ?>
-            </div>     
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Dashboard Overview</h1>
+        <div class="row">
+            <!-- Total Reservations -->
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Reservations</h5>
+                        <p class="card-text fs-3"><?php echo $totalReservations; ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Tenants -->
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Tenants</h5>
+                        <p class="card-text fs-3"><?php echo $totalTenants; ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Rooms -->
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Rooms</h5>
+                        <p class="card-text fs-3"><?php echo $totalRooms; ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Rooms -->
+            <div class="col-md-4">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Available Rooms</h5>
+                        <p class="card-text fs-3"><?php echo $availableRooms; ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Payments -->
+            <div class="col-md-4">
+                <div class="card text-white bg-dark mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Payments Collected</h5>
+                        <p class="card-text fs-3">₱<?php echo number_format($totalPayments, 2); ?></p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <?php endif; ?>
-
-        <div class="section1">
-            <style>
-                .section1{
-                    background-color: white;
-                    height: auto;
-                    font-weight: 20;
-                    display: grid;
-                    justify-content: center;
-                    grid-template-columns: 1fr 1fr;
-                    grid-template-rows: 1fr;
-                    border-radius: 10px;
-                    padding: 30px;
-                    padding-top: 30px;
-                    gap: 10px;
-                }
-
-                canvas{
-                    width: 200px;
-                    padding: 10px;
-                    justify-content: center;
-                    border: solid black 1px;
-                    border-radius: 10px;
-                }
-
-                .chart {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                }
-
-                .chart h3{
-                    text-align: center;
-                    padding: 5px;
-                }
-
-                @media (max-width: 1000px){
-                    canvas{
-                        width: 450px;
-                        padding: 10px;
-                        justify-content: center;
-                    }
-
-                    .section1{
-                        display: flex;
-                        flex-wrap: wrap;
-                        
-                    }
-                }
-            </style>
-            <div class="chart">
-                <h3>Number of tenants per Room Numer</h3>
-                <div class="chart-container">
-                    <canvas id="tenantOccupancyChart"></canvas>
-                </div>
-            </div>
-            <div class="chart">
-                <h3>Total Tenants</h3>
-                <div class="chart-container">
-                    <canvas id="totalTenantsChart"></canvas>
-                </div>
-            </div>
-
-
-
-            <?php
-                $tenantCountsStatus = [];
-                $roomNumbers = [];
-                
-                if(!empty($_SESSION['hname'])){ 
-                    $hname = $_SESSION['hname']; 
-                }  
-                else {  
-                    $hname = $_GET['hname']; 
-                } // Get the boarding house name from the session
-                
-                // Query to get the number of tenants in each occupied room (based on capacity)
-                $query_tenants_status = "
-                    SELECT room_no, capacity 
-                    FROM rooms 
-                    WHERE hname = '$hname' 
-                    AND status = 'occupied'";
-                    
-                $result_tenants_status = mysqli_query($conn, $query_tenants_status);
-                
-                while ($row = mysqli_fetch_assoc($result_tenants_status)) {
-                    $roomNumbers[] = $row['room_no'];
-                    $tenantCountsStatus[] = $row['capacity'];  // Assuming capacity means the number of tenants
-                }
-            ?>
-
-            <?php
-                $totalTenants = 0;
-
-                if(!empty($_SESSION['hname'])){ 
-                    $hname = $_SESSION['hname']; 
-                }  
-                else {  
-                    $hname = $_GET['hname']; 
-                } // Get the boarding house name from session
-                
-                // Query to get the total number of tenants based on room availability and capacity
-                $query_total_tenants = "
-                    SELECT SUM(capacity) AS total_tenants
-                    FROM rooms 
-                    WHERE hname = '$hname' 
-                    AND status = 'occupied'";
-                    
-                $result_total_tenants = mysqli_query($conn, $query_total_tenants);
-                
-                if ($row = mysqli_fetch_assoc($result_total_tenants)) {
-                    $totalTenants = $row['total_tenants']; // This will hold the total number of tenants
-                }
-            ?>
-
-        </div>                  
     </div>
 
     
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Dashboard Statistics</h1>
+        <div class="row">
+            <!-- Chart for Total Reservations -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="reservationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <script src="chart.min.js"></script>
+            <!-- Chart for Total Tenants -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="tenantChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Wrap chart logic in a function
-        function renderCharts() {
-            var roomNumbers = <?php echo json_encode($roomNumbers); ?>;
-            var tenantCountsStatus = <?php echo json_encode($tenantCountsStatus); ?>;
+        // Data for Total Reservations Chart
+        const reservationData = {
+            labels: ['Total Reservations'],
+            datasets: [{
+                label: 'Reservations',
+                data: [<?php echo $totalReservations; ?>],
+                backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+                borderColor: ['rgba(75, 192, 192, 1)'],
+                borderWidth: 1
+            }]
+        };
 
-            var ctx3 = document.getElementById('tenantOccupancyChart').getContext('2d');
-            var tenantOccupancyChart = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: roomNumbers,
-                    datasets: [{
-                        label: 'Number of Tenants (Occupied)',
-                        data: tenantCountsStatus,
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+        // Options for Reservations Chart
+        const reservationOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
                 }
-            });
-
-
-            var months = <?php echo json_encode($months); ?>;
-            var tenantCountsByMonth = <?php echo json_encode($tenantCountsByMonth); ?>;
-
-            var ctx = document.getElementById('tenantsByMonthChart').getContext('2d');
-            var tenantsByMonthChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: months.map(function(month) {
-                        // Convert month number to month name
-                        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                        return monthNames[month - 1];
-                    }),
-                    datasets: [{
-                        label: 'Number of Tenants',
-                        data: tenantCountsByMonth,
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
-            });
+            }
+        };
 
+        // Render Reservations Chart
+        const reservationCtx = document.getElementById('reservationChart').getContext('2d');
+        new Chart(reservationCtx, {
+            type: 'bar',
+            data: reservationData,
+            options: reservationOptions
+        });
 
+        // Data for Total Tenants Chart
+        const tenantData = {
+            labels: ['Total Tenants'],
+            datasets: [{
+                label: 'Tenants',
+                data: [<?php echo $totalTenants; ?>],
+                backgroundColor: ['rgba(153, 102, 255, 0.2)'],
+                borderColor: ['rgba(153, 102, 255, 1)'],
+                borderWidth: 1
+            }]
+        };
 
-        }
+        // Options for Tenants Chart
+        const tenantOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        };
 
-        // Call the function when the data is updated or after the page load
-        renderCharts();
-
+        // Render Tenants Chart
+        const tenantCtx = document.getElementById('tenantChart').getContext('2d');
+        new Chart(tenantCtx, {
+            type: 'bar',
+            data: tenantData,
+            options: tenantOptions
+        });
     </script>
-
-    <?php include 'chat.php'; ?>
     
 </body>
 </html>

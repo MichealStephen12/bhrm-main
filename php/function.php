@@ -80,8 +80,8 @@ if (isset($_GET['confirm'])) {
     $date_in = date('Y-m-d'); // Current date as the check-in date
 
     // Insert a payment record for the whole reservation (no need to handle beds)
-    $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `bed_price`, `pay_stat`, `hname`, `owner`) 
-                           VALUES ('', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
+    $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `price`, `pay_stat`, `hname`, `owner`) 
+                           VALUES                  ('', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
     mysqli_query($conn, $insertPaymentQuery);
 
     // Insert a report record for the reservation
@@ -190,6 +190,7 @@ if (isset($_GET['end'])) {
     // Update the report using the report ID
     $updateReportQuery = "UPDATE reports 
                           SET payment = '$payment', 
+                              pay_stat = '$pay_stat',
                               pay_date = '$pay_date', 
                               date_out = '$date_out' 
                           WHERE id = $report_id AND hname = '$hname'";

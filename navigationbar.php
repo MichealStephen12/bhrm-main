@@ -2,11 +2,12 @@
 
 require 'php/connection.php';
 
-if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
+if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord') {
     echo '';
 } else {
     header('location: index.php');
 }
+
 ?>
 
 <!DOCTYPE html>
