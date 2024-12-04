@@ -30,7 +30,7 @@ if (isset($_POST['submit'])) {
 
     $fileExt = explode('.', $fileName);
     $fileactualext = strtolower(end($fileExt));
-    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
+    $allowed = array('jpg', 'jpeg', 'png');
 
     if (in_array($fileactualext, $allowed)) {
         if ($fileError === 0) {
@@ -48,17 +48,17 @@ if (isset($_POST['submit'])) {
         echo "you cannot upload this type of file";
     }
 
-    $_FILES['image2'];
+    $_FILES['barper'];
 
-    $fileName = $_FILES['image2']['name'];
-    $fileTmpName = $_FILES['image2']['tmp_name'];
-    $fileSize = $_FILES['image2']['size'];
-    $fileError = $_FILES['image2']['error'];
-    $fileType = $_FILES['image2']['type'];
+    $fileName = $_FILES['barper']['name'];
+    $fileTmpName = $_FILES['barper']['tmp_name'];
+    $fileSize = $_FILES['barper']['size'];
+    $fileError = $_FILES['barper']['error'];
+    $fileType = $_FILES['barper']['type'];
 
     $fileExt = explode('.', $fileName);
     $fileactualext = strtolower(end($fileExt));
-    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
+    $allowed = array('jpg', 'jpeg', 'png');
 
     if (in_array($fileactualext, $allowed)) {
         if ($fileError === 0) {
@@ -76,9 +76,37 @@ if (isset($_POST['submit'])) {
         echo "you cannot upload this type of file";
     }
 
+    $_FILES['busper'];
+
+    $fileName = $_FILES['busper']['name'];
+    $fileTmpName = $_FILES['busper']['tmp_name'];
+    $fileSize = $_FILES['busper']['size'];
+    $fileError = $_FILES['busper']['error'];
+    $fileType = $_FILES['busper']['type'];
+
+    $fileExt = explode('.', $fileName);
+    $fileactualext = strtolower(end($fileExt));
+    $allowed = array('jpg', 'jpeg', 'png');
+
+    if (in_array($fileactualext, $allowed)) {
+        if ($fileError === 0) {
+            if ($fileSize < 1000000000000) {
+                $fileNameNew3 = $fileName;
+                $fileDestination = '../images/' . $fileNameNew3;
+                if ($fileNameNew3 > 0) {
+                    move_uploaded_file($fileTmpName, $fileDestination);
+                }
+            } else {
+                echo "your file is too big.";
+            }
+        }
+    } else {
+        echo "you cannot upload this type of file";
+    }
+
     $query = "INSERT INTO `bhapplication` (`id`, `owner`, `hname`, `haddress`, `contact_no`, `status`, `landlord`) VALUES ('', '$owner','$hname','$haddress', '$contactno', 'Pending', '$landlord')";
     mysqli_query($conn, $query);
-    $query = "INSERT INTO `documents` (`id`, `documents`, `image`, `hname`) VALUES ('','images/$fileNameNew2', 'images/$fileNameNew', '$hname')";
+    $query = "INSERT INTO `documents` (`id`, `bar_clear`, `bus_per`, `image`, `hname`) VALUES ('','images/$fileNameNew2', 'images/$fileNameNew3','images/$fileNameNew', '$hname')";
     mysqli_query($conn, $query);
     $query = "INSERT INTO `description` (`id`, `bh_description`, `hname`) VALUES ('','$description', '$hname')";
     mysqli_query($conn, $query);
@@ -138,13 +166,13 @@ if (isset($_GET['reject'])) {
     if (mysqli_query($conn, $query_update)) {
 
 
-        $query_insert = "UPDATE users SET hname = '' where uname = '$landlord'";
+        $query_insert = "UPDATE users SET hname = '' where uname = '$owner'";
         mysqli_query($conn, $query_insert);
 
-        $query_update = "UPDATE documents SET hname = '' where uname = '$landlord'";
+        $query_update = "UPDATE documents SET hname = '' where uname = '$owner'";
         mysqli_query($conn, $query_update);
 
-        $query_update = "UPDATE description SET hname = '' where uname = '$landlord'";
+        $query_update = "UPDATE description SET hname = '' where uname = '$owner'";
         mysqli_query($conn, $query_update);
         
         header('Location: ../index.php');
@@ -230,25 +258,7 @@ if (isset($_GET['reject'])) {
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .thank-you-message {
-            background-color: #eafaf1;
-            padding: 25px;
-            border-radius: 8px;
-            text-align: center;
-            color: black;
-            margin-bottom: 20px;
-        }
-
-        .thank-you-message h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .thank-you-message p {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-
+       
         .form-container {
             display: flex;
             flex-direction: column;
@@ -340,33 +350,126 @@ if (isset($_GET['reject'])) {
             <img src="../images/logo.png" alt="Logo">
         </a>
         <div class="nav-links">
-            <a href="php/bhfunction.php">Home</a>
+            <a href="/bhrm-main/php/bhfunction.php">Home</a>
             <a href="about.php">About Us</a>
             <a href="contact.php">Contact</a>
-            <a href="/bhrm-main/bhapplication.php">My Applications</a>
+            <a href="../bhapplication.php">My Application</a>
             </div>
                 <div class="login">
             <?php
-                if (!empty($_SESSION['uname'])) {
-                    echo '<a href="php/logout.php" class="logout">Logout</a>';
-                } else {
-                    echo '<a href="php/login.php">Login</a>';
-                }
-            ?>
+    if (!empty($_SESSION['uname'])) {
+        echo '<a href="logout.php" class="logout">Logout</a>';
+    } else {
+        echo '<a href="login.php">Login</a>';
+    }
+?>
 
         </div>
     </nav>
 
     <div class="section0">
         <div class="section1">
+            <style>
+                .thank-you-message {
+                    background-color: #f9f9fc;
+                    padding: 30px;
+                    border: 2px solid #c1e1c1;
+                    border-radius: 12px;
+                    color: #333;
+                    font-family: Arial, sans-serif;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    margin-bottom: 20px;
+                }
+
+                .thank-you-message h2 {
+                    font-size: 26px;
+                    margin-bottom: 15px;
+                    color: #27ae60;
+                }
+
+                .thank-you-message p {
+                    font-size: 16px;
+                    margin: 10px 0;
+                    line-height: 1.6;
+                }
+
+                .thank-you-message ul, .thank-you-message ol {
+                    text-align: left;
+                    margin: 10px auto;
+                    max-width: 700px;
+                }
+
+                .thank-you-message ul {
+                    list-style-type: disc;
+                    padding-left: 20px;
+                }
+
+                .thank-you-message ol {
+                    list-style-type: decimal;
+                    padding-left: 20px;
+                }
+
+                .thank-you-message a {
+                    color: #2980b9;
+                    text-decoration: none;
+                }
+
+                .thank-you-message a:hover {
+                    text-decoration: underline;
+                }
+
+                .thank-you-message h3 {
+                    font-size: 20px;
+                    margin-top: 20px;
+                    color: #2c3e50;
+                }
+
+            </style>
             <div class="thank-you-message">
                 <h2>Thank You for Registering as a Landlord!</h2>
                 <p>Dear <?php echo $fetch['fname']; ?>,</p>
-                <p>We appreciate your interest in becoming a landlord with us. Your application is under review, and we will notify you via email once it's processed.</p>
-                <p>At [Website/Platform Name], we are committed to providing a platform that benefits both landlords and tenants. If you have any questions in the meantime, feel free to reach out to us.</p>
-                <p>Thank you for choosing us to showcase your property. We look forward to working with you!</p>
-                <p>Best regards,<br>The [Website/Platform Name] Team</p>
+                <p>
+                    Thank you for registering as a landlord with us! To complete your application and activate your account, we kindly request you to submit the following essential documents:
+                </p>
+                <ul>
+                    <li><strong>Barangay Permit</strong></li>
+                    <li><strong>Business Permit</strong></li>
+                </ul>
+                <p>
+                    These documents are necessary to ensure compliance with local regulations and to validate your application. Below are the steps to acquire these documents if you haven’t obtained them yet:
+                </p>
+
+                <h3>How to Get a Barangay Permit</h3>
+                <ol>
+                    <li>Prepare required documents: Barangay Clearance, proof of property ownership or lease agreement, and a valid government-issued ID.</li>
+                    <li>Visit your Barangay Hall where your boarding house is located.</li>
+                    <li>Fill out the application form provided at the barangay office.</li>
+                    <li>Pay the processing fee (₱200–₱500 depending on the barangay).</li>
+                    <li>Barangay officials may inspect your boarding house for compliance.</li>
+                    <li>Receive your Barangay Permit (processing usually takes 1–3 business days).</li>
+                </ol>
+
+                <h3>How to Get a Business Permit</h3>
+                <ol>
+                    <li>Start by securing your Barangay Clearance or Barangay Permit (this is a prerequisite for a business permit).</li>
+                    <li>Gather the necessary documents, including your DTI Registration Certificate (for sole proprietors), SEC Registration (for corporations/partnerships), and Contract of Lease or proof of property ownership.</li>
+                    <li>Visit the Municipal or City Hall and head to the Business Permits and Licensing Office (BPLO).</li>
+                    <li>Submit your application form along with all required documents for processing.</li>
+                    <li>Pay the applicable fees (amount depends on the size and type of your business).</li>
+                    <li>Wait for your application to be processed and claim your Business Permit (processing times may vary).</li>
+                </ol>
+                <p>
+                    Should you have any questions or need further guidance, feel free to reach out to our team. We are here to assist you throughout this process.
+                </p>
+                <p>
+                    Thank you for trusting us with your property. We look forward to completing your application!
+                </p>
+                <p>
+                    Best regards,<br>
+                    <strong>The MBHC Team</strong>
+                </p>
             </div>
+
         </div>
 
         <div class="section2">
@@ -398,8 +501,12 @@ if (isset($_GET['reject'])) {
                     <input type="file" id="image" name="image" required>
                 </div>
                 <div class="form-group">
-                    <label for="image2">Provide Required Documents for BH Verification</label>
-                    <input type="file" id="image2" name="image2" required>
+                    <label for="image2">Provide Baranggay Permit BH Verification</label>
+                    <input type="file" id="image2" name="barper" required>
+                </div>
+                <div class="form-group">
+                    <label for="image2">Provide Business Permit for BH Verification</label>
+                    <input type="file" id="image2" name="busper" required>
                 </div>
                 <div class="form-group">
                     <button type="submit" name="submit">Submit</button>

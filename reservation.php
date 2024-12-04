@@ -186,23 +186,21 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             </div>
             <div class="card-body">
                 <div class="row">
-                <div class="col-md-6">
+                    <div class="col-md-6">
                         <p><strong>Guest Information:</strong></p>
                         <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
                         <p>Email: <?php echo $fetch['email']; ?></p>
                         <p>Gender: <?php echo $fetch['gender']; ?></p>
+                        <p>Status: <?php echo $fetch['tenant_status']; ?></p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
                         <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Gender Allowed: <?php echo $fetch['gender']; ?></p>
+                        <p>Room Amenities: <?php echo $fetch['amenities']; ?></p>
+                        <p>Room Floor: <?php echo $fetch['room_floor']; ?></p>
                         <p>Room Status: <?php echo $fetch['status']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Bed Information:</strong></p>
-                        <p>Bed Selected: <?php echo $fetch['bed_no'];?> </p>
-                        <p>Bed Rent: <?php echo $fetch['bed_price']; ?> / Month</p>
-                        <p>Bed Status: <?php echo $fetch['bed_stat'];?> </p>
                     </div>
                 </div>
                 <div class="row">
@@ -270,7 +268,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         ?>
                 <div class="card">
                     <div class="card-footer">
-                        <img src="<?php echo $reservation['image']; ?>" alt="Boarding House Image">
+                        <img src="<?php echo $fetch['image']; ?>" alt="Boarding House Image">
                     </div>
                     <div class="card-header">
                         <h5>Boarding House: <?php echo $reservation['hname']; ?></h5>
@@ -285,18 +283,16 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                                 <p>Name: <?php echo $reservation['fname'] . ' ' . $reservation['lname']; ?></p>
                                 <p>Email: <?php echo $reservation['email']; ?></p>
                                 <p>Gender: <?php echo $reservation['gender']; ?></p>
+                                <p>Status: <?php echo $reservation['tenant_status']; ?></p>
                             </div>
                             <div class="col-md-6">
                                 <p><strong>Room Information:</strong></p>
                                 <p>Room No: <?php echo $reservation['room_no']; ?></p>
                                 <p>Room Capacity: <?php echo $reservation['capacity']; ?></p>
+                                <p>Gender Allowed: <?php echo $reservation['gender']; ?></p>
+                                <p>Room Amenities: <?php echo $reservation['amenities']; ?></p>
+                                <p>Room Floor: <?php echo $reservation['room_floor']; ?></p>
                                 <p>Room Status: <?php echo $reservation['status']; ?></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p><strong>Bed Information:</strong></p>
-                                <p>Bed Selected: <?php echo $reservation['bed_no']; ?></p>
-                                <p>Bed Rent: <?php echo $reservation['bed_price']; ?> / Month</p>
-                                <p>Bed Status: <?php echo $reservation['bed_stat']; ?></p>
                             </div>
                         </div>
                         <div class="row">

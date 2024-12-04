@@ -103,17 +103,17 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"]
             <img src="images/logo.png" alt="Logo">
         </a>
         <div class="nav-links">
-            <a href="php/bhfunction.php">Home</a>
-            <a href="about.php">About Us</a>
-            <a href="contact.php">Contact</a>
+            <a href="/bhrm-main/php/bhfunction.php">Home</a>
+            <a href="/bhrm-main/about.php">About Us</a>
+            <a href="/bhrm-main/contact.php">Contact</a>
             <a href="/bhrm-main/bhapplication.php">My Applications</a>
             </div>
                 <div class="login">
             <?php
                 if (!empty($_SESSION['uname'])) {
-                    echo '<a href="php/logout.php" class="logout">Logout</a>';
+                    echo '<a href="/bhrm-main/php/logout.php" class="logout">Logout</a>';
                 } else {
-                    echo '<a href="php/login.php">Login</a>';
+                    echo '<a href="/bhrm-main/php/login.php">Login</a>';
                 }
             ?>
 

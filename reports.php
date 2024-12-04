@@ -21,7 +21,7 @@ $totalTenantsResult = mysqli_query($conn, $totalTenantsQuery);
 $totalTenants = mysqli_fetch_assoc($totalTenantsResult)['total_tenants'];
 
 // Fetch detailed report data for the landlord's boarding house
-$reportQuery = "SELECT * FROM reports WHERE hname = '$hname' ORDER BY date_in DESC";
+$reportQuery = "SELECT * FROM reports WHERE hname = '$hname' ORDER BY id DESC";
 $reportResult = mysqli_query($conn, $reportQuery);
 ?>
 
@@ -210,7 +210,6 @@ $reportResult = mysqli_query($conn, $reportQuery);
                     <th>Gender</th>
                     <th>Email</th>
                     <th>Room No</th>
-                    <th>Bed No</th>
                     <th>Payment</th>
                     <th>Payment Date</th>
                     <th>Date In</th>
@@ -224,7 +223,6 @@ $reportResult = mysqli_query($conn, $reportQuery);
                         <td><?php echo $report['gender']; ?></td>
                         <td><?php echo $report['email']; ?></td>
                         <td><?php echo $report['room_no']; ?></td>
-                        <td><?php echo $report['bed_no']; ?></td>
                         <td><?php echo number_format($report['payment'], 2); ?> PHP</td>
                         <td><?php echo $report['pay_date'] ?: 'N/A'; ?></td>
                         <td><?php echo $report['date_in']; ?></td>

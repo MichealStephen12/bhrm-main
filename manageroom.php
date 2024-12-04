@@ -37,7 +37,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rooms</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" <?php echo time() ?> rel="stylesheet">
 </head>
 <!-- Bootstrap CSS -->
     <style>
@@ -152,7 +152,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <div class="card-content">
                     <h5>Room No: <?php echo $fetch['room_no']?></h5>
                     <p>Capacity: <?php echo $fetch['capacity']?></p>
-                    <p>Price: <?php echo $fetch['price']?></p>
+                    <p>Rent / Month: <?php echo $fetch['price']?></p>
+                    <p>The rent is based on each person.</p>
                     <p>Amenities: <?php echo $fetch['amenities']?></p>
                     <p>Tenant Type:  <?php echo $fetch['tenant_type']?> Only </p>
                     <p>Current Tenant: <?php echo $fetch['current_tenant']; ?> / <?php echo $fetch['capacity']?> </p>
@@ -197,9 +198,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
                     </style>
                     <div class="room-btn"> 
-                        <a href='php/roomfunction.php?rupdate=<?php echo $id;?>' class='btn btn-warning'>Update</a>
-                        <a href='php/roomfunction.php?rdelete=<?php echo $id;?>' class='btn btn-danger'>Delete</a>  
-                        <a href='managebeds.php?roomno=<?php echo $roomno;?>' class='btn btn-warning'>Manage Beds</a>
+                    <button data-action="update" data-id="<?php echo $id; ?>" class="btn btn-success action-button">Update</button>
+                    <button data-action="delete" data-id="<?php echo $id; ?>" class="btn btn-danger action-button">Delete</button>  
                         <?php 
                         if ($tenantcount == $capacity){ 
                             $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno";
@@ -224,6 +224,60 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
         <?php } } ?>
 
     </div>
-                           
+                      <!-- Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalMessage">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <a href="#" id="confirmActionBtn" class="btn btn-danger">Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const actionButtons = document.querySelectorAll('.action-button');
+        const confirmActionBtn = document.getElementById('confirmActionBtn');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalLabel = document.getElementById('confirmModalLabel');
+        
+        actionButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const actionType = this.getAttribute('data-action');  // 'delete' or 'update'
+                const roomId = this.getAttribute('data-id');  // Room ID
+                
+                // Set the appropriate message and URL for the action
+                if (actionType === 'delete') {
+                    modalMessage.textContent = 'Are you sure you want to delete this room?';
+                    confirmActionBtn.setAttribute('href', 'php/roomfunction.php?rdelete=' + roomId);
+                    modalLabel.textContent = 'Confirm Deletion';
+                } else if (actionType === 'update') {
+                    modalMessage.textContent = 'Are you sure you want to update this room?';
+                    confirmActionBtn.setAttribute('href', 'php/roomfunction.php?rupdate=' + roomId);
+                    modalLabel.textContent = 'Confirm Update';
+                }
+
+                // Show the modal
+                $('#confirmModal').modal('show');
+            });
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    
 </body>
 </html>

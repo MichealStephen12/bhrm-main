@@ -259,7 +259,7 @@ if (isset($_POST['update'])) {
     }
 
     #add-amenity-btn {
-        background-color: #007bff;
+        background-color: #ffc107;
         color: #fff;
         padding: 8px;
         border: none;
@@ -281,7 +281,7 @@ if (isset($_POST['update'])) {
 
     /* Make both submit and back buttons equally tall */
     .button-container input, .button-container a {
-        background-color: #f0ad4e;
+        background-color: #ffc107;
         color: #fff;
         font-size: 16px;
         padding: 10px;
@@ -298,7 +298,7 @@ if (isset($_POST['update'])) {
     }
 
     a.btn-secondary {
-        background-color: #6c757d;
+        background-color: #343a40;
     }
 
     .button-container input[type="submit"]:hover, a.btn-secondary:hover {
@@ -395,18 +395,29 @@ if (isset($_POST['update'])) {
 
 
 
-        <label>Tenant Type:</label>
-        <select name="tenanttype" required>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
+            <label>Tenant Type:</label>
+            <div>
+                <select name="tenanttype" id="tenanttype" required>
+                    <option value="male">All</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                <button type="button" id="add-tenanttype-btn">Add New Tenant Type</button>
+                <input type="text" id="new-tenanttype" placeholder="Enter new tenant type" style="display:none;">
+                <button type="button" id="save-tenanttype-btn" style="display:none;">Save</button>
+            </div>
 
-        <label>Room Floor:</label>
-        <select name="roomfloor" required>
-            <option value="ground floor">Ground Floor</option>
-            <option value="1st floor">1st Floor</option>
-            <option value="2nd floor">2nd Floor</option>
-        </select>
+            <label>Room Floor:</label>
+            <div>
+                <select name="roomfloor" id="roomfloor" required>
+                    <option value="ground floor">Ground Floor</option>
+                    <option value="1st floor">1st Floor</option>
+                    <option value="2nd floor">2nd Floor</option>
+                </select>
+                <button type="button" id="add-roomfloor-btn">Add New Floor</button>
+                <input type="text" id="new-roomfloor" placeholder="Enter new floor" style="display:none;">
+                <button type="button" id="save-roomfloor-btn" style="display:none;">Save</button>
+            </div>
 
         <label>Rent / Month:</label>
         <input type="text" name="price" value="<?php echo $data['price']; ?>" placeholder="Enter here..." required>
@@ -477,6 +488,47 @@ if (isset($_POST['update'])) {
             newAmenityInput.style.display = 'none';
             saveAmenityBtn.style.display = 'none';
         }
+    });
+
+
+    // Add new tenant type
+    document.getElementById("add-tenanttype-btn").addEventListener("click", function () {
+        document.getElementById("new-tenanttype").style.display = "inline-block";
+        document.getElementById("save-tenanttype-btn").style.display = "inline-block";
+    });
+
+    document.getElementById("save-tenanttype-btn").addEventListener("click", function () {
+        const newTenantType = document.getElementById("new-tenanttype").value.trim();
+        if (newTenantType) {
+            const select = document.getElementById("tenanttype");
+            const option = document.createElement("option");
+            option.value = newTenantType.toLowerCase();
+            option.textContent = newTenantType;
+            select.appendChild(option);
+            document.getElementById("new-tenanttype").value = "";
+        }
+        document.getElementById("new-tenanttype").style.display = "none";
+        document.getElementById("save-tenanttype-btn").style.display = "none";
+    });
+
+    // Add new room floor
+    document.getElementById("add-roomfloor-btn").addEventListener("click", function () {
+        document.getElementById("new-roomfloor").style.display = "inline-block";
+        document.getElementById("save-roomfloor-btn").style.display = "inline-block";
+    });
+
+    document.getElementById("save-roomfloor-btn").addEventListener("click", function () {
+        const newRoomFloor = document.getElementById("new-roomfloor").value.trim();
+        if (newRoomFloor) {
+            const select = document.getElementById("roomfloor");
+            const option = document.createElement("option");
+            option.value = newRoomFloor.toLowerCase();
+            option.textContent = newRoomFloor;
+            select.appendChild(option);
+            document.getElementById("new-roomfloor").value = "";
+        }
+        document.getElementById("new-roomfloor").style.display = "none";
+        document.getElementById("save-roomfloor-btn").style.display = "none";
     });
 </script>
 

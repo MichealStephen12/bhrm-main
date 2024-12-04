@@ -90,106 +90,11 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             background-color: #c82333; /* Darker shade on hover */
         }
 
-        img {
-            width: 150px; /* Adjust the size of the images */
-            height: auto;
-        }
-
 
     </style>
 
 <body>
     <?php include 'navigationbar.php'; ?>
-
-    
-    <?php if(!empty($_SESSION['role']) && $_SESSION['role'] == 'landlord'): ?>
-        <style>
-
-            .back{
-                height: 100px;
-                display: flex;
-                justify-content: right;
-                align-items: center;
-                margin-right: 300px;
-            }.back a{
-                height: auto;
-            }
-        
-            @media (max-width: 479px){
-                .back{
-                    height: 100px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-right: 0;
-                }.back a{
-                    height: auto;
-                }
-            }
-            
-            .btn{
-                color: rgb(255, 255, 255);
-                padding: 10px 20px;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
-                background-color: #007bff;
-            }
-        </style>
-        <div class="back">
-            <div>
-                <a class='btn' href='managereservation.php'>Back</a>
-            </div>     
-        </div>
-        
-    <?php else: ?>
-        <style>
-
-            .back{
-                height: 100px;
-                display: flex;
-                justify-content: right;
-                align-items: center;
-                margin-right: 300px;
-            }.back a{
-                height: auto;
-            }
-        
-            @media (max-width: 479px){
-                .back{
-                    height: 100px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-right: 0;
-                }.back a{
-                    height: auto;
-                }
-            }
-            
-            .btn{
-                color: rgb(255, 255, 255);
-                padding: 10px 20px;
-                border-radius: 5px;
-                font-size: 16px;
-                cursor: pointer;
-                background-color: #007bff;
-            }
-        </style>
-        <div class="back">
-            <div>
-                <?php 
-                    if(empty($_SESSION['uname'])){
-                        echo "<a class='btn' href='index.php'>Back</a>";
-                    }else{
-                        echo "<a class='btn' href='index.php'>Back</a>";
-                    }
-                ?>
-            </div>     
-        </div>
-    <?php endif; ?>
-
-
 
     <?php 
         if (!empty($_SESSION) && $_SESSION['role'] == 'landlord') {

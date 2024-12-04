@@ -88,7 +88,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
         }
 
         .background {
-            background-image: url(images/a2.png);
+            background-color: #b9b9b9;
             background-size: cover;  /* Ensure the image covers the entire container */
             background-position: center; /* Position the background image centrally */
             background-repeat: no-repeat;  /* Prevent the background from repeating */
@@ -495,7 +495,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                     <p>Capacity: <?php echo $fetch['capacity']?></p>
                                     <p>Price: <?php echo $fetch['price']?></p>
                                     <p>Amenities: <?php echo $fetch['amenities']?></p>
-                                    <p>Tenant Type:  <?php echo $fetch['tenant_type']?> Only </p>
+                                    <p>Tenant Type:  <?php echo $fetch['tenant_type']?></p>
                                     <p>Current Tenant: <?php echo $fetch['current_tenant']; ?>/<?php echo $fetch['capacity']?> </p>
                                     <p>Room Floor:  <?php echo $fetch['room_floor']?> </p>
                                     <p>Status: <?php echo $fetch['status']?></p>
@@ -515,29 +515,41 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                     </style>
                                         <div class="room-btn">
                                         <?php 
+                                            // Check if the room is full or available based on tenant count and capacity
                                             if ($tenantcount == $capacity) { 
-                                                $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno and hname = '$hname'";
+                                                $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno AND hname = '$hname'";
                                                 mysqli_query($conn, $query);
-                                            } else if ($tenantcount <= $capacity) {
-                                                $query = "UPDATE rooms SET status = 'available' WHERE room_no = $roomno and hname = '$hname'";
+                                            } else if ($tenantcount < $capacity) {
+                                                $query = "UPDATE rooms SET status = 'Available' WHERE room_no = $roomno AND hname = '$hname'";
                                                 mysqli_query($conn, $query);
 
-                                                // Check if the room has beds
-                                                $bedQuery = "SELECT COUNT(*) as bed_count FROM beds WHERE roomno = $roomno and hname = '$hname'";
-                                                $bedResult = mysqli_query($conn, $bedQuery);
-                                                $bedData = mysqli_fetch_assoc($bedResult);
+                                                // Check room gender restriction
+                                                $roomQuery = "SELECT tenant_type FROM rooms WHERE room_no = $roomno AND hname = '$hname'";
+                                                $roomResult = mysqli_query($conn, $roomQuery);
+                                                $roomData = mysqli_fetch_assoc($roomResult);
 
-                                                if ($bedData['bed_count'] > 0) {
-                                                    // Display "Book Now!" if the room has beds
-                                                    ?>
-                                                    <a href='book-in.php?roomno=<?php echo $roomno; ?>' class='btn btn-warning'>Book Now!</a>
-                                                    <?php 
+                                                // Ensure the current user is logged in
+                                                if (isset($_SESSION['uname'])) {
+                                                    $userQuery = "SELECT role, gender FROM users WHERE uname = '" . $_SESSION['uname'] . "'";
+                                                    $userResult = mysqli_query($conn, $userQuery);
+                                                    $userData = mysqli_fetch_assoc($userResult);
+
+                                                    // Check if the user matches the room's gender restriction
+                                                    if ($roomData['tenant_type'] === 'All' || strtolower($roomData['tenant_type']) === strtolower($userData['gender'])) {
+                                                        // Display "Book Now!" for eligible users
+                                                        ?>
+                                                        <a href='book-in.php?roomno=<?php echo $roomno; ?>' class='btn btn-warning'>Book Now!</a>
+                                                        <?php
+                                                    } else {
+                                                        // Message if the user is not eligible
+                                                        echo "<p>This room is restricted to " . ucfirst($roomData['tenant_type']) . " tenants.</p>";
+                                                    }
                                                 } else {
-                                                    // Message for no beds
-                                                    echo "<p>No beds available in this room.</p>";
+                                                    // Message if the user is not logged in
+                                                    echo "<p>Please log in to book this room.</p>";
                                                 }
                                             }
-                                            ?>
+                                        ?>
                                         </div>
                                     </div>
                                 </div>

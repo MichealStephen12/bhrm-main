@@ -81,6 +81,9 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
                             <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
                             <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
+                            <p class="card-text"><strong>Documents:</strong></p>
+                            <img src="../<?php echo $fetch['bar_clear']; ?>" class="card-img-top" alt="Documents">
+                            <img src="../<?php echo $fetch['bus_per']; ?>" class="card-img-top" alt="Documents">
                             <span class="badge bg-warning text-dark">Pending</span>
                         </div>
                         <?php if ($_SESSION["role"] == "admin"): ?>
@@ -115,7 +118,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
                             <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
                             <p class="card-text"><strong>Documents:</strong></p>
-                            <img src="../<?php echo $fetch['documents']; ?>" class="card-img-top" alt="Documents">
+                            <img src="../<?php echo $fetch['bar_clear']; ?>" class="card-img-top" alt="Documents">
+                            <img src="../<?php echo $fetch['bus_per']; ?>" class="card-img-top" alt="Documents">
                             <span class="badge bg-success">Approved</span>
                         </div>
                         <div class="card-footer text-center">

@@ -1,5 +1,5 @@
 <?php 
-require 'php/connection.php';
+include 'php/connection.php';
 
 if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $uname = $_SESSION['uname'];
@@ -28,20 +28,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 ?>
 
-<?php
-    if (isset($_SESSION['already_booked']) && $_SESSION['already_booked'] === true) {
-        echo "
-        <script src='jquery.min.js'></script>
-        <link rel='stylesheet' href='toastr.min.css' />
-        <script src='toastr.min.js'></script>
-        <script>
-            $(document).ready(function() {
-                toastr.warning('You have already booked a room.');
-            });
-        </script>";
-        unset($_SESSION['already_booked']); 
-    }
-?>
 
 
 <!DOCTYPE html>
@@ -163,12 +149,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     <canvas id="totalTenantsChart"></canvas>
                 </div>
             </div>
-            <div class="chart">
-                <h3>Total Tenants by Month</h3>
-                <div class="chart-container">
-                    <canvas id="tenantsByMonthChart"></canvas>
-                </div>
-            </div>
+
 
 
             <?php
@@ -221,51 +202,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 }
             ?>
 
-            <?php
-                if (!empty($_SESSION['hname'])){
-                    $hname = $_SESSION['hname'];
-                }else{
-                    $hname = $_GET['hname'];
-                }
-                $query = "
-                SELECT 
-                    MONTH(date_in) AS month, 
-                    SUM(bed_no) AS total_tenants
-                FROM 
-                    reservation
-                WHERE 
-                    res_stat = 'Approved' AND hname = '$hname'
-                GROUP BY 
-                    MONTH(date_in)
-                UNION ALL
-                SELECT 
-                    month, 
-                    0 AS total_tenants
-                FROM 
-                    (SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS months
-                WHERE 
-                    month NOT IN (SELECT MONTH(date_in) FROM reservation WHERE status = 'occupied' AND hname = '$hname')
-                ORDER BY 
-                    month;
-                ";
-                
-                $result = mysqli_query($conn, $query);                                       
-                $months = [];
-                $tenantCountsByMonth = [];
-
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $months[] = $row['month'];
-                    $tenantCountsByMonth[] = $row['total_tenants'];
-                }
-
-                // Ensure months are ordered correctly
-                $data = array_combine($months, $tenantCountsByMonth);
-                ksort($data); // Sort data by month
-                $months = array_keys($data);
-                $tenantCountsByMonth = array_values($data);
-    
-            ?>
-
         </div>                  
     </div>
 
@@ -287,31 +223,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     datasets: [{
                         label: 'Number of Tenants (Occupied)',
                         data: tenantCountsStatus,
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            var totalTenants = <?php echo json_encode($totalTenants); ?>;
-
-            var ctxTotal = document.getElementById('totalTenantsChart').getContext('2d');
-            var totalTenantsChart = new Chart(ctxTotal, {
-                type: 'bar',
-                data: {
-                    labels: ['Total Tenants'],
-                    datasets: [{
-                        label: 'Number of Tenants',
-                        data: [totalTenants],
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1

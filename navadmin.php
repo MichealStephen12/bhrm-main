@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 </head>
 <body>
@@ -18,8 +19,6 @@
 
         } // Fallback to 'Guest' if session is not set
 
-
-        // Query to count new reservations
         $query = "SELECT COUNT(*) AS new_application FROM bhapplication WHERE status = 'Pending'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_assoc($result);
@@ -31,206 +30,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
+    <title>Responsive Sidebar</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
-        .navbar {
+        body {
+            margin-left: 250px; /* Default sidebar width */
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            height: 100%;
-            width: 220px;
+            height: 100vh;
+            width: 250px;
             background-color: #343a40;
             padding: 20px 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s ease;
         }
 
-        .navbar-brand {
-            text-align: center;
-            margin-bottom: 20px;
+        .sidebar.collapsed {
+            width: 70px;
         }
 
-        .navbar-brand img {
+        .sidebar .navbar-brand img {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            border: 2px solid #f4f4f4;
-            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
 
-        .navbar-brand img:hover {
-            transform: scale(1.1);
+        .sidebar.collapsed .navbar-brand img {
+            width: 50px;
+            height: 50px;
         }
 
-        .nav-links {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: left;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .nav-links li {
-            margin-bottom: 10px;
-        }
-
-        .nav-link {
+        .sidebar .nav-link {
             color: white;
-            text-decoration: none;
+            display: block;
             font-size: 16px;
             padding: 10px 15px;
-            display: block;
             border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .nav-link:hover,
-        .nav-link.active {
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
             background-color: #ffc107;
             color: white;
         }
 
-        .dropdown {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .dropdown .username {
-            font-weight: bold;
-            font-size: 15px;
-        }
-
-        .dropdown img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .li-background {
-            background-color: gray; /* Gray background */
-            color: white; /* Text color for contrast */
-            padding: 10px 15px; /* Add some padding for spacing */
-            border-radius: 5px; /* Smooth rounded corners */
-            margin: 5px 0; /* Add space between list items */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-            font-size: 16px; /* Font size for readability */
-            transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
-            position: relative; /* Ensure positioning for dropdown menu */
-        }
-
-        .li-background:hover {
-            background-color: #555; /* Darker gray on hover */
-            color: #f0f0f0; /* Slightly lighter text color on hover */
-        }
-
-        /* Show dropdown-menu when hovering over li-background */
-        .li-background:hover .dropdown-menu {
-            display: block;
-        }
-
         .dropdown-menu {
-            display: none; /* Hide menu by default */
-            position: absolute;
-            top: 150%; /* Align just below the parent */
-            left: 0;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1001;
-            min-width: 150px;
+            background-color: #343a40;
+            border: none;
         }
 
         .dropdown-menu a {
-            display: block;
-            padding: 10px 15px;
-            color: black;
-            text-decoration: none;
+            color: white;
+            padding: 10px;
             border-radius: 5px;
-            font-size: 14px;
         }
 
         .dropdown-menu a:hover {
-            background-color: #f0f0f0;
+            background-color: #495057;
         }
 
-
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-toggle {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            justify-content: space-between;
-        }
-
-        .dropdown-toggle span {
-            margin-left: auto;
-            font-size: 12px;
-            margin-right: 10px;
-        }
-
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .navbar {
-                width: 180px;
-                padding: 15px 10px;
-            }
-
-            .navbar-brand img {
-                width: 60px;
-                height: 60px;
-            }
-
-            .nav-link {
-                font-size: 14px;
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-bottom: 20px;
             }
 
             body {
-                margin-left: 180px;
+                margin-left: 0;
             }
         }
     </style>
-
-    <nav class="navbar">
-        <a class="navbar-brand" href="#">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar bg-dark">
+        <div class="navbar-brand text-center">
             <img src="/bhrm-main/images/logo.png" alt="Logo">
-        </a>
-        <ul class="nav-links">
-        <div class="li-background">
-            <li class="dropdown">
-                <img src="/bhrm-main/<?php echo $fetch['image']?>" alt="Profile">
-            </li>
-            <li class="dropdown">
-                <div class="dropdown-toggle">
-                    <span class="username"> Welcome <?php echo $fetch['fname']; ?></span>
-                    <span>▼</span>
-                </div>
-                <div class="dropdown-menu">
-                    <a href="/bhrm-main/profile.php">Profile</a>
-                    <a href="settings.php">Settings</a>
-                    <a href="/bhrm-main/php/logout.php">Logout</a>
-                </div>
-            </li>
         </div>
-            <li><a class="nav-link active" href="/bhrm-main/dashboardadmin.php">Dashboard</a></li>
-            <li><a class="nav-link" href="/bhrm-main/index.php">Manage Boarding House</a></li>
-            <li><a class="nav-link" href="/bhrm-main/php/bhapplications.php">Applications (<?php echo $newReservations; ?>)</a></li>
+        <ul class="nav flex-column">
+            <!-- User Info -->
+            <li class="nav-item text-center mb-4">
+                <img class="rounded-circle mb-2" src="/bhrm-main/<?php echo $fetch['image'] ?? 'default.png'; ?>" alt="Profile" width="60" height="60">
+                <span class="d-block text-white">Welcome <?php echo $fetch['fname'] ?? 'Guest'; ?></span>
+            </li>
+            <!-- Navigation Links -->
+            <li class="nav-item">
+                <a class="nav-link" href="/bhrm-main/dashboardadmin.php">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/bhrm-main/index.php">Manage Boarding House</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/bhrm-main/php/bhapplications.php">Applications (<?php echo $newReservations; ?>)</a>
+            </li>
+            <!-- Dropdown Menu -->
+            <ul class="nav">
+            <li class="nav-item dropdown mt-3 position-relative">
+                <a class="nav-link text-white dropdown-toggle" href="#" id="userMenu" role="button">
+                    Account
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark position-absolute" aria-labelledby="userMenu">
+                    <li><a class="dropdown-item" href="profile.php">Profile</a></li>
+                    <li><a class="dropdown-item" href="settings.php">Settings</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/php/logout.php">Logout</a></li>
+                </ul>
+            </li>
         </ul>
     </nav>
+    
+
+    <!-- JavaScript -->
+    <script>
+        // Add dropdown toggle functionality manually
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdownToggle = document.getElementById('userMenu');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+
+            // Toggle the dropdown menu on click
+            dropdownToggle.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default anchor behavior
+                dropdownMenu.classList.toggle('show'); // Toggle visibility
+            });
+
+            // Close dropdown if clicked outside
+            document.addEventListener('click', function (event) {
+                if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.remove('show'); // Hide dropdown
+                }
+            });
+        });
+    </script>
+     
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 </body>
 </html>

@@ -51,141 +51,153 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        /* General Styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            margin: 0;
-            padding: 0;
-        }
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: none; /* White background */
+    color: #343a40; /* Dark text color */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent scrolling */
+}
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+/* Animated Background */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
-        .background {
-            background-image: url( images/ima);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            
-        }
+.background {
+    background: linear-gradient(45deg, #343a40, #aeb5bb, #343a40, #ffffff);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
 
-        .content-background {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: 30px auto;
-            max-width: 1100px;
-        }
+/* Other Styles for Content and Card */
+.content-background {
+    background-color: white; /* White background for the content */
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 1100px;
+}
 
-        /* Section for admin charts */
-        .chart-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+/* Section for admin charts */
+.chart-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
+canvas {
+    max-width: 100%;
+    height: auto;
+}
 
-        /* Card Styles */
-        .card {
-            border: none;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
-        }
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+}
 
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
 
-        .card-content {
-            padding: 15px;
-        }
+.card-content {
+    padding: 15px;
+}
 
-        .card-content h5 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
+.card-content h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
-        .card-content p {
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
+.card-content p {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
 
-                /* General Button Styles */
-        .button {
-            background-color: #ffc107; /* Default color for buttons */
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
+/* General Button Styles */
+.button {
+    background-color: #ffc107; /* Default color for buttons */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
 
-        /* Default hover effect (for non-specific buttons) */
-        .button:hover {
-            background-color: #ffc107;
-        }
+/* Default hover effect (for non-specific buttons) */
+.button:hover {
+    background-color: #ffc107;
+}
 
-        /* Specific styles for Delete button */
-        .button.delete {
-            background-color: #dc3545; /* Default red for delete button */
-        }
+/* Specific styles for Delete button */
+.button.delete {
+    background-color: #dc3545; /* Default red for delete button */
+}
 
-        .button.delete:hover {
-            background-color: #c82333; /* Darker red on hover */
-        }
+.button.delete:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
 
-        /* Specific styles for Update button */
-        .button.update {
-            background-color: #28a745; /* Default green for update button */
-        }
+/* Specific styles for Update button */
+.button.update {
+    background-color: #28a745; /* Default green for update button */
+}
 
-        .button.update:hover {
-            background-color: #218838; /* Darker green on hover */
-        }
+.button.update:hover {
+    background-color: #218838; /* Darker green on hover */
+}
 
-        /* Footer */
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-        }
+/* Footer */
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
 
-        .footer a {
-            color: #ffc107;
-        }
+.footer a {
+    color: #ffc107;
+}
 
-        .footer a:hover {
-            color: white;
-        }
+.footer a:hover {
+    color: white;
+}
+
+
     </style>
 </head>
 
