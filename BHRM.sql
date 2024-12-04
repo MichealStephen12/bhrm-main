@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2024 at 11:28 AM
+-- Generation Time: Dec 04, 2024 at 12:13 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -118,8 +118,7 @@ CREATE TABLE `payments` (
   `id` int(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `room_no` int(255) NOT NULL,
-  `bed_no` int(255) NOT NULL,
-  `bed_price` int(255) NOT NULL,
+  `price` varchar(255) NOT NULL,
   `payment` int(255) NOT NULL,
   `pay_stat` varchar(255) NOT NULL,
   `pay_date` date DEFAULT NULL,
@@ -165,7 +164,8 @@ INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `payment`, `pa
 (8, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00', '', '2024-12-04', NULL, 1, 0, 'Dodge Boarding House', ''),
 (9, 'user', 'user', 'male', 'user@gmail.com', 500, '2024-12-04', '', '2024-12-04', '2024-12-04', 1, 0, 'Dodge Boarding House', ''),
 (10, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00', '', '2024-12-04', '2024-12-04', 1, 0, 'Dodge Boarding House', ''),
-(11, 'user', 'user', 'male', 'user@gmail.com', 3663, '2024-12-04', '', '2024-12-04', '2024-12-04', 1, 0, 'Dodge Boarding House', '');
+(11, 'user', 'user', 'male', 'user@gmail.com', 3663, '2024-12-04', '', '2024-12-04', '2024-12-04', 1, 0, 'Dodge Boarding House', ''),
+(12, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-04', 'Fully Paid', '2024-12-04', '2024-12-04', 1, 0, 'Dodge Boarding House', '');
 
 -- --------------------------------------------------------
 
@@ -211,7 +211,8 @@ INSERT INTO `reservation` (`id`, `image`, `fname`, `lname`, `email`, `gender`, `
 (5, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-13', '2025-01-12', 'Student', 'palihug kog hinlo', 1, 3, 'wifi, bedsheets', '3rd floor', 1000, 'available', 0, '', NULL, 'Cancelled', '1 day', 'Reservation Cancelled', 'Dodge Boarding House', 'dodge@gmail.com'),
 (6, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-12', '2025-01-11', 'Student', 'palihug kog hinlo', 1, 3, 'wifi, bedsheets', '3rd floor', 1000, 'available', 500, 'Partially Paid', '2024-12-04', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
 (7, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-07', '2025-01-06', 'Student', 'palihug kog hinlo', 1, 3, 'wifi, bedsheets', '3rd floor', 1000, 'available', 0, 'Not Fully Paid', '0000-00-00', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
-(8, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-13', '2025-01-12', 'Student', 'palihug kog hinlo', 1, 3, 'wifi, bedsheets', '3rd floor', 1000, 'available', 3663, 'Fully Paid', '2024-12-04', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com');
+(8, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-13', '2025-01-12', 'Student', 'palihug kog hinlo', 1, 3, 'wifi, bedsheets', '3rd floor', 1000, 'available', 3663, 'Fully Paid', '2024-12-04', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(9, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-13', '2025-01-12', 'Student', 'lakad matatag', 1, 3, 'wifi, bedsheets', '3rd floor', 1000, 'available', 1000, 'Fully Paid', '2024-12-04', 'Ended', '1 day', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -358,19 +359,19 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `rooms`

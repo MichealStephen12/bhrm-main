@@ -34,6 +34,11 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $reservationData = mysqli_fetch_assoc($reservationResult);
     $totalReservations = $reservationData['total_reservations'];
 
+    $reservationQuery = "SELECT COUNT(*) as total_reservations FROM reservation where res_stat = 'Approved'";
+    $reservationResult = mysqli_query($conn, $reservationQuery);
+    $reservationData = mysqli_fetch_assoc($reservationResult);
+    $totalapproved = $reservationData['total_reservations'];
+
     // Fetch total tenants
     $tenantQuery = "SELECT COUNT(*) as total_tenants FROM users WHERE role = 'user'";
     $tenantResult = mysqli_query($conn, $tenantQuery);
@@ -130,6 +135,15 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                     <div class="card-body">
                         <h5 class="card-title">Total Payments Collected</h5>
                         <p class="card-text fs-3">₱<?php echo number_format($totalPayments, 2); ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card text-white bg-dark mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Reservation Apporved</h5>
+                        <p class="card-text fs-3"> <?php echo $totalapproved; ?></p>
                     </div>
                 </div>
             </div>

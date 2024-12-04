@@ -22,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payment_amount = floatval($_POST['payment']);
     $pay_stat = $_POST['pay_stat'];
     $pay_date = $_POST['pay_date'];
-    $bed_price = floatval($payment['price']);
+    $price = floatval($payment['price']);
 
     // Calculate the payment status if it's not manually selected
     if ($pay_stat === 'Fully Paid' || $pay_stat === 'Partially Paid') {
         // Validate user override
-        if ($pay_stat === 'Fully Paid' && $payment_amount < $bed_price) {
+        if ($pay_stat === 'Fully Paid' && $payment_amount < $price) {
             $pay_stat = 'Partially Paid';
         }
     } else {

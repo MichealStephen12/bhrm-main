@@ -134,8 +134,6 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <p><strong>Guest Information:</strong></p>
                         <p>Email: <?php echo $fetch['email']; ?></p>
                         <p>Room Number: <?php echo $fetch['room_no']; ?></p>
-                        <p>Bed Number: <?php echo $fetch['bed_no']; ?></p>
-                        <p>Bed Price: <?php echo $fetch['bed_price']; ?></p>
                         <p>Payment: <?php echo $fetch['payment']; ?></p>
                         <p>Payment Status: <?php echo $fetch['pay_stat']; ?></p>
                         <p>Payment Date: <?php echo $fetch['pay_date']; ?></p>

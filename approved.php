@@ -28,6 +28,7 @@
                         <th>Room No</th>
                         <th>Date In</th>
                         <th>Date Out</th>
+                        <th>Room Price</th>
                         <th>Reservation Status</th>
                         <th>Payment</th>
                         <th>Payment Status</th>
@@ -55,6 +56,7 @@
                         <td><?php echo $fetch['room_no']; ?></td>
                         <td><?php echo $fetch['date_in']; ?></td>
                         <td><?php echo $fetch['date_out']; ?></td>
+                        <td><?php echo $fetch['price']; ?></td>
                         <td><?php echo $fetch['res_stat']; ?></td>
                         <td><?php echo $payment; ?></td>
                         <td><?php echo $paystat; ?></td>
