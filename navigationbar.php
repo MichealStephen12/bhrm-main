@@ -10,16 +10,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-</head>
-<body>
-    <?php
+<?php
     // Assuming you have already set $_SESSION['uname'] when the user logs in.
         if(!empty($_SESSION['uname'])){
             $uname = $_SESSION['uname'];
@@ -49,7 +40,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landlord Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" <?php echo time() ?> rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- FontAwesome Icons -->
     <style>
         body {
             margin-left: 250px;
@@ -135,14 +127,18 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
             </li>
             <!-- Navigation Links -->
             <li class="nav-item">
-                <a class="nav-link active" href="/bhrm-main/dashboard.php">Dashboard</a>
+                <a class="nav-link" href="/bhrm-main/dashboard.php">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/manageroom.php">Manage Rooms</a>
+                <a class="nav-link" href="/bhrm-main/manageroom.php">
+                    <i class="fas fa-bed"></i> Manage Rooms
+                </a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="reservationMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Reservations (<?php echo $newReservations; ?>)
+                    <i class="fas fa-calendar-check"></i> Reservations (<?php echo $newReservations; ?>)
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="reservationMenu">
                     <li><a class="dropdown-item" href="/bhrm-main/pending.php">Pending (<?php echo $newReservations; ?>)</a></li>
@@ -153,15 +149,19 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/payment.php">Payments</a>
+                <a class="nav-link" href="/bhrm-main/payment.php">
+                    <i class="fas fa-credit-card"></i> Payments
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/reports.php">Reports</a>
+                <a class="nav-link" href="/bhrm-main/reports.php">
+                    <i class="fas fa-file-alt"></i> Reports
+                </a>
             </li>
             <!-- Dropdown Menu -->
             <li class="nav-item dropdown mt-3">
                 <a class="nav-link text-white dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
-                    Account
+                    <i class="fas fa-user"></i> Account
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userMenu">
                     <li><a class="dropdown-item" href="profile.php">Profile</a></li>
@@ -174,5 +174,5 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+</body>
 </html>

@@ -14,6 +14,15 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RESERVATION</title>
+      <!-- DataTables CSS -->
+      <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+
+        <!-- jQuery (necessary for DataTables) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <!-- DataTables JS -->
+        <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
 </head>
     <style>
         *{

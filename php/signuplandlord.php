@@ -5,10 +5,14 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     header("location: ../index.php");
 }
 
+$showModal = false;
+$modalMessage = "";
+
 if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $uname = $_POST['uname'];
+    $gender = $_POST['gender'];
     $pass = $_POST['pass'];
     $conpassword = $_POST['confirmpassword'];
 
@@ -35,15 +39,16 @@ if (isset($_POST['submit'])) {
     } elseif ($result && mysqli_num_rows($result) > 0) {
         array_push($errors, "Email already exists.");
     }
-    
+
     if (count($errors) > 0) {
-        $error_messages = implode("\\n", $errors); // Combine error messages into a single string
-        echo "<script>alert('$error_messages');</script>"; // Display the alert button with error messages
+        $modalMessage = implode("<br>", $errors); // Combine error messages with line breaks
+        $showModal = true;
     } else {
-        $query = "INSERT INTO `users`(`id`, `fname`, `lname`, `uname`, `pass`, `role`) VALUES ('','$fname','$lname','$uname','$pass', 'landlord')";
+        $query = "INSERT INTO `users`(`id`, `fname`, `lname`, `gender`, `uname`, `pass`, `role`) VALUES ('','$fname','$lname', '$gender', '$uname','$pass', 'landlord')";
         mysqli_query($conn, $query);
-        echo "<script>alert('Successfully added the information.');</script>"; // Display success message in an alert button
-    }    
+        $modalMessage = "Registration successful!";
+        $showModal = true;
+    }
 }
 ?>
 
@@ -61,8 +66,6 @@ if (isset($_POST['submit'])) {
             background-color: #e6e6e6; /* Background color */
         }
     </style>
-
-
 </head>
 <body>
     <div class="container-fluid">
@@ -114,6 +117,33 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <p><?= $modalMessage ?></p>
+                    <button type="button" class="btn btn-warning" id="modalConfirmButton">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        <?php if ($showModal): ?>
+            var modal = new bootstrap.Modal(document.getElementById('responseModal'));
+            modal.show();
+        <?php endif; ?>
+
+        document.getElementById('modalConfirmButton').addEventListener('click', function () {
+            <?php if ($modalMessage === "Registration successful!"): ?>
+                window.location.href = "login.php";
+            <?php else: ?>
+                var modalInstance = bootstrap.Modal.getInstance(document.getElementById('responseModal'));
+                modalInstance.hide();
+            <?php endif; ?>
+        });
+    </script>
 </body>
 </html>

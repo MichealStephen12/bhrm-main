@@ -196,7 +196,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <div class="col-md-6">
                         <p><strong>Room Information:</strong></p>
                         <p>Room No: <?php echo $fetch['room_no']; ?></p>
+                        <p>Room / Rent: <?php echo $fetch['price']; ?></p>
                         <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                        <p>Room Selected Slots: <?php echo $fetch['room_slot']; ?></p>
+                        <p>Current Tenant: <?php echo $fetch['current_tenant']; ?></p>
                         <p>Gender Allowed: <?php echo $fetch['gender']; ?></p>
                         <p>Room Amenities: <?php echo $fetch['amenities']; ?></p>
                         <p>Room Floor: <?php echo $fetch['room_floor']; ?></p>
@@ -208,6 +211,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                         <p><strong>Reservation Details:</strong></p>
                         <p>Date In: <?php echo $fetch['date_in']; ?></p>
                         <p>Date Out: <?php echo $fetch['date_out']; ?></p>
+                        <p>Requests: <?php echo $fetch['addons']; ?></p>
                         <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
                         <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
                         <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
@@ -219,12 +223,15 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
                     if (mysqli_num_rows($paymentResult) > 0) {
                         while ($payment = mysqli_fetch_assoc($paymentResult)) {
+                            // Calculate the balance
+                            $balance = $fetch['price'] - $payment['payment'];
                     ?>
                             <div class="col-md-6">
                                 <p><strong>Payment Details:</strong></p>
                                 <p>Payment: <?php echo $payment['payment'] . ' PHP'; ?></p>
                                 <p>Payment Date: <?php echo $payment['pay_date']; ?></p>
                                 <p>Payment Status: <?php echo $payment['pay_stat']; ?></p>
+                                <p><strong>Balance: </strong><?php echo $balance . ' PHP'; ?></p>
                             </div>
                         <?php
                         }
@@ -234,6 +241,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             <p>Payment: <?php echo $fetch['payment'] . ' PHP'; ?></p>
                             <p>Payment Date: <?php echo $fetch['pay_date'];  ?></p>
                             <p>Payment Status: <?php echo $fetch['pay_stat'];  ?></p>
+                            <p>Balance: <?php echo $fetch['price'] . ' PHP'; ?></p>
                         </div>
                     <?php } ?>
                 </div>
@@ -287,12 +295,15 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             </div>
                             <div class="col-md-6">
                                 <p><strong>Room Information:</strong></p>
-                                <p>Room No: <?php echo $reservation['room_no']; ?></p>
-                                <p>Room Capacity: <?php echo $reservation['capacity']; ?></p>
-                                <p>Gender Allowed: <?php echo $reservation['gender']; ?></p>
-                                <p>Room Amenities: <?php echo $reservation['amenities']; ?></p>
-                                <p>Room Floor: <?php echo $reservation['room_floor']; ?></p>
-                                <p>Room Status: <?php echo $reservation['status']; ?></p>
+                                <p>Room No: <?php echo $fetch['room_no']; ?></p>
+                                <p>Room / Rent: <?php echo $fetch['price']; ?></p>
+                                <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
+                                <p>Room Selected Slots: <?php echo $fetch['room_slot']; ?></p>
+                                <p>Current Tenant: <?php echo $fetch['current_tenant']; ?></p>
+                                <p>Gender Allowed: <?php echo $fetch['gender']; ?></p>
+                                <p>Room Amenities: <?php echo $fetch['amenities']; ?></p>
+                                <p>Room Floor: <?php echo $fetch['room_floor']; ?></p>
+                                <p>Room Status: <?php echo $fetch['status']; ?></p>
                             </div>
                         </div>
                         <div class="row">
@@ -300,6 +311,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                                 <p><strong>Reservation Details:</strong></p>
                                 <p>Date In: <?php echo $reservation['date_in']; ?></p>
                                 <p>Date Out: <?php echo $reservation['date_out']; ?></p>
+                                <p>Requests: <?php echo $fetch['addons']; ?></p>
                                 <p>Reservation Status: <?php echo $reservation['res_stat']; ?></p>
                                 <p>Reservation Duration: <?php echo $reservation['res_duration']; ?></p>
                                 <p>Reservation Reason: <?php echo $reservation['res_reason']; ?></p>
@@ -311,21 +323,25 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
                             if (mysqli_num_rows($paymentResult) > 0) {
                                 while ($payment = mysqli_fetch_assoc($paymentResult)) {
+                                    // Calculate the balance
+                                    $balance = $fetch['price'] - $payment['payment'];
                             ?>
                                     <div class="col-md-6">
                                         <p><strong>Payment Details:</strong></p>
                                         <p>Payment: <?php echo $payment['payment'] . ' PHP'; ?></p>
                                         <p>Payment Date: <?php echo $payment['pay_date']; ?></p>
                                         <p>Payment Status: <?php echo $payment['pay_stat']; ?></p>
+                                        <p><strong>Balance: </strong><?php echo $balance . ' PHP'; ?></p>
                                     </div>
                                 <?php
                                 }
                             } else { ?>
                                 <div class="col-md-6">
                                     <p><strong>Payment Details:</strong></p>
-                                    <p>Payment: <?php echo $reservation['payment'] . ' PHP'; ?></p>
-                                    <p>Payment Date: <?php echo $reservation['pay_date'];  ?></p>
-                                    <p>Payment Status: <?php echo $reservation['pay_stat'];  ?></p>
+                                    <p>Payment: <?php echo $fetch['payment'] . ' PHP'; ?></p>
+                                    <p>Payment Date: <?php echo $fetch['pay_date'];  ?></p>
+                                    <p>Payment Status: <?php echo $fetch['pay_stat'];  ?></p>
+                                    <p>Balance: <?php echo $fetch['price'] . ' PHP'; ?></p>
                                 </div>
                             <?php } ?>
                         </div>

@@ -2,8 +2,6 @@
 
 include('php/connection.php'); // Database connection file
 
-
-
 $hname = $_SESSION['hname'];
 
 // Fetch total sum of payments from the reports table (based on payment)
@@ -31,8 +29,18 @@ $reportResult = mysqli_query($conn, $reportQuery);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - <?php echo $hname; ?></title>
+
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+
+    <!-- jQuery (necessary for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -43,32 +51,22 @@ $reportResult = mysqli_query($conn, $reportQuery);
             font-family: Arial, sans-serif;
             margin-left: 220px; /* Offset for the navbar */
         }
-
-
-    </style>
-</head>
-<body>
-    <?php include 'navigationbar.php'; ?>
-
-
-    <style>
         .container {
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-
         header {
             text-align: center;
             margin-bottom: 20px;
         }
-
         header h1 {
             font-size: 2.5em;
             color: #333;
         }
 
+        /* Style for summary cards */
         .summary {
             display: flex;
             justify-content: space-around;
@@ -85,13 +83,11 @@ $reportResult = mysqli_query($conn, $reportQuery);
             transition: transform 0.3s ease-in-out;
         }
 
-        /* Add hover effect to the summary cards */
         .card:hover {
-            transform: scale(1.05); /* Slightly enlarge on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Add more shadow */
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
 
-        /* Highlighting the Total Payments and Total Tenants cards */
         .card h3 {
             font-size: 1.8em;
             color: #333;
@@ -102,95 +98,67 @@ $reportResult = mysqli_query($conn, $reportQuery);
             font-size: 2em;
             font-weight: bold;
             color: #fff;
-            background-color: #2ecc71; /* Green background for emphasis */
+            background-color: #ffc107;
             padding: 10px;
             border-radius: 8px;
             margin-top: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Make the text bold for total tenants as well */
-        .card p {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #2ecc71;
+        /* DataTable styling */
+        .dataTables_wrapper {
+            padding: 20px;
+        }
+        .dataTables_length,
+        .dataTables_filter {
+            margin: 20px 0;
         }
 
-        .card .total-amount,
-        .card p {
-            font-size: 1.5em; /* Make total text slightly larger */
-            font-weight: bold;
-            color: #fff;
-            background-color: #2ecc71; /* A matching color for consistency */
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out; /* Add a smooth animation */
+        .dataTables_filter input {
+            margin-left: 10px;
+            padding: 5px;
         }
 
-        .card .total-amount {
-            background-color: #27ae60; /* Different shade for distinction */
-        }
-
-        /* Adding an extra shadow to make it pop more */
-        .card:hover .total-amount {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Optional: Add animations to make totals appear more dynamically */
-        .card .total-amount,
-        .card p {
-            opacity: 0;
-            transform: translateY(20px); /* Start from below */
-            animation: fadeInUp 0.8s forwards; /* Animation when loaded */
-        }
-
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .report-table {
+        table.dataTable {
             width: 100%;
-            border-collapse: collapse;
             margin-top: 20px;
+            border-collapse: collapse;
             background-color: #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .report-table th, .report-table td {
+        table.dataTable th,
+        table.dataTable td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
-        .report-table th {
-            background-color: #2ecc71;
+        table.dataTable th {
+            background-color: #ffc107;
             color: #fff;
         }
 
-        .report-table tr:nth-child(even) {
+        table.dataTable tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        .report-table tr:hover {
+        table.dataTable tr:hover {
             background-color: #f1f1f1;
         }
 
-        .report-table td {
+        table.dataTable td {
             font-size: 1em;
         }
     </style>
+</head>
+<body>
+    <?php include 'navigationbar.php'; ?>
+
     <div class="container">
         <h1>Reports for <?php echo $hname; ?></h1>
 
-        <!-- Display Total Payments -->
+        <!-- Display Total Payments and Tenants -->
         <div class="summary">
             <div class="card">
                 <h3>Total Payments</h3>
@@ -203,7 +171,7 @@ $reportResult = mysqli_query($conn, $reportQuery);
         </div>
 
         <!-- Detailed Reports Table -->
-        <table class="report-table">
+        <table id="reportTable" class="display">
             <thead>
                 <tr>
                     <th>Tenant Name</th>
@@ -232,5 +200,11 @@ $reportResult = mysqli_query($conn, $reportQuery);
             </tbody>
         </table>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#reportTable').DataTable();
+        });
+    </script>
 </body>
 </html>

@@ -110,8 +110,7 @@ if (isset($_POST['submit'])) {
     mysqli_query($conn, $query);
     $query = "INSERT INTO `description` (`id`, `bh_description`, `hname`) VALUES ('','$description', '$hname')";
     mysqli_query($conn, $query);
-    echo "thank you for providing information, this will be proccessed";
-
+   
 }
 
 
@@ -182,7 +181,18 @@ if (isset($_GET['reject'])) {
 }
 
 ?>
+<?php
+if (isset($_POST['submit'])) {
+    // Existing form handling logic...
 
+    // Display success modal
+    echo '<div class="alert-modal active" id="successModal">
+            <h2>Submission Successful!</h2>
+            <p>Thank you for submitting your boarding house details. Your application is under review.</p>
+            <button onclick="closeModal()">Close</button>
+          </div>';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -342,6 +352,50 @@ if (isset($_GET['reject'])) {
                 gap: 15px;
             }
         }
+
+        /* Alert modal styles */
+.alert-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+}
+
+.alert-modal.active {
+    display: block;
+}
+
+.alert-modal h2 {
+    margin: 0 0 15px;
+    color: #ffc107;
+    font-size: 22px;
+}
+
+.alert-modal p {
+    font-size: 16px;
+    color: #555;
+}
+
+.alert-modal button {
+    background-color: #ffc107;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.alert-modal button:hover {
+    background-color: #ffc107;
+}
+
     </style>
 </head>
 <body>
@@ -521,5 +575,11 @@ if (isset($_GET['reject'])) {
             </form>
         </div>
     </div>
+    <script>
+    function closeModal() {
+        document.getElementById('successModal').style.display = 'none';
+    }
+</script>
+
 </body>
 </html>

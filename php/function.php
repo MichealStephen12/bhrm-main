@@ -16,17 +16,10 @@ if (isset($_GET['approve'])) {
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
 
-    $roomno = $fetch['room_no'];
-
-    // Update the room status to 'Reserved' (assuming you're using room status instead of bed status)
-    $updateRoomQuery = "UPDATE rooms 
-                        SET status = 'Reserved' 
-                        WHERE room_no = '$roomno' AND hname = '$hname'";
-    mysqli_query($conn, $updateRoomQuery);
-
     // Update the reservation status
     $updateReservationQuery = "UPDATE reservation 
-                                SET res_stat = 'Approved', 
+                                SET res_duration = '1 day', 
+                                    res_stat = 'Approved', 
                                     res_reason = 'Process Completed' 
                                 WHERE id = $id AND hname = '$hname'";
     mysqli_query($conn, $updateReservationQuery);
@@ -78,10 +71,34 @@ if (isset($_GET['confirm'])) {
     $gender = $fetch['gender'];
     $owner = $fetch['owner'];
     $date_in = date('Y-m-d'); // Current date as the check-in date
+    $selected_slots = $fetch['room_slot']; // Assuming this field stores slots as comma-separated values
 
-    // Insert a payment record for the whole reservation (no need to handle beds)
+    // Fetch room capacity
+    $roomQuery = "SELECT capacity, current_tenant FROM rooms WHERE room_no = '$roomno' AND hname = '$hname'";
+    $roomResult = mysqli_query($conn, $roomQuery);
+    $roomData = mysqli_fetch_assoc($roomResult);
+    $roomCapacity = $roomData['capacity'];
+    $currentTenant = $roomData['current_tenant'];
+
+    // Determine slots booked
+    if (trim($selected_slots) === 'Whole Room') {
+        // If "Whole Room" is selected, set current_tenant to the room's full capacity
+        $newTenantCount = $roomCapacity;
+    } else {
+        // Otherwise, count the slots booked
+        $slotsBooked = count(explode(", ", $selected_slots));
+        $newTenantCount = $currentTenant + $slotsBooked;
+        // Ensure we do not exceed room capacity
+        if ($newTenantCount > $roomCapacity) {
+            $newTenantCount = $roomCapacity;
+        }
+    }
+
+    $roomStatus = ($newTenantCount >= $roomCapacity) ? 'Full' : 'Available';
+
+    // Insert a payment record for the reservation
     $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `price`, `pay_stat`, `hname`, `owner`) 
-                           VALUES                  ('', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
+                           VALUES ('', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
     mysqli_query($conn, $insertPaymentQuery);
 
     // Insert a report record for the reservation
@@ -91,14 +108,18 @@ if (isset($_GET['confirm'])) {
 
     // Update the reservation status
     $updateReservationQuery = "UPDATE reservation 
-                                SET res_stat = 'Confirmed', 
+                                SET current_tenant = $newTenantCount,
+                                    status = '$roomStatus', 
+                                    res_duration = '', 
+                                    res_stat = 'Confirmed', 
                                     res_reason = 'Tenant Arrived'
                                 WHERE id = $id AND hname = '$hname'";
     mysqli_query($conn, $updateReservationQuery);
 
-    // Increment the tenant count in the room
+    // Increment the tenant count in the room based on slots booked
     $updateRoomQuery = "UPDATE rooms 
-                        SET current_tenant = current_tenant + 1 
+                        SET current_tenant = $newTenantCount,
+                            status = '$roomStatus'
                         WHERE room_no = '$roomno' AND hname = '$hname'";
     mysqli_query($conn, $updateRoomQuery);
 
@@ -121,16 +142,11 @@ if (isset($_GET['cancel'])) {
 
     // Update the reservation status to 'Cancelled'
     $updateReservationQuery = "UPDATE reservation 
-                               SET res_stat = 'Cancelled', 
+                               SET  res_duration = '',
+                                    res_stat = 'Cancelled', 
                                    res_reason = 'Reservation Cancelled' 
                                WHERE id = $id AND hname = '$hname'";
     mysqli_query($conn, $updateReservationQuery);
-
-    // Update the room availability (No need to check bed status anymore)
-    $updateRoomQuery = "UPDATE rooms 
-                        SET current_tenant = current_tenant - 1 
-                        WHERE room_no = '$roomno' AND hname = '$hname'";
-    mysqli_query($conn, $updateRoomQuery);
 
     // Redirect after the update
     header('Location: ../cancelled.php');
@@ -150,6 +166,30 @@ if (isset($_GET['end'])) {
 
     $roomno = $fetch['room_no'];
     $email = $fetch['email'];
+    $selected_slots = $fetch['room_slot']; // Assuming this field exists and stores the slots booked
+
+    // Fetch room details
+    $roomQuery = "SELECT capacity, current_tenant FROM rooms WHERE room_no = '$roomno' AND hname = '$hname'";
+    $roomResult = mysqli_query($conn, $roomQuery);
+    $roomData = mysqli_fetch_assoc($roomResult);
+    $roomCapacity = $roomData['capacity'];
+    $currentTenant = $roomData['current_tenant'];
+
+    // Determine slots booked
+    if (trim($selected_slots) === 'Whole Room') {
+        // If "Whole Room" was booked, decrement the tenant count by the room's full capacity
+        $newTenantCount = $currentTenant - $roomCapacity;
+    } else {
+        // Otherwise, count the slots booked
+        $slotsBooked = count(explode(", ", $selected_slots));
+        $newTenantCount = $currentTenant - $slotsBooked;
+        // Ensure the tenant count does not drop below zero
+        if ($newTenantCount < 0) {
+            $newTenantCount = 0;
+        }
+    }
+
+    $roomStatus = ($newTenantCount === $roomCapacity) ? 'Full' : 'Available';
 
     // Fetch the most recent payment for this reservation
     $paymentQuery = "SELECT * FROM payments 
@@ -165,7 +205,9 @@ if (isset($_GET['end'])) {
 
     // Update the reservation status
     $updateReservationQuery = "UPDATE reservation 
-                                SET res_stat = 'Ended', 
+                                SET current_tenant = $newTenantCount,
+                                    status = '$roomStatus',
+                                    res_stat = 'Ended', 
                                     res_reason = 'Reservation Ended', 
                                     payment = '$payment',
                                     pay_stat = '$pay_stat',
@@ -173,9 +215,10 @@ if (isset($_GET['end'])) {
                                 WHERE id = $id AND hname = '$hname'";
     mysqli_query($conn, $updateReservationQuery);
 
-    // Decrement tenant count
+    // Update tenant count in the room
     $updateRoomQuery = "UPDATE rooms 
-                        SET current_tenant = current_tenant - 1 
+                        SET current_tenant = $newTenantCount,
+                        status = '$roomStatus'
                         WHERE room_no = '$roomno' AND hname = '$hname'";
     mysqli_query($conn, $updateRoomQuery);
 
@@ -205,7 +248,6 @@ if (isset($_GET['end'])) {
     header('Location: ../ended.php');
     exit;
 }
-
 
 
 

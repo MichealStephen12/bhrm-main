@@ -53,6 +53,7 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     $roomno = $fetch['room_no']; 
     $roomimg = $fetch['image'];
     $roomcapacity = $fetch['capacity'];
+    $currenttenant = $fetch['current_tenant'];
     $amenities = $fetch['amenities'];
     $roomprice = $fetch['price'];
     $roomstat = $fetch['status'];
@@ -88,7 +89,11 @@ if (isset($_POST['submit'])) {
     $addons = $_POST['addons'];
     $roomno = $_GET['roomno'];
     $capacity = $roomcapacity;
+    $selected_slots = isset($_POST['slots']) ? $_POST['slots'] : [];
+    $slots = implode(", ", $selected_slots); // Join slots into a single string for storage
+    $currenttent = $currenttenant;
     $amenities = $fetch['amenities'];
+    $tenanttype = $fetch['tenant_type'];
     $image = $fetch['image'];
     $roomfloor = $fetch['room_floor'];
     $price = $fetch['price']; // Assuming this is now the room price, you can rename for clarity
@@ -103,16 +108,16 @@ if (isset($_POST['submit'])) {
 
     // Insert the reservation without any bed-related fields
     $query = "INSERT INTO `reservation` 
-              (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `capacity`, `amenities`, `room_floor`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
+              (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `capacity`, `room_slot`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
               VALUES 
-              ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$capacity', '$amenities', '$roomfloor', '$price', '$image', '$status', 'Pending', '1 day', '', '$hname', '$owner')";
+              ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$capacity', '$slots', '$currenttent', '$amenities', '$tenanttype', '$roomfloor', '$price', '$image', '$status', 'Pending', '', '', '$hname', '$owner')";
 
     mysqli_query($conn, $query);
+    
 
     // Redirect to thank-you page after submission
     header("location: thankyou.php");
 }
-
 
 ?>
 
@@ -278,16 +283,18 @@ if (isset($_POST['submit'])) {
 
         .centering {
             display: flex;
-            justify-content: center;
-            margin: 20px;
+            justify-content: space-between; /* Align items to the sides */
+            width: 300px; /* Adjust as needed */
+            margin: 20px auto;
         }
     </style>
 
 
 
-    <div class="centering">
-        <button id="previewButton" class="preview-btn">Preview</button>
-    </div>
+        <div class="centering">
+            <button id="backButton" class="preview-btn">Back</button>
+            <button id="previewButton" class="preview-btn">Preview</button>
+        </div>
 
     <div id="infoModal" class="modal">
         <div class="modal-content">
@@ -300,6 +307,7 @@ if (isset($_POST['submit'])) {
                     <h5>Selected Room: <?php echo $roomno ?></h5>
                     <img src="<?php echo $roomimg ?>" alt="Room Image">
                     <p>Room Capacity: <?php echo $roomcapacity ?></p>
+                    <p>Current Tenant: <?php echo $currenttenant ?></p>
                     <p>Room Amenities: <?php echo $amenities ?></p>
                     <p>Room Price: <?php echo $roomprice ?></p>
                     <p>Room Status: <?php echo $roomstat ?></p>
@@ -324,12 +332,12 @@ if (isset($_POST['submit'])) {
             }
         };
     </script>
+        <script>
+    document.getElementById('backButton').addEventListener('click', function () {
+        window.history.back(); // Navigates to the previous page
+    });
+</script>
 
-
-
-
-
-    
 
     <div class="form">
         <form method="post">
@@ -369,6 +377,46 @@ if (isset($_POST['submit'])) {
                 <label for="addons">Additional Requests</label>
                 <input type="text" id="addons" name="addons">
             </div>
+
+            <?php
+                // Fetch room capacity and current tenant count from the database
+               // Fetch room capacity and current tenant count from the database
+                $roomQuery = "SELECT capacity, current_tenant FROM rooms WHERE room_no = '$roomno' AND hname = '$hname'";
+                $roomResult = mysqli_query($conn, $roomQuery);
+                $roomData = mysqli_fetch_assoc($roomResult);
+
+                $roomCapacity = $roomData['capacity']; // Total capacity of the room
+                $currentTenant = $roomData['current_tenant']; // Current tenants in the room
+                $availableSlots = $roomCapacity - $currentTenant; // Remaining slots
+
+                // Generate checkbox options dynamically based on available slots
+                $checkbox_options = '';
+                
+                // Show checkboxes for the available slots (not including the whole room option yet)
+                for ($i = 1; $i <= $availableSlots; $i++) { // Loop for the available slots
+                    $checkbox_options .= "
+                        <div class='form-check'>
+                            <input type='checkbox' class='form-check-input' id='slot_$i' name='slots[]' value='Slot $i'>
+                            <label class='form-check-label' for='slot_$i'>Slot $i</label>
+                        </div>
+                    ";
+                }
+
+                // Only show the "Whole Room" option if all slots are available (room is not full)
+                if ($availableSlots == $roomCapacity) {
+                    $checkbox_options .= "
+                        <div class='form-check'>
+                            <input type='checkbox' class='form-check-input' id='whole_room' name='slots[]' value='Whole Room'>
+                            <label class='form-check-label' for='whole_room'>Whole Room</label>
+                        </div>";
+                }
+            ?>
+
+            <div class="form-col">
+                <label for="slots">Book Slots</label>
+                <?php echo $checkbox_options; ?>
+            </div>
+
             <button type="submit" name="submit">Submit</button>
         </form>
     </div>
@@ -416,6 +464,18 @@ if (isset($_POST['submit'])) {
 
 </div>
 
+    <script>
+            document.getElementById('whole_room').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('input[name="slots[]"]:not(#whole_room)');
+            if (this.checked) {
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+                checkboxes.forEach(checkbox => checkbox.disabled = true);
+            } else {
+                checkboxes.forEach(checkbox => checkbox.disabled = false);
+            }
+        });
+    </script>
+    
     <script>
         document.getElementById('datein').addEventListener('change', function() {
             calculateDateOut();

@@ -63,8 +63,7 @@ body {
     background-color: none; /* White background */
     color: #343a40; /* Dark text color */
     margin: 0;
-    padding: 0;
-    overflow: hidden; /* Prevent scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling only */
 }
 
 /* Animated Background */
@@ -88,15 +87,16 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     position: relative;
+    padding-bottom: 80px; /* Ensure footer space */
 }
 
-/* Other Styles for Content and Card */
+/* Content Background */
 .content-background {
-    background-color: white; /* White background for the content */
+    background-color: white;
     border-radius: 10px;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin: 30px auto;
+    margin: 0px auto; /* Adds space around the content */
     max-width: 1100px;
 }
 
@@ -149,44 +149,58 @@ canvas {
 /* General Button Styles */
 .button {
     background-color: #ffc107; /* Default color for buttons */
-    color: white;
+    color: white; /* Text color */
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease; /* Ensure smooth transitions */
+}
+a.button {
+    text-decoration: none; /* Removes the underline */
 }
 
-/* Default hover effect (for non-specific buttons) */
+a.button:hover {
+    text-decoration: none; /* Ensures no underline on hover */
+}
+
+
 .button:hover {
-    background-color: #ffc107;
+    background-color: #e0a800; /* Slightly darker yellow */
+    color: white; /* Text color remains white */
 }
 
 /* Specific styles for Delete button */
 .button.delete {
     background-color: #dc3545; /* Default red for delete button */
+    color: white; /* Ensure text is white */
 }
 
 .button.delete:hover {
     background-color: #c82333; /* Darker red on hover */
+    color: white; /* Text color remains white */
 }
 
 /* Specific styles for Update button */
 .button.update {
     background-color: #28a745; /* Default green for update button */
+    color: white; /* Ensure text is white */
 }
 
 .button.update:hover {
     background-color: #218838; /* Darker green on hover */
+    color: white; /* Text color remains white */
 }
+
 
 /* Footer */
 .footer {
     background-color: #343a40;
     color: white;
-    padding: 40px 0;
+    padding: 20px 0;
     text-align: center;
+   
 }
 
 .footer a {

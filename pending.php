@@ -24,17 +24,26 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Reservation No</th>
                         <th>Guest Name</th>
                         <th>Email</th>
                         <th>Gender</th>
+                        <th>Tenant Status</th>
                         <th>Room No</th>
+                        <th>Room Rent</th>
                         <th>Capacity</th>
-                        <th>Status</th>
+                        <th>Selected Room Slot</th>
+                        <th>Current Tenant</th>
+                        <th>Gender Allowed</th>
+                        <th>Room Amenities</th>
+                        <th>Room Floor</th>
+                        <th>Room Status</th>
                         <th>Date In</th>
                         <th>Date Out</th>
+                        <th>Requests</th>
                         <th>Duration</th>
                         <th>Reason</th>
+                        <th>Reservation Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -47,13 +56,22 @@
                         <td><?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></td>
                         <td><?php echo $fetch['email']; ?></td>
                         <td><?php echo $fetch['gender']; ?></td>
+                        <td><?php echo $fetch['tenant_status']; ?></td>
                         <td><?php echo $fetch['room_no']; ?></td>
+                        <td><?php echo $fetch['price']; ?></td>
                         <td><?php echo $fetch['capacity']; ?></td>
+                        <td><?php echo $fetch['room_slot']; ?></td>
+                        <td><?php echo $fetch['current_tenant']; ?></td>
+                        <td><?php echo $fetch['tenant_type']; ?></td>
+                        <td><?php echo $fetch['amenities']; ?></td>
+                        <td><?php echo $fetch['room_floor']; ?></td>
                         <td><?php echo $fetch['status']; ?></td>
                         <td><?php echo $fetch['date_in']; ?></td>
                         <td><?php echo $fetch['date_out']; ?></td>
+                        <td><?php echo $fetch['addons']; ?></td>
                         <td><?php echo $fetch['res_duration']; ?></td>
                         <td><?php echo $fetch['res_reason']; ?></td>
+                        <td><?php echo $fetch['res_stat']; ?></td>
                         <td>
                             <?php if ($fetch['res_stat'] == 'Pending'): ?>
                                 <a href="php/function.php?approve=<?php echo $fetch['id']; ?>" class="btn btn-success btn-sm">Approve</a>

@@ -1,9 +1,7 @@
 <?php
 include 'connection.php';
 
-if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
-    echo '';
-}else{
+if (empty($_SESSION["uname"]) || empty($_SESSION["role"])) {
     header('location: ./index.php');
 }
 ?>
@@ -17,6 +15,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <title>Reservation</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -27,28 +27,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
             font-weight: 700;
         }
 
-        .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: none;
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .card:hover {
-            transform: scale(1.02);
-        }
-
-        .card-title {
-            font-weight: bold;
-        }
-
-        .card-text {
-            font-size: 1rem;
-            font-weight: 600; /* Slightly bold text for emphasis */
-            color: #495057;
-        }
-
-        .card .btn {
-            font-size: 0.85rem;
+        table {
+            margin-top: 30px;
         }
 
         .badge {
@@ -63,106 +43,164 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <div class="container my-5">
         <!-- Pending Section -->
         <h2 class="text-center mb-4">Pending Applications</h2>
-        <div class="row gy-4">
-            <?php 
-            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
-                      FROM bhapplication 
-                      INNER JOIN documents ON bhapplication.hname = documents.hname
-                      INNER JOIN description ON bhapplication.hname = description.hname 
-                      WHERE bhapplication.status = 'PENDING' 
-                      ORDER BY bhapplication.id DESC";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)): 
-            ?>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="../<?php echo $fetch['image']; ?>" class="card-img-top" alt="Boarding House">
-                        <div class="card-body">
-                            <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
-                            <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
-                            <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
-                            <p class="card-text"><strong>Documents:</strong></p>
-                            <img src="../<?php echo $fetch['bar_clear']; ?>" class="card-img-top" alt="Documents">
-                            <img src="../<?php echo $fetch['bus_per']; ?>" class="card-img-top" alt="Documents">
-                            <span class="badge bg-warning text-dark">Pending</span>
-                        </div>
-                        <?php if ($_SESSION["role"] == "admin"): ?>
-                            <div class="card-footer text-center">
-                                <a href="bhfunction.php?approve=<?php echo $fetch['hname']; ?>" class="btn btn-success">Approve</a>
-                                <a href="bhfunction.php?reject=<?php echo $fetch['hname']; ?>" class="btn btn-danger">Reject</a>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endwhile; ?>
-        </div>
+        <table id="applicationsTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Boarding House Name</th>
+                    <th>Address</th>
+                    <th>Description</th>
+                    <th>Documents</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
+                          FROM bhapplication 
+                          INNER JOIN documents ON bhapplication.hname = documents.hname
+                          INNER JOIN description ON bhapplication.hname = description.hname 
+                          WHERE bhapplication.status = 'PENDING' 
+                          ORDER BY bhapplication.id DESC";
+                $result = mysqli_query($conn, $query);
+                while ($fetch = mysqli_fetch_assoc($result)): 
+                ?>
+                    <tr>
+                        <td>
+                            <!-- Checkbox for selection -->
+                            <input type="radio" name="selectApplication" class="form-check-input" value="<?php echo $fetch['hname']; ?>" />
+                        </td>
+                        <td><?php echo $fetch['hname']; ?></td>
+                        <td><?php echo $fetch['haddress']; ?></td>
+                        <td><?php echo $fetch['bh_description']; ?></td>
+                        <td>
+                            <!-- Links to download documents -->
+                            <a href="../<?php echo $fetch['bar_clear']; ?>" class="btn btn-link" target="_blank">Bar Clearance</a><br>
+                            <a href="../<?php echo $fetch['bus_per']; ?>" class="btn btn-link" target="_blank">Business Permit</a>
+                        </td>
+                        <td><span class="badge bg-warning text-dark">Pending</span></td>
+                        <td>
+                            <!-- Actions for admin -->
+                            <?php if ($_SESSION["role"] == "admin"): ?>
+                                <a href="bhfunction.php?approve=<?php echo $fetch['hname']; ?>" class="btn btn-success btn-sm">Approve</a>
+                                <a href="bhfunction.php?reject=<?php echo $fetch['hname']; ?>" class="btn btn-danger btn-sm">Reject</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
 
-        <!-- Approved Section -->
+        <!-- Approved Section (Similar to Pending Section) -->
         <h2 class="text-center my-4">Approved Applications</h2>
-        <div class="row gy-4">
-            <?php 
-            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
-                      FROM bhapplication 
-                      INNER JOIN documents ON bhapplication.hname = documents.hname
-                      INNER JOIN description ON bhapplication.hname = description.hname 
-                      WHERE bhapplication.status = 'APPROVED' 
-                      ORDER BY bhapplication.id DESC";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)): 
-            ?>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="../<?php echo $fetch['image']; ?>" class="card-img-top" alt="Boarding House">
-                        <div class="card-body">
-                            <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
-                            <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
-                            <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
-                            <p class="card-text"><strong>Documents:</strong></p>
-                            <img src="../<?php echo $fetch['bar_clear']; ?>" class="card-img-top" alt="Documents">
-                            <img src="../<?php echo $fetch['bus_per']; ?>" class="card-img-top" alt="Documents">
-                            <span class="badge bg-success">Approved</span>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button class="btn btn-secondary" disabled>Approved</button>
-                        </div>
-                    </div>
-                </div>
-            <?php endwhile; ?>
-        </div>
+        <table id="approvedApplicationsTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Boarding House Name</th>
+                    <th>Address</th>
+                    <th>Description</th>
+                    <th>Documents</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
+                          FROM bhapplication 
+                          INNER JOIN documents ON bhapplication.hname = documents.hname
+                          INNER JOIN description ON bhapplication.hname = description.hname 
+                          WHERE bhapplication.status = 'APPROVED' 
+                          ORDER BY bhapplication.id DESC";
+                $result = mysqli_query($conn, $query);
+                while ($fetch = mysqli_fetch_assoc($result)): 
+                ?>
+                    <tr>
+                        <td><?php echo $fetch['hname']; ?></td>
+                        <td><?php echo $fetch['haddress']; ?></td>
+                        <td><?php echo $fetch['bh_description']; ?></td>
+                        <td>
+                            <a href="../<?php echo $fetch['bar_clear']; ?>" class="btn btn-link" target="_blank">Bar Clearance</a><br>
+                            <a href="../<?php echo $fetch['bus_per']; ?>" class="btn btn-link" target="_blank">Business Permit</a>
+                        </td>
+                        <td><span class="badge bg-success">Approved</span></td>
+                        <td><button class="btn btn-secondary" disabled>Approved</button></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
 
         <!-- Rejected Section -->
         <h2 class="text-center my-4">Rejected Applications</h2>
-        <div class="row gy-4">
-            <?php 
-            $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
-                      FROM bhapplication 
-                      INNER JOIN documents ON bhapplication.hname = documents.hname
-                      INNER JOIN description ON bhapplication.hname = description.hname 
-                      WHERE bhapplication.status = 'REJECTED' 
-                      ORDER BY bhapplication.id DESC";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)): 
-            ?>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="../<?php echo $fetch['image']; ?>" class="card-img-top" alt="Boarding House">
-                        <div class="card-body">
-                            <h5 class="card-title">Boarding House: <?php echo $fetch['hname']; ?></h5>
-                            <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
-                            <p class="card-text"><strong>Description:</strong> <?php echo $fetch['bh_description']; ?></p>
-                            <span class="badge bg-danger">Rejected</span>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button class="btn btn-secondary" disabled>Rejected</button>
-                        </div>
-                    </div>
-                </div>
-            <?php endwhile; ?>
-        </div>
+        <table id="rejectedApplicationsTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Boarding House Name</th>
+                    <th>Address</th>
+                    <th>Description</th>
+                    <th>Documents</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $query = "SELECT DISTINCT bhapplication.hname, bhapplication.*, documents.*, description.* 
+                          FROM bhapplication 
+                          INNER JOIN documents ON bhapplication.hname = documents.hname
+                          INNER JOIN description ON bhapplication.hname = description.hname 
+                          WHERE bhapplication.status = 'REJECTED' 
+                          ORDER BY bhapplication.id DESC";
+                $result = mysqli_query($conn, $query);
+                while ($fetch = mysqli_fetch_assoc($result)): 
+                ?>
+                    <tr>
+                        <td><?php echo $fetch['hname']; ?></td>
+                        <td><?php echo $fetch['haddress']; ?></td>
+                        <td><?php echo $fetch['bh_description']; ?></td>
+                        <td>
+                            <a href="../<?php echo $fetch['bar_clear']; ?>" class="btn btn-link" target="_blank">Bar Clearance</a><br>
+                            <a href="../<?php echo $fetch['bus_per']; ?>" class="btn btn-link" target="_blank">Business Permit</a>
+                        </td>
+                        <td><span class="badge bg-danger">Rejected</span></td>
+                        <td><button class="btn btn-secondary" disabled>Rejected</button></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- Bootstrap JS and DataTables JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTables for all tables
+            $('#applicationsTable').DataTable({
+                searching: true,
+                paging: true,
+                ordering: true,
+                columnDefs: [{ targets: [0, 5], orderable: false }]
+            });
+
+            $('#approvedApplicationsTable').DataTable({
+                searching: true,
+                paging: true,
+                ordering: true,
+                columnDefs: [{ targets: [5], orderable: false }]
+            });
+
+            $('#rejectedApplicationsTable').DataTable({
+                searching: true,
+                paging: true,
+                ordering: true,
+                columnDefs: [{ targets: [5], orderable: false }]
+            });
+        });
+    </script>
 </body>
 
 </html>

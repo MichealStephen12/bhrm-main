@@ -127,7 +127,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     <?php include 'navigationbar.php'; ?>
 
     <div class="section2">
-        <div class="button">
+        <div type="button" class="btn btn-warning">
             <a href='php/roomfunction.php' class='btn'>Add Rooms</a>
         </div>
     </div>
@@ -150,15 +150,15 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             <div class="card">
                 <img src="<?php echo $fetch['image']?>" width="20%" class="card-img-top" alt="Room Image">
                 <div class="card-content">
-                    <h5>Room No: <?php echo $fetch['room_no']?></h5>
-                    <p>Capacity: <?php echo $fetch['capacity']?></p>
-                    <p>Rent / Month: <?php echo $fetch['price']?></p>
-                    <p>The rent is based on each person.</p>
-                    <p>Amenities: <?php echo $fetch['amenities']?></p>
-                    <p>Tenant Type:  <?php echo $fetch['tenant_type']?> Only </p>
-                    <p>Current Tenant: <?php echo $fetch['current_tenant']; ?> / <?php echo $fetch['capacity']?> </p>
-                    <p>Room Floor:  <?php echo $fetch['room_floor']?> </p>
-                    <p>Status: <?php echo $fetch['status']?></p>
+                <h5><strong>Room No:</strong> <?php echo $fetch['room_no']; ?></h5>
+                <p><strong>Capacity:</strong> <?php echo $fetch['capacity']; ?></p>
+                <p><strong>Rent / Month:</strong> <?php echo $fetch['price']; ?></p>
+                <p><strong>The rent is based on each person.</strong></p>
+                <p><strong>Amenities:</strong> <?php echo $fetch['amenities']; ?></p>
+                <p><strong>Tenant Type:</strong> <?php echo $fetch['tenant_type']; ?> Only </p>
+                <p><strong>Current Tenant:</strong> <?php echo $fetch['current_tenant']; ?> / <?php echo $fetch['capacity']; ?></p>
+                <p><strong>Room Floor:</strong> <?php echo $fetch['room_floor']; ?></p>
+                <p><strong>Status:</strong> <?php echo $fetch['status']; ?></p>
                     <style>
                         .card{
                             width: 360px;

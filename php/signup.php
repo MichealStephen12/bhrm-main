@@ -9,6 +9,7 @@ if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $uname = $_POST['uname'];
+    $gender = $_POST['gender'];
     $pass = $_POST['pass'];
     $conpassword = $_POST['confirmpassword'];
 
@@ -66,8 +67,8 @@ if (isset($_POST['submit'])) {
         $error_messages = implode("\\n", $errors); // Combine error messages into a single string
         echo "<script>alert('$error_messages');</script>"; // Display the alert button with error messages
     } else {
-        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `uname`, `pass`, `role`) VALUES 
-                                    ('', 'profiles/$fileNameNew','$fname','$lname','$uname','$pass', 'user')";
+        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `gender`, `uname`, `pass`, `role`) VALUES 
+                                    ('', 'profiles/$fileNameNew','$fname','$lname', '$gender','$uname','$pass', 'user')";
         mysqli_query($conn, $query);
         echo "<script>alert('Successfully added the information.');</script>"; // Display success message in an alert button
     }    
@@ -93,7 +94,7 @@ if (isset($_POST['submit'])) {
             width: 100%;
             max-width: 400px;
             margin: 5% auto;
-            background-color: white;
+            background-color: #a9a9a9;
             border-radius: 20px;
             padding: 20px;
             text-align: center;

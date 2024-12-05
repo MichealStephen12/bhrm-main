@@ -395,7 +395,7 @@ if (isset($_POST['update'])) {
 
 
 
-            <label>Tenant Type:</label>
+            <label>Gender Allowed:</label>
             <div>
                 <select name="tenanttype" id="tenanttype" required>
                     <option value="male">All</option>

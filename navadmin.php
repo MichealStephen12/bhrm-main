@@ -33,6 +33,8 @@
     <title>Responsive Sidebar</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             margin-left: 250px; /* Default sidebar width */
@@ -56,29 +58,21 @@
             width: 70px;
         }
 
-        .sidebar .navbar-brand img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.collapsed .navbar-brand img {
-            width: 50px;
-            height: 50px;
-        }
-
         .sidebar .nav-link {
             color: white;
-            display: block;
+            display: flex;
+            align-items: center;
             font-size: 16px;
             padding: 10px 15px;
+            gap: 10px;
             border-radius: 5px;
             transition: all 0.3s ease;
         }
 
-        .sidebar .nav-link.active,
+        .sidebar .nav-link i {
+            font-size: 20px;
+        }
+
         .sidebar .nav-link:hover {
             background-color: #ffc107;
             color: white;
@@ -99,17 +93,22 @@
             background-color: #495057;
         }
 
-        /* Responsive adjustments */
+        /* Hide text in mobile view */
         @media (max-width: 768px) {
             .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                margin-bottom: 20px;
+                width: 70px;
             }
 
             body {
-                margin-left: 0;
+                margin-left: 70px;
+            }
+
+            .sidebar .nav-link span {
+                display: none;
+            }
+
+            .sidebar .nav-link i {
+                margin: auto;
             }
         }
     </style>
@@ -118,7 +117,7 @@
     <!-- Sidebar -->
     <nav class="sidebar bg-dark">
         <div class="navbar-brand text-center">
-            <img src="/bhrm-main/images/logo.png" alt="Logo">
+            <img src="/bhrm-main/images/logo.png" alt="Logo" width="60" class="mb-3 rounded-circle">
         </div>
         <ul class="nav flex-column">
             <!-- User Info -->
@@ -128,19 +127,29 @@
             </li>
             <!-- Navigation Links -->
             <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/dashboardadmin.php">Dashboard</a>
+                <a class="nav-link" href="/bhrm-main/dashboardadmin.php">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/index.php">Manage Boarding House</a>
+                <a class="nav-link" href="/bhrm-main/index.php">
+                    <i class="bi bi-house-door"></i>
+                    <span>Manage Boarding House</span>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/php/bhapplications.php">Applications (<?php echo $newReservations; ?>)</a>
+                <a class="nav-link" href="/bhrm-main/php/bhapplications.php">
+                    <i class="bi bi-envelope"></i>
+                    <span>Applications</span>
+                    <span class="badge bg-warning text-dark"><?php echo $newReservations; ?></span>
+                </a>
             </li>
             <!-- Dropdown Menu -->
-            <ul class="nav">
             <li class="nav-item dropdown mt-3 position-relative">
                 <a class="nav-link text-white dropdown-toggle" href="#" id="userMenu" role="button">
-                    Account
+                    <i class="bi bi-person-circle"></i>
+                    <span>Account</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark position-absolute" aria-labelledby="userMenu">
                     <li><a class="dropdown-item" href="profile.php">Profile</a></li>
@@ -150,6 +159,7 @@
             </li>
         </ul>
     </nav>
+
     
 
     <!-- JavaScript -->
@@ -176,6 +186,5 @@
      
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
 </body>
 </html>
