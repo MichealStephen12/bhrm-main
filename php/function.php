@@ -63,6 +63,7 @@ if (isset($_GET['confirm'])) {
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
 
+    $resid = $fetch['id'];
     $roomno = $fetch['room_no'];
     $price = $fetch['price'];
     $uname = $fetch['email'];
@@ -97,8 +98,8 @@ if (isset($_GET['confirm'])) {
     $roomStatus = ($newTenantCount >= $roomCapacity) ? 'Full' : 'Available';
 
     // Insert a payment record for the reservation
-    $insertPaymentQuery = "INSERT INTO `payments` (`id`, `email`, `room_no`, `price`, `pay_stat`, `hname`, `owner`) 
-                           VALUES ('', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
+    $insertPaymentQuery = "INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `pay_stat`, `hname`, `owner`) 
+                           VALUES                   ('', '$resid', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
     mysqli_query($conn, $insertPaymentQuery);
 
     // Insert a report record for the reservation

@@ -205,8 +205,6 @@ $reportResult = mysqli_query($conn, $reportQuery);
                         <td><?php echo $report['room_no']; ?></td>
                         <td><?php echo $report['price']; ?></td>
                         <td><?php echo number_format($report['payment'], 2); ?> PHP</td>
-                        <td><?php echo number_format($price, 2); ?> PHP</td>
-                        <td><?php echo number_format($payment, 2); ?> PHP</td>
                         <td><?php echo number_format($balance, 2); ?> PHP</td>
                         <td><?php echo $report['pay_date'] ?: 'N/A'; ?></td>
                         <td><?php echo $report['pay_stat'] ?: 'N/A'; ?></td>

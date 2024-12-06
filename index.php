@@ -192,6 +192,52 @@ a.button:hover {
     background-color: #218838; /* Darker green on hover */
     color: white; /* Text color remains white */
 }
+.section {
+            padding: 40px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .section p, .section ol {
+            color: #555;
+        }
+
+        .icon-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .icon-box {
+            text-align: center;
+        }
+
+        .feature-list li {
+            margin-bottom: 10px;
+        }
+
+        .feature-list strong {
+            color: #007bff;
+        }
+
+        .highlight {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+        }
 
 
 /* Footer */
@@ -300,37 +346,70 @@ a.button:hover {
         });
     </script>
 
+    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"] == 'admin')): ?>
+    <?php else: ?>
     <div class="container mt-5">
         <!-- Reservation Section -->
         <section id="reservation-easy" class="section mb-5">
-            <h2 class="display-4">Reservation Made Easy</h2>
-            <p>At <strong>Maranding Boarding House Center</strong>, reserving a room has never been easier! With just a few clicks, you can browse through various boarding houses, check availability, and book a room that suits your needs. Our user-friendly platform ensures that the entire process is seamless, from start to finish. No more complicated forms or long procedures—everything is at your fingertips!</p>
+            <h2 class="display-6 text-center">Reservation Made Easy</h2>
+            <p class="text-center">At <strong>Maranding Boarding House Center</strong>, reserving a room has never been easier! Browse boarding houses, check availability, and book a room that suits your needs—all in just a few clicks.</p>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="icon-circle">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h5>Explore</h5>
+                    <p>Find a variety of boarding houses tailored to your needs.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="icon-circle">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h5>Reserve</h5>
+                    <p>Quickly reserve your room with just a few clicks.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="icon-circle">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <h5>Confirm</h5>
+                    <p>Receive instant confirmation for stress-free booking.</p>
+                </div>
+            </div>
         </section>
 
         <!-- What is Boarding House Section -->
-        <section id="what-is-boarding-house" class="section mb-5">
-            <h2 class="display-4">What is a Boarding House?</h2>
-            <p>A boarding house is a place that offers rooms for rent, typically with shared facilities such as bathrooms, kitchens, and lounges. Boarding houses are often an affordable living option for students, workers, or anyone in need of temporary accommodation. Whether you're looking for a short-term stay or long-term housing, a boarding house can be a perfect solution!</p>
+        <section id="what-is-boarding-house" class="section mb-5 highlight">
+            <h2 class="display-6">What is a Boarding House?</h2>
+            <p>A boarding house offers rooms for rent with shared facilities like bathrooms and kitchens. It's an affordable option for students, workers, and travelers looking for temporary accommodation.</p>
         </section>
 
         <!-- How Reservation Works Section -->
         <section id="how-it-works" class="section mb-5">
-            <h2 class="display-4">Reservations</h2>
-            <p>Our reservation system is designed to be quick and convenient. Here's how it works:</p>
-            <ol class="fs-4">
-                <li><strong>Browse Boarding Houses:</strong> Explore a variety of boarding houses available in Maranding, each offering different amenities and features.</li>
-                <li><strong>Check Availability:</strong> Quickly check the availability of rooms based on your desired check-in and check-out dates.</li>
-                <li><strong>Make a Reservation:</strong> Once you’ve found the perfect room, submit your booking details, and we’ll handle the rest.</li>
-                <li><strong>Confirmation:</strong> You’ll receive an instant confirmation once your reservation is approved. Simple and stress-free!</li>
+            <h2 class="display-6">How Reservation Works</h2>
+            <ol class="feature-list fs-5">
+                <li><strong>Browse Boarding Houses:</strong> Explore available options with various amenities.</li>
+                <li><strong>Check Availability:</strong> Find rooms for your desired dates.</li>
+                <li><strong>Make a Reservation:</strong> Submit your booking details with ease.</li>
+                <li><strong>Receive Confirmation:</strong> Get instant approval for your stay.</li>
             </ol>
         </section>
 
-        <!-- About Maranding Boarding House Center Section -->
+        <!-- About Section -->
         <section id="about" class="section mb-5">
-            <h2 class="display-4">About Maranding Boarding House Center</h2>
-            <p>Welcome to <strong>Maranding Boarding House Center</strong>, your trusted platform for finding the best boarding houses in Maranding. We aim to make accommodation accessible, affordable, and hassle-free for everyone. Whether you're a student, worker, or traveler, our platform helps you find a place to stay that meets your needs. Our goal is to provide a seamless experience from browsing to booking and everything in between.</p>
+            <h2 class="display-6">About Us</h2>
+            <p><strong>Maranding Boarding House Center</strong> is your trusted platform for finding the best boarding houses in Maranding. Whether you're a student, worker, or traveler, we make accommodation easy, accessible, and hassle-free.</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="/bhrm-main/images/logo.png" class="img-fluid rounded" alt="Boarding House">
+                </div>
+                <div class="col-md-6">
+                    <p>Our goal is to provide a seamless experience, from browsing to booking. Find your ideal room, enjoy transparent pricing, and experience convenience like never before!</p>
+                </div>
+            </div>
         </section>
     </div>
+    <?php endif; ?>
 
 
 

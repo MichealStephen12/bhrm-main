@@ -169,114 +169,30 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
 
 
     <div class="container">    
-    <?php 
+    <?php
         if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && !empty($_SESSION['hname'])) {
             $uname = $_SESSION['uname'];
             $hname = $_SESSION['hname'];
-            $query = "SELECT * FROM reservation WHERE email = '$uname' AND hname = '$hname' order by id desc";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)) {
-        ?>
-        <div class="card">
-            <div class="card-footer">
-                <img src="<?php echo $fetch['image']; ?>">
-            </div>
-            <div class="card-header">
-                <h5>Reservation #<?php echo $fetch['id']; ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Guest Information:</strong></p>
-                        <p>Name: <?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></p>
-                        <p>Email: <?php echo $fetch['email']; ?></p>
-                        <p>Gender: <?php echo $fetch['gender']; ?></p>
-                        <p>Status: <?php echo $fetch['tenant_status']; ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Room Information:</strong></p>
-                        <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                        <p>Room / Rent: <?php echo $fetch['price']; ?></p>
-                        <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
-                        <p>Room Selected Slots: <?php echo $fetch['room_slot']; ?></p>
-                        <p>Current Tenant: <?php echo $fetch['current_tenant']; ?></p>
-                        <p>Gender Allowed: <?php echo $fetch['gender']; ?></p>
-                        <p>Room Amenities: <?php echo $fetch['amenities']; ?></p>
-                        <p>Room Floor: <?php echo $fetch['room_floor']; ?></p>
-                        <p>Room Status: <?php echo $fetch['status']; ?></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Reservation Details:</strong></p>
-                        <p>Date In: <?php echo $fetch['date_in']; ?></p>
-                        <p>Date Out: <?php echo $fetch['date_out']; ?></p>
-                        <p>Requests: <?php echo $fetch['addons']; ?></p>
-                        <p>Reservation Status: <?php echo $fetch['res_stat']; ?></p>
-                        <p>Reservation Duration: <?php echo $fetch['res_duration']; ?></p>
-                        <p>Reservation Reason: <?php echo $fetch['res_reason']; ?></p>
-                    </div>
-                    <?php
-                    // Query payment information for the current reservation
-                    $paymentQuery = "SELECT * FROM payments WHERE email = '$uname' AND hname = '$hname' ORDER BY id DESC";
-                    $paymentResult = mysqli_query($conn, $paymentQuery);
-
-                    if (mysqli_num_rows($paymentResult) > 0) {
-                        while ($payment = mysqli_fetch_assoc($paymentResult)) {
-                            // Calculate the balance
-                            $balance = $fetch['price'] - $payment['payment'];
-                    ?>
-                            <div class="col-md-6">
-                                <p><strong>Payment Details:</strong></p>
-                                <p>Payment: <?php echo $payment['payment'] . ' PHP'; ?></p>
-                                <p>Payment Date: <?php echo $payment['pay_date']; ?></p>
-                                <p>Payment Status: <?php echo $payment['pay_stat']; ?></p>
-                                <p><strong>Balance: </strong><?php echo $balance . ' PHP'; ?></p>
-                            </div>
-                        <?php
-                        }
-                    } else { ?>
-                        <div class="col-md-6">
-                            <p><strong>Payment Details:</strong></p>
-                            <p>Payment: <?php echo $fetch['payment'] . ' PHP'; ?></p>
-                            <p>Payment Date: <?php echo $fetch['pay_date'];  ?></p>
-                            <p>Payment Status: <?php echo $fetch['pay_stat'];  ?></p>
-                            <p>Balance: <?php echo $fetch['price'] . ' PHP'; ?></p>
-                        </div>
-                    <?php } ?>
-                </div>
-            </div>
-        </div>
-        <?php } } ?>
-
-
-
-        <?php
-            $uname = $_SESSION['uname'];
-            $query = "SELECT * FROM boardinghouses order by id desc";
-            $result = mysqli_query($conn, $query);
-            $fetch = mysqli_fetch_assoc($result);
-            $hname = $fetch['hname'];
-
-            $query = "SELECT * FROM reservation where email = '$uname' and hname = '$hname' order by id desc";
-            $result = mysqli_query($conn, $query);
-            $fetch = mysqli_fetch_assoc($result)
-        ?>
-
-        <?php
-        $uname = $_SESSION['uname'];
-
-        if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && empty($_SESSION['hname'])) {
             // Query all reservations for the user
-            $query = "SELECT * FROM reservation WHERE email = '$uname' ORDER BY id DESC";
-            $result = mysqli_query($conn, $query);
+            $reservationQuery = "SELECT * FROM reservation WHERE email = '$uname' and hname = '$hname' ORDER BY id DESC";
+            $reservationResult = mysqli_query($conn, $reservationQuery);
 
-            while ($reservation = mysqli_fetch_assoc($result)) {
-                $hname = $reservation['hname'];
-        ?>
+            while ($reservation = mysqli_fetch_assoc($reservationResult)) {
+                $reservationId = $reservation['id']; // Unique identifier for the reservation
+                $roomPrice = $reservation['price']; // Price for the specific reservation
+                $twobalance = $reservation['price'] - $reservation['payment'];
+                
+                // Fetch payment details for the current reservation
+                $paymentQuery = "SELECT * FROM payments WHERE res_id = '$reservationId' ORDER BY id DESC";
+                $paymentResult = mysqli_query($conn, $paymentQuery);
+                $payment = mysqli_fetch_assoc($paymentResult);
+
+                $paymentAmount = $payment['payment'] ?? 0;
+                $balance = $roomPrice - $paymentAmount;
+                ?>
                 <div class="card">
                     <div class="card-footer">
-                        <img src="<?php echo $fetch['image']; ?>" alt="Boarding House Image">
+                        <img src="<?php echo $reservation['image']; ?>" alt="Boarding House Image">
                     </div>
                     <div class="card-header">
                         <h5>Boarding House: <?php echo $reservation['hname']; ?></h5>
@@ -295,15 +211,15 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             </div>
                             <div class="col-md-6">
                                 <p><strong>Room Information:</strong></p>
-                                <p>Room No: <?php echo $fetch['room_no']; ?></p>
-                                <p>Room / Rent: <?php echo $fetch['price']; ?></p>
-                                <p>Room Capacity: <?php echo $fetch['capacity']; ?></p>
-                                <p>Room Selected Slots: <?php echo $fetch['room_slot']; ?></p>
-                                <p>Current Tenant: <?php echo $fetch['current_tenant']; ?></p>
-                                <p>Gender Allowed: <?php echo $fetch['gender']; ?></p>
-                                <p>Room Amenities: <?php echo $fetch['amenities']; ?></p>
-                                <p>Room Floor: <?php echo $fetch['room_floor']; ?></p>
-                                <p>Room Status: <?php echo $fetch['status']; ?></p>
+                                <p>Room No: <?php echo $reservation['room_no']; ?></p>
+                                <p>Room / Rent: <?php echo $reservation['price']; ?></p>
+                                <p>Room Capacity: <?php echo $reservation['capacity']; ?></p>
+                                <p>Room Selected Slots: <?php echo $reservation['room_slot']; ?></p>
+                                <p>Current Tenant: <?php echo $reservation['current_tenant']; ?></p>
+                                <p>Gender Allowed: <?php echo $reservation['gender']; ?></p>
+                                <p>Room Amenities: <?php echo $reservation['amenities']; ?></p>
+                                <p>Room Floor: <?php echo $reservation['room_floor']; ?></p>
+                                <p>Room Status: <?php echo $reservation['status']; ?></p>
                             </div>
                         </div>
                         <div class="row">
@@ -311,46 +227,121 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                                 <p><strong>Reservation Details:</strong></p>
                                 <p>Date In: <?php echo $reservation['date_in']; ?></p>
                                 <p>Date Out: <?php echo $reservation['date_out']; ?></p>
-                                <p>Requests: <?php echo $fetch['addons']; ?></p>
+                                <p>Requests: <?php echo $reservation['addons']; ?></p>
                                 <p>Reservation Status: <?php echo $reservation['res_stat']; ?></p>
                                 <p>Reservation Duration: <?php echo $reservation['res_duration']; ?></p>
                                 <p>Reservation Reason: <?php echo $reservation['res_reason']; ?></p>
                             </div>
-                            <?php
-                            // Query payment information for the current reservation
-                            $paymentQuery = "SELECT * FROM payments WHERE email = '$uname' AND hname = '$hname' ORDER BY id DESC";
-                            $paymentResult = mysqli_query($conn, $paymentQuery);
-
-                            if (mysqli_num_rows($paymentResult) > 0) {
-                                while ($payment = mysqli_fetch_assoc($paymentResult)) {
-                                    // Calculate the balance
-                                    $balance = $fetch['price'] - $payment['payment'];
-                            ?>
-                                    <div class="col-md-6">
-                                        <p><strong>Payment Details:</strong></p>
-                                        <p>Payment: <?php echo $payment['payment'] . ' PHP'; ?></p>
-                                        <p>Payment Date: <?php echo $payment['pay_date']; ?></p>
-                                        <p>Payment Status: <?php echo $payment['pay_stat']; ?></p>
-                                        <p><strong>Balance: </strong><?php echo $balance . ' PHP'; ?></p>
-                                    </div>
-                                <?php
-                                }
-                            } else { ?>
-                                <div class="col-md-6">
-                                    <p><strong>Payment Details:</strong></p>
-                                    <p>Payment: <?php echo $fetch['payment'] . ' PHP'; ?></p>
-                                    <p>Payment Date: <?php echo $fetch['pay_date'];  ?></p>
-                                    <p>Payment Status: <?php echo $fetch['pay_stat'];  ?></p>
-                                    <p>Balance: <?php echo $fetch['price'] . ' PHP'; ?></p>
-                                </div>
-                            <?php } ?>
+                            <div class="col-md-6">
+                                <p><strong>Payment Details:</strong></p>
+                                <?php if ($payment) { ?>
+                                    <p>Payment: <?php echo $payment['payment'] . ' PHP'; ?></p>
+                                    <p>Payment Date: <?php echo $payment['pay_date']; ?></p>
+                                    <p>Payment Status: <?php echo $payment['pay_stat']; ?></p>
+                                    <p><strong>Balance: </strong><?php echo $balance . ' PHP'; ?></p>
+                                <?php } else { ?>
+                                    <p>Payment:  <?php echo $reservation['payment'] . ' PHP'; ?></p>
+                                    <p>Payment Date: <?php echo $reservation['pay_date']; ?></p>
+                                    <p>Payment Status: <?php echo $reservation['pay_stat']; ?></p>
+                                    <p><strong>Balance: </strong><?php echo $twobalance . ' PHP'; ?></p>
+                                <?php } ?>
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
-        <?php
+                <?php
             }
         }
         ?>
+
+
+
+        <?php
+        if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user' && empty($_SESSION['hname'])) {
+            $uname = $_SESSION['uname'];
+            // Query all reservations for the user
+            $reservationQuery = "SELECT * FROM reservation WHERE email = '$uname' ORDER BY id DESC";
+            $reservationResult = mysqli_query($conn, $reservationQuery);
+
+            while ($reservation = mysqli_fetch_assoc($reservationResult)) {
+                $reservationId = $reservation['id']; // Unique identifier for the reservation
+                $roomPrice = $reservation['price']; // Price for the specific reservation
+                $twobalance = $reservation['price'] - $reservation['payment'];
+                
+                // Fetch payment details for the current reservation
+                $paymentQuery = "SELECT * FROM payments WHERE res_id = '$reservationId' ORDER BY id DESC";
+                $paymentResult = mysqli_query($conn, $paymentQuery);
+                $payment = mysqli_fetch_assoc($paymentResult);
+
+                $paymentAmount = $payment['payment'] ?? 0;
+                $balance = $roomPrice - $paymentAmount;
+                ?>
+                <div class="card">
+                    <div class="card-footer">
+                        <img src="<?php echo $reservation['image']; ?>" alt="Boarding House Image">
+                    </div>
+                    <div class="card-header">
+                        <h5>Boarding House: <?php echo $reservation['hname']; ?></h5>
+                    </div>
+                    <div class="card-header">
+                        <h5>Reservation #<?php echo $reservation['id']; ?></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Guest Information:</strong></p>
+                                <p>Name: <?php echo $reservation['fname'] . ' ' . $reservation['lname']; ?></p>
+                                <p>Email: <?php echo $reservation['email']; ?></p>
+                                <p>Gender: <?php echo $reservation['gender']; ?></p>
+                                <p>Status: <?php echo $reservation['tenant_status']; ?></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Room Information:</strong></p>
+                                <p>Room No: <?php echo $reservation['room_no']; ?></p>
+                                <p>Room / Rent: <?php echo $reservation['price']; ?></p>
+                                <p>Room Capacity: <?php echo $reservation['capacity']; ?></p>
+                                <p>Room Selected Slots: <?php echo $reservation['room_slot']; ?></p>
+                                <p>Current Tenant: <?php echo $reservation['current_tenant']; ?></p>
+                                <p>Gender Allowed: <?php echo $reservation['gender']; ?></p>
+                                <p>Room Amenities: <?php echo $reservation['amenities']; ?></p>
+                                <p>Room Floor: <?php echo $reservation['room_floor']; ?></p>
+                                <p>Room Status: <?php echo $reservation['status']; ?></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Reservation Details:</strong></p>
+                                <p>Date In: <?php echo $reservation['date_in']; ?></p>
+                                <p>Date Out: <?php echo $reservation['date_out']; ?></p>
+                                <p>Requests: <?php echo $reservation['addons']; ?></p>
+                                <p>Reservation Status: <?php echo $reservation['res_stat']; ?></p>
+                                <p>Reservation Duration: <?php echo $reservation['res_duration']; ?></p>
+                                <p>Reservation Reason: <?php echo $reservation['res_reason']; ?></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Payment Details:</strong></p>
+                                <?php if ($payment) { ?>
+                                    <p>Payment: <?php echo $payment['payment'] . ' PHP'; ?></p>
+                                    <p>Payment Date: <?php echo $payment['pay_date']; ?></p>
+                                    <p>Payment Status: <?php echo $payment['pay_stat']; ?></p>
+                                    <p><strong>Balance: </strong><?php echo $balance . ' PHP'; ?></p>
+                                <?php } else { ?>
+                                    <p>Payment:  <?php echo $reservation['payment'] . ' PHP'; ?></p>
+                                    <p>Payment Date: <?php echo $reservation['pay_date']; ?></p>
+                                    <p>Payment Status: <?php echo $reservation['pay_stat']; ?></p>
+                                    <p><strong>Balance: </strong><?php echo $twobalance . ' PHP'; ?></p>
+                                <?php } ?>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }
+        }
+        ?>
+
     </div>
 
 

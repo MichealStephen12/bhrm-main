@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2024 at 05:12 AM
+-- Generation Time: Dec 06, 2024 at 03:17 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -116,6 +116,7 @@ INSERT INTO `documents` (`id`, `bar_clear`, `bus_per`, `image`, `hname`, `owner`
 
 CREATE TABLE `payments` (
   `id` int(255) NOT NULL,
+  `res_id` int(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `room_no` int(255) NOT NULL,
   `price` varchar(255) NOT NULL,
@@ -187,7 +188,14 @@ INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `payment`, `pa
 (31, 'user', 'user', 'male', 'user@gmail.com', 700, '2024-12-05', 'Partially Paid', '2024-12-05', '2024-12-06', 1, 0, 'Dodge Boarding House', ''),
 (32, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-06', 'Fully Paid', '2024-12-06', '2024-12-06', 2, 0, 'Dodge Boarding House', ''),
 (33, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00', 'Not Fully Paid', '2024-12-06', '2024-12-06', 1, 0, 'Dodge Boarding House', ''),
-(34, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00', 'Not Fully Paid', '2024-12-06', '2024-12-06', 2, 1000, 'Dodge Boarding House', '');
+(34, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00', 'Not Fully Paid', '2024-12-06', '2024-12-06', 2, 1000, 'Dodge Boarding House', ''),
+(35, 'user', 'user', 'male', 'user@gmail.com', 999, '2024-12-06', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 'Dodge Boarding House', ''),
+(36, 'user', 'user', 'male', 'user2@gmail.com', 500, '2024-12-06', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 'Dodge Boarding House', ''),
+(37, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-06', 'Fully Paid', '2024-12-06', '2024-12-06', 1, 1000, 'Dodge Boarding House', ''),
+(38, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-06', 'Fully Paid', '2024-12-06', '2024-12-06', 1, 1000, 'Dodge Boarding House', ''),
+(39, 'user', 'user', 'male', 'user2@gmail.com', 800, '1970-01-15', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 'Dodge Boarding House', ''),
+(40, 'user', 'user', 'male', 'user2@gmail.com', 500, '1970-01-14', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 'Dodge Boarding House', ''),
+(41, 'user', 'user', 'male', 'user@gmail.com', 700, '1970-01-14', 'Partially Paid', '2024-12-06', '2024-12-06', 2, 1000, 'Dodge Boarding House', '');
 
 -- --------------------------------------------------------
 
@@ -261,7 +269,14 @@ INSERT INTO `reservation` (`id`, `image`, `fname`, `lname`, `email`, `gender`, `
 (35, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-12', '2025-01-11', 'Student', 'lakad matatag', 1, 3, 'Whole Room', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'available', 700, 'Partially Paid', '2024-12-05', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
 (36, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-18', '2025-01-17', 'Student', 'awdasdas', 2, 5, 'Whole Room', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'available', 1000, 'Fully Paid', '2024-12-06', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
 (37, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', '', 'lakad matatag', 1, 3, 'Whole Room', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 0, 'Not Fully Paid', '0000-00-00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
-(38, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-19', '2025-01-18', '', 'lakad matatag', 2, 5, 'Slot 3', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 0, 'Not Fully Paid', '0000-00-00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com');
+(38, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-19', '2025-01-18', '', 'lakad matatag', 2, 5, 'Slot 3', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 0, 'Not Fully Paid', '0000-00-00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(39, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'lakad matatag', 1, 3, 'Slot 1, Slot 2', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 999, 'Partially Paid', '2024-12-06', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(40, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'lakad matatag', 1, 3, 'Slot 3', 2, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 500, 'Partially Paid', '2024-12-06', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(41, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-19', '2025-01-18', 'Student', 'lakad matatag', 1, 3, 'Whole Room', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 1000, 'Fully Paid', '2024-12-06', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(42, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-19', '2025-01-18', 'Student', 'lakad matatag', 1, 3, 'Whole Room', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 1000, 'Fully Paid', '2024-12-06', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(43, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-19', '2025-01-18', 'Student', 'awdasdas', 1, 3, 'Slot 1, Slot 2', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 800, 'Partially Paid', '1970-01-15', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(44, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-19', '2025-01-18', 'Student', 'lakad matatag', 1, 3, 'Whole Room', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 500, 'Partially Paid', '1970-01-14', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(45, 'images/674fc4adb0e222.28894530.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-18', '2025-01-17', 'Student', 'lakad matatag', 2, 5, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'All', '3rd floor', 1000, 'Available', 700, 'Partially Paid', '1970-01-14', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -410,19 +425,19 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `rooms`
