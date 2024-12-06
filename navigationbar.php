@@ -138,10 +138,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="reservationMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-calendar-check"></i> Reservations (<?php echo $newReservations; ?>)
+                    <i class="fas fa-calendar-check"></i> Reservations <span class="badge bg-warning text-dark"><?php echo $newReservations; ?></span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="reservationMenu">
-                    <li><a class="dropdown-item" href="/bhrm-main/pending.php">Pending (<?php echo $newReservations; ?>)</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/pending.php">Pending <span class="badge bg-warning text-dark"><?php echo $newReservations; ?></span></a></li>
                     <li><a class="dropdown-item" href="/bhrm-main/approved.php">Approved</a></li>
                     <li><a class="dropdown-item" href="/bhrm-main/ended.php">Ended</a></li>
                     <li><a class="dropdown-item" href="/bhrm-main/rejected.php">Rejected</a></li>

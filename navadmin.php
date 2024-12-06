@@ -145,18 +145,32 @@
                     <span class="badge bg-warning text-dark"><?php echo $newReservations; ?></span>
                 </a>
             </li>
-            <!-- Dropdown Menu -->
-            <li class="nav-item dropdown mt-3 position-relative">
-                <a class="nav-link text-white dropdown-toggle" href="#" id="userMenu" role="button">
+           <!-- Reports Dropdown Menu -->
+            <!-- Reports Dropdown Menu -->
+            <li class="nav-item dropdown mt-3">
+                <a class="nav-link text-white dropdown-toggle" href="#" id="reportsMenu" role="button">
+                    <i class="bi bi-graph-up"></i>
+                    <span>Reports</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="reportsMenu">
+                    <li><a class="dropdown-item" href="/bhrm-main/reportsboardinghouse.php">Boarding House</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/reportslandlord.php">Landlords</a></li>
+                </ul>
+            </li>
+
+            <!-- Account Dropdown Menu -->
+            <li class="nav-item dropdown mt-3">
+                <a class="nav-link text-white dropdown-toggle" href="#" id="accountMenu" role="button">
                     <i class="bi bi-person-circle"></i>
                     <span>Account</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-dark position-absolute" aria-labelledby="userMenu">
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="accountMenu">
                     <li><a class="dropdown-item" href="profile.php">Profile</a></li>
                     <li><a class="dropdown-item" href="settings.php">Settings</a></li>
                     <li><a class="dropdown-item" href="/bhrm-main/php/logout.php">Logout</a></li>
                 </ul>
             </li>
+
         </ul>
     </nav>
 
@@ -164,21 +178,34 @@
 
     <!-- JavaScript -->
     <script>
-        // Add dropdown toggle functionality manually
         document.addEventListener('DOMContentLoaded', function () {
-            const dropdownToggle = document.getElementById('userMenu');
-            const dropdownMenu = document.querySelector('.dropdown-menu');
+            // Handle Reports dropdown
+            const reportsDropdownToggle = document.getElementById('reportsMenu');
+            const reportsDropdownMenu = reportsDropdownToggle.nextElementSibling; // Find the next <ul> element
 
-            // Toggle the dropdown menu on click
-            dropdownToggle.addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent default anchor behavior
-                dropdownMenu.classList.toggle('show'); // Toggle visibility
+            // Toggle visibility for Reports dropdown
+            reportsDropdownToggle.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default behavior
+                reportsDropdownMenu.classList.toggle('show'); // Toggle visibility
             });
 
-            // Close dropdown if clicked outside
+            // Handle Account dropdown
+            const accountDropdownToggle = document.getElementById('accountMenu');
+            const accountDropdownMenu = accountDropdownToggle.nextElementSibling; // Find the next <ul> element
+
+            // Toggle visibility for Account dropdown
+            accountDropdownToggle.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default behavior
+                accountDropdownMenu.classList.toggle('show'); // Toggle visibility
+            });
+
+            // Close dropdowns if clicked outside
             document.addEventListener('click', function (event) {
-                if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                    dropdownMenu.classList.remove('show'); // Hide dropdown
+                if (!reportsDropdownToggle.contains(event.target) && !reportsDropdownMenu.contains(event.target)) {
+                    reportsDropdownMenu.classList.remove('show'); // Hide Reports dropdown
+                }
+                if (!accountDropdownToggle.contains(event.target) && !accountDropdownMenu.contains(event.target)) {
+                    accountDropdownMenu.classList.remove('show'); // Hide Account dropdown
                 }
             });
         });
