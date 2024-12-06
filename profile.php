@@ -86,15 +86,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-<style>
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0px;
             background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
         .profile-container {
             max-width: 600px;
@@ -103,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease-in-out;
         }
         .profile-container img {
             width: 150px;
@@ -111,45 +111,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             object-fit: cover;
             display: block;
             margin: 0 auto 20px;
+            animation: scaleUp 0.5s ease-in-out;
         }
-        .profile-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        .profile-container input[type="text"], .profile-container input[type="file"] {
-            margin-bottom: 15px;
-            padding: 10px;
+        .profile-container input, .profile-container button {
             font-size: 16px;
-            border: 1px solid #ddd;
             border-radius: 5px;
         }
-        .profile-container input[type="password"]{
+        .profile-container input[type="text"], 
+        .profile-container input[type="password"], 
+        .profile-container input[type="file"] {
             margin-bottom: 15px;
             padding: 10px;
-            font-size: 16px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            width: 100%;
         }
         .profile-container button {
             background-color: #007BFF;
             color: white;
             border: none;
             padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .profile-container button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .profile-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleUp {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
+        }
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 20px;
+                padding: 15px;
+            }
+            .profile-container img {
+                width: 120px;
+                height: 120px;
+            }
         }
     </style>
-    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == 'user'): ?>
-        <?php include 'navbar.php'; ?>
+</head>
+<body>
+    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])): ?>
+        <!-- Include appropriate navbar based on role -->
+        <?php if ($_SESSION["role"] === 'user') include 'navbar.php'; ?>
+        <?php if ($_SESSION["role"] === 'landlord') include 'navigationbar.php'; ?>
+        <?php if ($_SESSION["role"] === 'admin') include 'navadmin.php'; ?>
 
         <div class="profile-container">
             <img src="<?php echo $fetch['image']; ?>" alt="Profile Picture">
-            
-            <!-- Toggle Edit Mode -->
+            <!-- Edit Mode -->
             <?php if (isset($_POST['edit_profile'])): ?>
                 <form method="POST" enctype="multipart/form-data">
                     <label>Profile Picture:</label>
@@ -179,84 +200,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
         </div>
+    <?php else: ?>
+        <p class="text-center">Please <a href="index.php">log in</a> to view your profile.</p>
     <?php endif; ?>
-
-
-    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == 'landlord'): ?>
-        <?php include 'navigationbar.php'; ?>
-
-        <div class="profile-container">
-            <img src="<?php echo $fetch['image']; ?>" alt="Profile Picture">
-            
-            <!-- Toggle Edit Mode -->
-            <?php if (isset($_POST['edit_profile'])): ?>
-                <form method="POST" enctype="multipart/form-data">
-                    <label>Profile Picture:</label>
-                    <input type="file" name="image">
-                    <label>First Name:</label>
-                    <input type="text" name="fname" value="<?php echo $fetch['fname']; ?>" required>
-                    <label>Last Name:</label>
-                    <input type="text" name="lname" value="<?php echo $fetch['lname']; ?>" required>
-                    <label>Email:</label>
-                    <input type="text" name="uname" value="<?php echo $fetch['uname']; ?>" required>
-                    <label>Password:</label>
-                    <input type="password" name="pass" placeholder="Enter a new password">
-                    <label>Role:</label>
-                    <input type="text" value="<?php echo $fetch['role']; ?>" readonly>
-                    <button type="submit" name="save_changes">Save Changes</button>
-                    <button type="submit" name="cancel_edit">Cancel</button>
-                </form>
-            <?php else: ?>
-                <div>
-                    <p><strong>First Name:</strong> <?php echo $fetch['fname']; ?></p>
-                    <p><strong>Last Name:</strong> <?php echo $fetch['lname']; ?></p>
-                    <p><strong>Email:</strong> <?php echo $fetch['uname']; ?></p>
-                    <p><strong>Role:</strong> <?php echo $fetch['role']; ?></p>
-                    <form method="POST">
-                        <button type="submit" name="edit_profile">Edit Profile</button>
-                    </form>
-                </div>
-            <?php endif; ?>
-        </div>
-    <?php endif; ?>
-
-
-    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION["role"] == 'admin'): ?>
-        <?php include 'navadmin.php'; ?>
-
-        <div class="profile-container">
-            <img src="<?php echo $fetch['image']; ?>" alt="Profile Picture">
-            
-            <!-- Toggle Edit Mode -->
-            <?php if (isset($_POST['edit_profile'])): ?>
-                <form method="POST" enctype="multipart/form-data">
-                    <label>Profile Picture:</label>
-                    <input type="file" name="image">
-                    <label>First Name:</label>
-                    <input type="text" name="fname" value="<?php echo $fetch['fname']; ?>" required>
-                    <label>Last Name:</label>
-                    <input type="text" name="lname" value="<?php echo $fetch['lname']; ?>" required>
-                    <label>Email:</label>
-                    <input type="text" name="uname" value="<?php echo $fetch['uname']; ?>" required>
-                    <label>Password:</label>
-                    <input type="password" name="pass" placeholder="Enter a new password">
-                    <label>Role:</label>
-                    <input type="text" value="<?php echo $fetch['role']; ?>" readonly>
-                    <button type="submit" name="save_changes">Save Changes</button>
-                    <button type="submit" name="cancel_edit">Cancel</button>
-                </form>
-            <?php else: ?>
-                <div>
-                    <p><strong>First Name:</strong> <?php echo $fetch['fname']; ?></p>
-                    <p><strong>Last Name:</strong> <?php echo $fetch['lname']; ?></p>
-                    <p><strong>Email:</strong> <?php echo $fetch['uname']; ?></p>
-                    <p><strong>Role:</strong> <?php echo $fetch['role']; ?></p>
-                    <form method="POST">
-                        <button type="submit" name="edit_profile">Edit Profile</button>
-                    </form>
-                </div>
-            <?php endif; ?>
-        </div>
-    <?php endif; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

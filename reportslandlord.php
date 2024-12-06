@@ -59,18 +59,22 @@ $landlordsResult = mysqli_query($conn, $landlordsQuery);
                     <th>ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
+                    <th>Gender</th>
                     <th>Email</th>
                     <th>Image</th>
+                    <th>Boarding House</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($landlord = mysqli_fetch_assoc($landlordsResult)) { ?>
                     <tr>
                         <td><?php echo $landlord['id']; ?></td>
+                        <td><img src="/bhrm-main/<?php echo $landlord['image'] ?? 'default.png'; ?>" width="50" height="50" class="rounded-circle" alt="Profile Picture"></td>
                         <td><?php echo $landlord['fname']; ?></td>
                         <td><?php echo $landlord['lname']; ?></td>
+                        <td><?php echo $landlord['gender']; ?></td>
                         <td><?php echo $landlord['uname']; ?></td>
-                        <td><img src="/bhrm-main/<?php echo $landlord['image'] ?? 'default.png'; ?>" width="50" height="50" class="rounded-circle" alt="Profile Picture"></td>
+                        <td><?php echo $landlord['hname']; ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -78,8 +82,6 @@ $landlordsResult = mysqli_query($conn, $landlordsQuery);
     </div>
 
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
     <!-- DataTables JS Initialization -->
     <script>
         $(document).ready(function() {

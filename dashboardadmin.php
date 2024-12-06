@@ -86,6 +86,5 @@ $total_boardinghouses = mysqli_fetch_assoc($result_boardinghouses)['total_boardi
     </script>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

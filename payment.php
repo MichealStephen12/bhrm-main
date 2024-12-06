@@ -124,45 +124,40 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     <?php endif; ?>
 
     <div class="container">
-        <?php 
-        if (!empty($_SESSION) && $_SESSION['role'] == 'landlord' && !empty($confirmedReservations)) {
-            foreach ($confirmedReservations as $uname) {
-                // Fetch payment details for each confirmed reservation
-                $query = "SELECT * FROM payments WHERE hname = '$hname' AND email = '$uname' order by id desc";
-                $result = mysqli_query($conn, $query);
+    <?php 
+    if (!empty($_SESSION) && $_SESSION['role'] == 'landlord' && !empty($confirmedReservations)) {
+        foreach ($confirmedReservations as $uname) {
+            // Fetch payment details for each confirmed reservation
+            $query = "SELECT * FROM payments WHERE hname = '$hname' AND email = '$uname' ORDER BY id DESC";
+            $result = mysqli_query($conn, $query);
 
-                while ($fetch = mysqli_fetch_assoc($result)) {
-        ?>
-        <div class="card">
-            <div class="card-header">
-                <h5>Payment #<?php echo $fetch['id']; ?></h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Guest Information:</strong></p>
-                        <p>Email: <?php echo $fetch['email']; ?></p>
-                        <p>Room Number: <?php echo $fetch['room_no']; ?></p>
-                        <p>Payment: <?php echo $fetch['payment']; ?></p>
-                        <p>Payment Status: <?php echo $fetch['pay_stat']; ?></p>
-                        <p>Payment Date: <?php echo $fetch['pay_date']; ?></p>
-                    </div>
-                </div>
-                <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role'] == 'landlord') { ?>
-                <div class="button-row">
-                    <div class="button-col">
-                    <a href="php/payfunction.php?id=<?php echo $fetch['id']; ?>"><button>Edit</button></a>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
+            while ($fetch = mysqli_fetch_assoc($result)) {
+    ?>
+    <div class="card">
+        <div class="card-header">
+            Payment #<?php echo $fetch['id']; ?>
         </div>
-        <?php 
-                }
-            } 
-        } 
-        ?>
+        <div class="card-body">
+            <p><strong>Email:</strong> <?php echo $fetch['email']; ?></p>
+            <p><strong>Room Number:</strong> <?php echo $fetch['room_no']; ?></p>
+            <p><strong>Payment:</strong> <?php echo $fetch['payment']; ?></p>
+            <p><strong>Status:</strong> <?php echo $fetch['pay_stat']; ?></p>
+            <p><strong>Date:</strong> <?php echo $fetch['pay_date']; ?></p>
+        </div>
+        <div class="button-row">
+            <a href="php/payfunction.php?id=<?php echo $fetch['id']; ?>">
+                <button>Edit</button>
+            </a>
+            
+        </div>
     </div>
+    <?php 
+            }
+        } 
+    } 
+    ?>
+</div>
+
 
     <style>
         .container{
@@ -203,105 +198,66 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         }
 
         .card {
-            margin: 20px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-            width: auto;
-        }
+        margin: 20px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        @media (max-width: 479px){
-            .card {
-                margin: 20px;
-                padding: 20px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-around;
-                border: 1px solid #ccc;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-                width: 280px;
-            }
-        }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
-        .card-header {
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
+    .card-header {
+        background-color: #f8f9fa; /* Light gray */
+        padding: 10px;
+        border-bottom: 1px solid #dee2e6; /* Light border */
+        font-weight: bold;
+        font-size: 18px;
+        color: #333;
+        text-align: center;
+    }
 
-        .card-body {
-            width: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
+    .card-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 
-        .col-md-6{
-            padding: 2px;
-        }.col-md-6 p{
-            margin-bottom: 3px;
-        }
+    .card-body p {
+        margin: 0;
+        font-size: 14px;
+        color: #555;
+    }
 
-        @media (max-width: 479px){
-                .card-body {
-                    width: auto;
-                    padding: 20px;
-                    display: flex;
-                    flex-direction: column;
-                    grid-template-columns: 0fr;
-                }
-            }
+    .button-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 15px;
+    }
 
-        .card-footer {
-            padding: 10px;
-            background-color: #f0f0f0;
-            border-top: 1px solid #ccc;
-        }
+    button {
+        padding: 8px 12px;
+        font-size: 14px;
+        color: #fff;
+        background-color: #ffc107; /* Bootstrap primary color */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
 
-        .card-footer img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .reject {
-            background-color: #ff0000;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .reject:hover {
-            background-color: #cc0000;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #3e8e41;
-        }
-
-        .button-row{
-            margin: auto;
-            grid-column-start: 1;
-            grid-column-end: 3;
-
-        }
+    button:hover {
+        background-color: #b78c0c;
+    }
     </style>
   
 </body>

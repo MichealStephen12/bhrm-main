@@ -77,7 +77,6 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     exit(); // Prevent further script execution
 }
 
-
 if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
@@ -96,7 +95,7 @@ if (isset($_POST['submit'])) {
     $tenanttype = $fetch['tenant_type'];
     $image = $fetch['image'];
     $roomfloor = $fetch['room_floor'];
-    $price = $fetch['price']; // Assuming this is now the room price, you can rename for clarity
+    $price = $fetch['price'];
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
 
@@ -106,19 +105,16 @@ if (isset($_POST['submit'])) {
     $fetch = mysqli_fetch_assoc($result);
     $owner = $fetch['owner'];
 
-    // Insert the reservation without any bed-related fields
+    // Insert the reservation
     $query = "INSERT INTO `reservation` 
               (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `addons`, `room_no`, `capacity`, `room_slot`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
               VALUES 
               ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$addons', '$roomno', '$capacity', '$slots', '$currenttent', '$amenities', '$tenanttype', '$roomfloor', '$price', '$image', '$status', 'Pending', '', '', '$hname', '$owner')";
-
     mysqli_query($conn, $query);
-    
 
-    // Redirect to thank-you page after submission
-    header("location: thankyou.php");
+    // Use a session variable to trigger the modal
+    $_SESSION['booking_success'] = true;
 }
-
 ?>
 
 
@@ -421,7 +417,72 @@ if (isset($_POST['submit'])) {
         </form>
     </div>
 
+    <div id="thankYouModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>Thank you for booking with us!</h2>
+        <p>Your reservation has been successfully submitted.</p>
+        <button id="okButton" class="btn">OK</button>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+    <?php if (!empty($_SESSION['booking_success'])): ?>
+        // Show the modal
+        const modal = document.getElementById('thankYouModal');
+        modal.style.display = 'flex';
+
+        // Clear the session variable to prevent the modal from showing again
+        <?php unset($_SESSION['booking_success']); ?>
+
+        // Redirect to the homepage when clicking OK
+        document.getElementById('okButton').addEventListener('click', function () {
+            window.location.href = 'index.php'; // Change this to your homepage
+        });
+    <?php endif; ?>
+});
+
+        </script>
+    </div>
+</div>
+
+
     <style>
+         .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-content h2 {
+        margin-bottom: 10px;
+    }
+
+    .modal-content button {
+        padding: 10px 20px ;
+        padding-top: 15px;
+        background-color: #ffaa00;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .modal-content button:hover {
+        background-color: #ffaa00;
+    }
         .form{
             border: 1px solid black;
             width: auto;

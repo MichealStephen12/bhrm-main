@@ -38,187 +38,131 @@ $reportResult = mysqli_query($conn, $reportQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - <?php echo $hname; ?></title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
-
-    <!-- jQuery (necessary for DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <!-- Custom CSS -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: sans-serif;
-        }
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            margin-left: 220px; /* Offset for the navbar */
+            background-color: #f8f9fa;
         }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        header h1 {
-            font-size: 2.5em;
-            color: #333;
-        }
-
-        /* Style for summary cards */
         .summary {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 30%;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .card h3 {
-            font-size: 1.8em;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .card .total-amount {
-            font-size: 2em;
-            font-weight: bold;
-            color: #fff;
-            background-color: #ffc107;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* DataTable styling */
-        .dataTables_wrapper {
-            padding: 20px;
-        }
-        .dataTables_length,
-        .dataTables_filter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin: 20px 0;
         }
-
-        .dataTables_filter input {
-            margin-left: 10px;
-            padding: 5px;
+        .card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-
-        table.dataTable {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
-
-        table.dataTable th,
-        table.dataTable td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        .card h5 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-
-        table.dataTable th {
-            background-color: #ffc107;
-            color: #fff;
-        }
-
-        table.dataTable tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        table.dataTable tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        table.dataTable td {
-            font-size: 1em;
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #c19206;
         }
     </style>
 </head>
 <body>
     <?php include 'navigationbar.php'; ?>
 
-    <div class="container">
-        <h1>Reports for <?php echo $hname; ?></h1>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Reports for <?php echo $hname; ?></h1>
 
-        <!-- Display Total Payments and Tenants -->
+        <!-- Summary Section -->
         <div class="summary">
-            <p><strong>Total Payments:</strong> <?php echo number_format($totalPayments, 2); ?> PHP</p>
-            <p><strong>Fully Paid:</strong> <?php echo $fullyPaidCount; ?></p>
-            <p><strong>Not Paid:</strong> <?php echo $notPaidCount; ?></p>
-            <p><strong>Partially Paid:</strong> <?php echo $partiallyPaidCount; ?></p>
+            <div class="card">
+                <h5>Total Payments</h5>
+                <p><?php echo number_format($totalPayments, 2); ?> PHP</p>
+            </div>
+            <div class="card">
+                <h5>Fully Paid</h5>
+                <p><?php echo $fullyPaidCount; ?></p>
+            </div>
+            <div class="card">
+                <h5>Not Paid</h5>
+                <p><?php echo $notPaidCount; ?></p>
+            </div>
+            <div class="card">
+                <h5>Partially Paid</h5>
+                <p><?php echo $partiallyPaidCount; ?></p>
+            </div>
         </div>
 
-        <!-- Detailed Reports Table -->
-        <table id="reportTable" class="display">
-            <thead>
-                <tr>
-                    <th>Tenant Name</th>
-                    <th>Gender</th>
-                    <th>Email</th>
-                    <th>Room No</th>
-                    <th>Room Rent</th>
-                    <th>Payment</th>
-                    <th>Balance</th>
-                    <th>Payment Date</th>
-                    <th>Payment Status</th>
-                    <th>Date In</th>
-                    <th>Date Out</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($report = mysqli_fetch_assoc($reportResult)) {
-                        $price = $report['price'] ?: 0; // Default to 0 if price is null
-                        $payment = $report['payment'] ?: 0; // Default to 0 if payment is null
-                        $balance = $price - $payment; // Calculate balance
-                ?>
-                    
-                    <tr>
-                        <td><?php echo $report['fname'] . ' ' . $report['lname']; ?></td>
-                        <td><?php echo $report['gender']; ?></td>
-                        <td><?php echo $report['email']; ?></td>
-                        <td><?php echo $report['room_no']; ?></td>
-                        <td><?php echo $report['price']; ?></td>
-                        <td><?php echo number_format($report['payment'], 2); ?> PHP</td>
-                        <td><?php echo number_format($balance, 2); ?> PHP</td>
-                        <td><?php echo $report['pay_date'] ?: 'N/A'; ?></td>
-                        <td><?php echo $report['pay_stat'] ?: 'N/A'; ?></td>
-                        <td><?php echo $report['date_in']; ?></td>
-                        <td><?php echo $report['date_out'] ?: 'N/A'; ?></td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+        <!-- DataTable Section -->
+        <div class="mt-5">
+            <h2 class="mb-3">Detailed Reports</h2>
+            <div class="table-responsive">
+                <table id="reportTable" class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Tenant Name</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Room No</th>
+                            <th>Room Rent</th>
+                            <th>Payment</th>
+                            <th>Balance</th>
+                            <th>Payment Date</th>
+                            <th>Payment Status</th>
+                            <th>Date In</th>
+                            <th>Date Out</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($report = mysqli_fetch_assoc($reportResult)) {
+                            $price = $report['price'] ?: 0; // Default to 0 if price is null
+                            $payment = $report['payment'] ?: 0; // Default to 0 if payment is null
+                            $balance = $price - $payment; // Calculate balance
+                        ?>
+                            <tr>
+                                <td><?php echo $report['fname'] . ' ' . $report['lname']; ?></td>
+                                <td><?php echo $report['gender']; ?></td>
+                                <td><?php echo $report['email']; ?></td>
+                                <td><?php echo $report['room_no']; ?></td>
+                                <td><?php echo number_format($price, 2); ?> PHP</td>
+                                <td><?php echo number_format($payment, 2); ?> PHP</td>
+                                <td><?php echo number_format($balance, 2); ?> PHP</td>
+                                <td><?php echo $report['pay_date'] ?: 'N/A'; ?></td>
+                                <td><?php echo $report['pay_stat'] ?: 'N/A'; ?></td>
+                                <td><?php echo $report['date_in']; ?></td>
+                                <td><?php echo $report['date_out'] ?: 'N/A'; ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#reportTable').DataTable();
+            $('#reportTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true
+            });
         });
     </script>
 </body>

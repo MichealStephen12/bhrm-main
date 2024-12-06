@@ -138,12 +138,17 @@
                     <span>Manage Boarding House</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/php/bhapplications.php">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="applicationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-envelope"></i>
                     <span>Applications</span>
                     <span class="badge bg-warning text-dark"><?php echo $newReservations; ?></span>
                 </a>
+                <ul class="dropdown-menu" aria-labelledby="applicationsDropdown">
+                    <li><a class="dropdown-item" href="/bhrm-main/applicationpending.php">Pending Applications</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/applicationapproved.php">Approved Applications</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/applicationrejected.php">Rejected Applications</a></li>
+                </ul>
             </li>
            <!-- Reports Dropdown Menu -->
             <!-- Reports Dropdown Menu -->

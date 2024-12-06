@@ -70,150 +70,145 @@ $reservationResult = mysqli_query($conn, $reservationQuery);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Reservation Reports - <?php echo $hname; ?></title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
 
-    <!-- jQuery (necessary for DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-    
-</head>
-<body>
-    <?php include 'navigationbar.php'; ?>
-
+    <!-- Custom CSS -->
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin-left: 220px; /* Offset for the navbar */
-            padding: 20px;
+            background-color: #f8f9fa;
         }
-
         .summary {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
-
         .card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: calc(33.333% - 20px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
             text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-
         .card:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
-
-        .card h3 {
-            font-size: 1.5em;
+        .card h5 {
             color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-
-        table.dataTable {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table.dataTable th,
-        table.dataTable td {
-            padding: 15px;
-            text-align: left;
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #c19206;
         }
     </style>
 </head>
 <body>
     <?php include 'navigationbar.php'; ?>
 
-    <div class="container">
-        <h1>Reservation Reports for <?php echo $hname; ?></h1>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Reservation Reports for <?php echo $hname; ?></h1>
 
-        <!-- Summary Cards -->
+        <!-- Summary Section -->
         <div class="summary">
             <div class="card">
-                <h3>Total Reservations</h3>
+                <h5>Total Reservations</h5>
                 <p><?php echo $totalReservations; ?></p>
             </div>
             <div class="card">
-                <h3>Most Reserved Room</h3>
+                <h5>Most Reserved Room</h5>
                 <p><?php echo $mostReservedRoom['room_no'] . ' (' . $mostReservedRoom['count'] . ' reservations)'; ?></p>
             </div>
             <div class="card">
-                <h3>Gender with most Reservation</h3>
+                <h5>Most Reserved Gender</h5>
                 <p><?php echo $mostGenderReserved['gender'] . ' (' . $mostGenderReserved['count'] . ')'; ?></p>
             </div>
             <div class="card">
-                <h3>Most Reserved Status</h3>
+                <h5>Most Reserved Status</h5>
                 <p><?php echo $mostStudentStatusReserved['status'] . ' (' . $mostStudentStatusReserved['count'] . ')'; ?></p>
             </div>
             <div class="card">
-                <h3>Email with Highest Reservations</h3>
+                <h5>Email with Highest Reservations</h5>
                 <p><?php echo $emailHighestReservations['email'] . ' (' . $emailHighestReservations['count'] . ')'; ?></p>
             </div>
             <div class="card">
-                <h3>Approved Reservations</h3>
+                <h5>Approved Reservations</h5>
                 <p><?php echo $approvedCount; ?></p>
             </div>
             <div class="card">
-                <h3>Rejected Reservations</h3>
+                <h5>Rejected Reservations</h5>
                 <p><?php echo $rejectedCount; ?></p>
             </div>
             <div class="card">
-                <h3>Ended Reservations</h3>
+                <h5>Ended Reservations</h5>
                 <p><?php echo $endedCount; ?></p>
             </div>
             <div class="card">
-                <h3>Cancelled Reservations</h3>
+                <h5>Cancelled Reservations</h5>
                 <p><?php echo $cancelledCount; ?></p>
             </div>
         </div>
 
-        <h2>Reservation Details</h2>
-            <table id="reservationTable" class="display">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Room No</th>
-                        <th>Status</th>
-                        <th>Requests</th>
-                        <th>Date In</th>
-                        <th>Date Out</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($reservation = mysqli_fetch_assoc($reservationResult)) { ?>
+        <!-- DataTable Section -->
+        <div class="mt-5">
+            <h2 class="mb-3">Reservation Details</h2>
+            <div class="table-responsive">
+                <table id="reservationTable" class="table table-striped table-bordered">
+                    <thead class="table-dark">
                         <tr>
-                            <td><?php echo $reservation['fname']; ?></td>
-                            <td><?php echo $reservation['lname']; ?></td>
-                            <td><?php echo $reservation['email']; ?></td>
-                            <td><?php echo $reservation['room_no']; ?></td>
-                            <td><?php echo $reservation['status']; ?></td>
-                            <td><?php echo $reservation['addons']; ?></td>
-                            <td><?php echo $reservation['date_in']; ?></td>
-                            <td><?php echo $reservation['date_out'] ?: 'N/A'; ?></td>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Room No</th>
+                            <th>Status</th>
+                            <th>Requests</th>
+                            <th>Date In</th>
+                            <th>Date Out</th>
                         </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php while ($reservation = mysqli_fetch_assoc($reservationResult)) { ?>
+                            <tr>
+                                <td><?php echo $reservation['fname']; ?></td>
+                                <td><?php echo $reservation['lname']; ?></td>
+                                <td><?php echo $reservation['email']; ?></td>
+                                <td><?php echo $reservation['room_no']; ?></td>
+                                <td><?php echo $reservation['status']; ?></td>
+                                <td><?php echo $reservation['addons']; ?></td>
+                                <td><?php echo $reservation['date_in']; ?></td>
+                                <td><?php echo $reservation['date_out'] ?: 'N/A'; ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        <script>
-            $(document).ready(function() {
-                $('#reservationTable').DataTable();
+    <!-- Bootstrap JS -->
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#reservationTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true
             });
-        </script>
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+        });
+    </script>
 </body>
 </html>

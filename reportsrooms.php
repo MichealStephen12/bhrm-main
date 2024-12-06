@@ -45,40 +45,82 @@ $roomsResult = mysqli_query($conn, $roomsQuery);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Room Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #fff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .card h3 {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #c19206; /* Updated color */
+        }
+    </style>
 </head>
 <body>
-    <?php include 'navigationbar.php'; ?>
 
+<?php include 'navigationbar.php'; ?>
+
+<div class="container">
     <!-- Room Summary Section -->
     <div class="summary">
         <div class="card">
             <h3>Total Rooms</h3>
-            <p class="total-amount"><?php echo $totalRooms; ?></p>
+            <p><?php echo $totalRooms; ?></p>
         </div>
         <div class="card">
             <h3>Highest Capacity</h3>
-            <p class="total-amount"><?php echo "Room $highestCapacityRoomNo - $highestCapacity"; ?></p>
+            <p><?php echo "Room $highestCapacityRoomNo - $highestCapacity"; ?></p>
         </div>
         <div class="card">
             <h3>Highest Current Tenants</h3>
-            <p class="total-amount"><?php echo "Room $highestTenantRoomNo - $highestTenantCount Tenants"; ?></p>
+            <p><?php echo "Room $highestTenantRoomNo - $highestTenantCount Tenants"; ?></p>
         </div>
         <div class="card">
             <h3>Available Rooms</h3>
-            <p class="total-amount"><?php echo $availableRooms; ?></p>
+            <p><?php echo $availableRooms; ?></p>
         </div>
         <div class="card">
             <h3>Full Rooms</h3>
-            <p class="total-amount"><?php echo $fullRooms; ?></p>
+            <p><?php echo $fullRooms; ?></p>
         </div>
     </div>
 
     <!-- Room Details Table -->
-    <div class="container">
-        <h2>Room Details</h2>
-        <table id="roomsTable" class="display">
-            <thead>
+    <h2 class="mt-4">Room Details</h2>
+    <div class="table-responsive">
+        <table id="roomsTable" class="table table-striped table-bordered">
+            <thead class="table-dark">
                 <tr>
                     <th>Room No</th>
                     <th>Capacity</th>
@@ -102,7 +144,26 @@ $roomsResult = mysqli_query($conn, $roomsQuery);
             </tbody>
         </table>
     </div>
+</div>
 
+<!-- Bootstrap JS -->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    // Initialize DataTable
+    $(document).ready(function () {
+        $('#roomsTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            responsive: true
+        });
+    });
+</script>
 
 </body>
 </html>

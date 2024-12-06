@@ -25,7 +25,6 @@ $tenantDetailsQuery = "SELECT * FROM users WHERE hname = '$hname' ORDER BY id DE
 $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,109 +32,120 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenants Report - <?php echo $hname; ?></title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
 
-    <!-- jQuery (necessary for DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-
+    <!-- Custom CSS -->
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin-left: 220px; /* Offset for the navbar */
+            background-color: #f8f9fa;
             padding: 20px;
         }
-
         .summary {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
-
         .card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: calc(33.333% - 20px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-
-        .card h3 {
-            font-size: 1.5em;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .card h5 {
             color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #c19206;
+        }
         table.dataTable {
             width: 100%;
             margin-top: 20px;
-            border-collapse: collapse;
-        }
-
-        table.dataTable th,
-        table.dataTable td {
-            padding: 15px;
-            text-align: left;
         }
     </style>
 </head>
 <body>
     <?php include 'navigationbar.php'; ?>
 
-    <div class="container">
-        <h1>Tenant Reports for <?php echo $hname; ?></h1>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Tenant Reports for <?php echo $hname; ?></h1>
 
-        <!-- Summary Cards -->
+        <!-- Summary Section -->
         <div class="summary">
             <div class="card">
-                <h3>Total Tenants</h3>
+                <h5>Total Tenants</h5>
                 <p><?php echo $totalTenants; ?></p>
             </div>
             <div class="card">
-                <h3>Total Male Tenants</h3>
+                <h5>Total Male Tenants</h5>
                 <p><?php echo $maleCount; ?></p>
             </div>
             <div class="card">
-                <h3>Total Female Tenants</h3>
+                <h5>Total Female Tenants</h5>
                 <p><?php echo $femaleCount; ?></p>
             </div>
         </div>
 
-        <!-- Tenant Details Table -->
-        <h2>Tenant Details</h2>
-        <table id="tenantTable" class="display">
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Gender</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($tenant = mysqli_fetch_assoc($tenantDetailsResult)) { ?>
-                    <tr>
-                        <td><?php echo $tenant['fname']; ?></td>
-                        <td><?php echo $tenant['lname']; ?></td>
-                        <td><?php echo $tenant['gender']; ?></td>
-                        <td><?php echo $tenant['uname']; ?></td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+        <!-- DataTable Section -->
+        <div class="mt-5">
+            <h2 class="mb-3">Tenant Details</h2>
+            <div class="table-responsive">
+                <table id="tenantTable" class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Image</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($tenant = mysqli_fetch_assoc($tenantDetailsResult)) { ?>
+                            <tr>
+                                <td><?php echo $tenant['id']; ?></td>
+                                <td><img src="/bhrm-main/<?php echo $tenant['image'] ?? 'default.png'; ?>" width="50" height="50" class="rounded-circle" alt="Profile Picture"></td>
+                                <td><?php echo $tenant['fname']; ?></td>
+                                <td><?php echo $tenant['lname']; ?></td>
+                                <td><?php echo $tenant['gender']; ?></td>
+                                <td><?php echo $tenant['uname']; ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#tenantTable').DataTable();
+            $('#tenantTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true
+            });
         });
     </script>
-</body>
-</html>
-
 </body>
 </html>
