@@ -153,10 +153,16 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
                     <i class="fas fa-credit-card"></i> Payments
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/reports.php">
-                    <i class="fas fa-file-alt"></i> Reports
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="reservationMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-calendar-check"></i> Reports
                 </a>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="reservationMenu">
+                    <li><a class="dropdown-item" href="/bhrm-main/reportsrooms.php">Rooms</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/reportspayments.php">Income</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/reportsreservation.php">Reservation</a></li>
+                    <li><a class="dropdown-item" href="/bhrm-main/reportstenant.php">Tenants</a></li>
+                </ul>
             </li>
             <!-- Dropdown Menu -->
             <li class="nav-item dropdown mt-3">

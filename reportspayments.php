@@ -12,15 +12,23 @@ $totalPaymentsResult = mysqli_query($conn, $totalPaymentsQuery);
 $totalPayments = mysqli_fetch_assoc($totalPaymentsResult)['total_payments'];
 
 // Fetch total number of tenants (counting reports entries)
-$totalTenantsQuery = "SELECT COUNT(*) AS total_tenants 
-                      FROM reports 
-                      WHERE hname = '$hname'";
-$totalTenantsResult = mysqli_query($conn, $totalTenantsQuery);
-$totalTenants = mysqli_fetch_assoc($totalTenantsResult)['total_tenants'];
+$paymentStatusQuery = "SELECT 
+                          SUM(pay_stat = 'Fully Paid') AS fully_paid_count,
+                          SUM(pay_stat = 'Not Paid') AS not_paid_count,
+                          SUM(pay_stat = 'Partially Paid') AS partially_paid_count
+                       FROM reports 
+                       WHERE hname = '$hname'";
+$paymentStatusResult = mysqli_query($conn, $paymentStatusQuery);
+$paymentStatusData = mysqli_fetch_assoc($paymentStatusResult);
+
+$fullyPaidCount = $paymentStatusData['fully_paid_count'];
+$notPaidCount = $paymentStatusData['not_paid_count'];
+$partiallyPaidCount = $paymentStatusData['partially_paid_count'];
 
 // Fetch detailed report data for the landlord's boarding house
 $reportQuery = "SELECT * FROM reports WHERE hname = '$hname' ORDER BY id DESC";
 $reportResult = mysqli_query($conn, $reportQuery);
+
 ?>
 
 <!DOCTYPE html>
@@ -160,14 +168,10 @@ $reportResult = mysqli_query($conn, $reportQuery);
 
         <!-- Display Total Payments and Tenants -->
         <div class="summary">
-            <div class="card">
-                <h3>Total Payments</h3>
-                <p class="total-amount"><?php echo number_format($totalPayments, 2); ?> PHP</p>
-            </div>
-            <div class="card">
-                <h3>Total Tenants</h3>
-                <p><?php echo $totalTenants; ?> Tenants</p>
-            </div>
+            <p><strong>Total Payments:</strong> <?php echo number_format($totalPayments, 2); ?> PHP</p>
+            <p><strong>Fully Paid:</strong> <?php echo $fullyPaidCount; ?></p>
+            <p><strong>Not Paid:</strong> <?php echo $notPaidCount; ?></p>
+            <p><strong>Partially Paid:</strong> <?php echo $partiallyPaidCount; ?></p>
         </div>
 
         <!-- Detailed Reports Table -->
@@ -178,21 +182,34 @@ $reportResult = mysqli_query($conn, $reportQuery);
                     <th>Gender</th>
                     <th>Email</th>
                     <th>Room No</th>
+                    <th>Room Rent</th>
                     <th>Payment</th>
+                    <th>Balance</th>
                     <th>Payment Date</th>
+                    <th>Payment Status</th>
                     <th>Date In</th>
                     <th>Date Out</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while ($report = mysqli_fetch_assoc($reportResult)) { ?>
+                <?php while ($report = mysqli_fetch_assoc($reportResult)) {
+                        $price = $report['price'] ?: 0; // Default to 0 if price is null
+                        $payment = $report['payment'] ?: 0; // Default to 0 if payment is null
+                        $balance = $price - $payment; // Calculate balance
+                ?>
+                    
                     <tr>
                         <td><?php echo $report['fname'] . ' ' . $report['lname']; ?></td>
                         <td><?php echo $report['gender']; ?></td>
                         <td><?php echo $report['email']; ?></td>
                         <td><?php echo $report['room_no']; ?></td>
+                        <td><?php echo $report['price']; ?></td>
                         <td><?php echo number_format($report['payment'], 2); ?> PHP</td>
+                        <td><?php echo number_format($price, 2); ?> PHP</td>
+                        <td><?php echo number_format($payment, 2); ?> PHP</td>
+                        <td><?php echo number_format($balance, 2); ?> PHP</td>
                         <td><?php echo $report['pay_date'] ?: 'N/A'; ?></td>
+                        <td><?php echo $report['pay_stat'] ?: 'N/A'; ?></td>
                         <td><?php echo $report['date_in']; ?></td>
                         <td><?php echo $report['date_out'] ?: 'N/A'; ?></td>
                     </tr>

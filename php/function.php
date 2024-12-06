@@ -169,10 +169,11 @@ if (isset($_GET['end'])) {
     $selected_slots = $fetch['room_slot']; // Assuming this field exists and stores the slots booked
 
     // Fetch room details
-    $roomQuery = "SELECT capacity, current_tenant FROM rooms WHERE room_no = '$roomno' AND hname = '$hname'";
+    $roomQuery = "SELECT capacity, price, current_tenant FROM rooms WHERE room_no = '$roomno' AND hname = '$hname'";
     $roomResult = mysqli_query($conn, $roomQuery);
     $roomData = mysqli_fetch_assoc($roomResult);
     $roomCapacity = $roomData['capacity'];
+    $roomprice = $roomData['price'];
     $currentTenant = $roomData['current_tenant'];
 
     // Determine slots booked
@@ -235,7 +236,8 @@ if (isset($_GET['end'])) {
                           SET payment = '$payment', 
                               pay_stat = '$pay_stat',
                               pay_date = '$pay_date', 
-                              date_out = '$date_out' 
+                              date_out = '$date_out',
+                              price = '$roomprice'
                           WHERE id = $report_id AND hname = '$hname'";
     mysqli_query($conn, $updateReportQuery);
 
