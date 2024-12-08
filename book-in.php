@@ -113,6 +113,9 @@ if (isset($_POST['submit'])) {
               ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$school', '$addons', '$roomno', '$capacity', '$slots', '$currenttent', '$amenities', '$tenanttype', '$roomfloor', '$price', '$image', '$status', 'Pending', '', '', '$hname', '$owner')";
     mysqli_query($conn, $query);
 
+    $userquery = "UPDATE `users` SET `tenant_status`='$tenantstatus',`school`='$school' where uname = '$uname'";
+    mysqli_query($conn, $userquery);
+
     // Use a session variable to trigger the modal
     $_SESSION['booking_success'] = true;
 }

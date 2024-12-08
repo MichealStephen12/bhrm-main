@@ -25,35 +25,19 @@ $tenantDetailsQuery = "SELECT * FROM users WHERE role = 'user' ORDER BY id DESC"
 $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
 
 
-$tenantquery = "SELECT * FROM users WHERE role = 'user' ORDER BY id DESC";
-$tenantresult = mysqli_query($conn, $tenantquery);
 
-while ($tenant = mysqli_fetch_assoc($tenantresult)) { 
-    $email = $tenant['uname']; // Tenant email
-    
     // Fetch the total number of students and the total number of students from CKCM for each tenant (limit to 1 reservation per email)
-    $countQuery = "
-        SELECT 
-            COUNT(CASE WHEN tenant_status = 'Student' THEN 1 END) AS total_students,
-            COUNT(CASE WHEN tenant_status = 'Student' AND school = 'CKCM' THEN 1 END) AS total_ckcm_students
-        FROM reservation 
-        WHERE email = '$email'
-        LIMIT 1;
-    ";
-    $countResult = mysqli_query($conn, $countQuery);
-    $countFetch = mysqli_fetch_assoc($countResult);
+$countQuery = "
+    SELECT 
+        COUNT(CASE WHEN tenant_status = 'Student' THEN 1 END) AS total_students,
+        COUNT(CASE WHEN tenant_status = 'Student' AND school = 'CKCM' THEN 1 END) AS total_ckcm_students
+    FROM users";
+$countResult = mysqli_query($conn, $countQuery);
+$countFetch = mysqli_fetch_assoc($countResult);
 
-    // You can now use $countFetch['total_students'] and $countFetch['total_ckcm_students']
-    $totalStudents = $countFetch['total_students'];
-    $totalCkcmStudents = $countFetch['total_ckcm_students'];
-}
-
-
-
-// Get the total students and CKCM students
+// You can now use $countFetch['total_students'] and $countFetch['total_ckcm_students']
 $totalStudents = $countFetch['total_students'];
 $totalCkcmStudents = $countFetch['total_ckcm_students'];
-
 
 ?>
 
@@ -180,8 +164,8 @@ $totalCkcmStudents = $countFetch['total_ckcm_students'];
                                 <td><?php echo $tenant['lname']; ?></td>
                                 <td><?php echo $tenant['gender']; ?></td>
                                 <td><?php echo $tenant['uname']; ?></td>
-                                <td><?php echo $tenantStatus; ?></td>
-                                <td><?php echo $school; ?></td>
+                                <td><?php echo $tenant['tenant_status']; ?></td>
+                                <td><?php echo $tenant['school']; ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
