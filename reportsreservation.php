@@ -26,14 +26,6 @@ $mostGenderReservedQuery = "SELECT gender, COUNT(gender) AS count
 $mostGenderReservedResult = mysqli_query($conn, $mostGenderReservedQuery);
 $mostGenderReserved = mysqli_fetch_assoc($mostGenderReservedResult);
 
-// Fetch most common student status reserved
-$mostStudentStatusReservedQuery = "SELECT status, COUNT(status) AS count 
-                                   FROM reservation 
-                                   WHERE hname = '$hname' 
-                                   GROUP BY status 
-                                   ORDER BY count DESC LIMIT 1";
-$mostStudentStatusReservedResult = mysqli_query($conn, $mostStudentStatusReservedQuery);
-$mostStudentStatusReserved = mysqli_fetch_assoc($mostStudentStatusReservedResult);
 
 // Fetch email with the highest reservations
 $emailHighestReservationsQuery = "SELECT email, COUNT(email) AS count 
@@ -131,12 +123,8 @@ $reservationResult = mysqli_query($conn, $reservationQuery);
                 <p><?php echo $mostReservedRoom['room_no'] . ' (' . $mostReservedRoom['count'] . ' reservations)'; ?></p>
             </div>
             <div class="card">
-                <h5>Most Reserved Gender</h5>
+                <h5>Most Gender Booked</h5>
                 <p><?php echo $mostGenderReserved['gender'] . ' (' . $mostGenderReserved['count'] . ')'; ?></p>
-            </div>
-            <div class="card">
-                <h5>Most Reserved Status</h5>
-                <p><?php echo $mostStudentStatusReserved['status'] . ' (' . $mostStudentStatusReserved['count'] . ')'; ?></p>
             </div>
             <div class="card">
                 <h5>Email with Highest Reservations</h5>
@@ -155,7 +143,7 @@ $reservationResult = mysqli_query($conn, $reservationQuery);
                 <p><?php echo $endedCount; ?></p>
             </div>
             <div class="card">
-                <h5>Cancelled Reservations</h5>
+                <h5>Books Cancelled</h5>
                 <p><?php echo $cancelledCount; ?></p>
             </div>
             <div class="card">

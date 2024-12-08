@@ -65,6 +65,8 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
         $fname = $fetch['fname'];
         $lname = $fetch['lname'];
         $gender = $fetch['gender'];
+        $tenantstatus = $fetch['tenant_status'];
+        $school = $fetch['school'];
     }if($result){
         $hname = $_SESSION['hname'];
         $query = "select * from rooms where hname = '$hname'";
@@ -112,9 +114,6 @@ if (isset($_POST['submit'])) {
               VALUES 
               ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$school', '$addons', '$roomno', '$capacity', '$slots', '$currenttent', '$amenities', '$tenanttype', '$roomfloor', '$price', '$image', '$status', 'Pending', '', '', '$hname', '$owner')";
     mysqli_query($conn, $query);
-
-    $userquery = "UPDATE `users` SET `tenant_status`='$tenantstatus',`school`='$school' where uname = '$uname'";
-    mysqli_query($conn, $userquery);
 
     // Use a session variable to trigger the modal
     $_SESSION['booking_success'] = true;
@@ -352,52 +351,16 @@ if (isset($_POST['submit'])) {
                 <input type="text" id="lname" name="lname" value="<?php echo $lname ?>" readonly>
             </div>
             <div class="form-col">
-                <label class="form-label">Status</label>
-                <div class="d-flex align-items-center">
-                    <select id="statusDropdown" name="tenant_status" class="form-select me-2" required>
-                        <option value="">Select Status</option>
-                        <option value="Student">Student</option>
-                        <option value="Worker">Worker</option>
-                        <option value="Working Student">Working Student</option>
-                    </select>
-                    <button type="button" id="addStatusBtn" class="btn btn-primary">Add</button>
-                </div>
-                <!-- Hidden section for adding a new status -->
-                <div id="addStatusDiv" class="mt-3 d-none">
-                    <input type="text" id="newStatusInput" class="form-control mb-2" placeholder="Enter new status">
-                    <div class="d-flex justify-content-end">
-                        <button type="button" id="saveStatusBtn" class="btn btn-success me-2">Save</button>
-                        <button type="button" id="cancelStatusBtn" class="btn btn-secondary">Cancel</button>
-                    </div>
-                </div>
+                <label for="lname">Tenant Status</label>
+                <input type="text" id="lname" name="tenant_status" value="<?php echo $tenantstatus ?>" readonly>
             </div>
-
-            <div class="form-group mt-3">
-                <label for="schoolDropdown">School</label>
-                <select id="schoolDropdown" name="school" class="form-select" disabled>
-                    <option value="">Select School</option>
-                    <option value="CKCM">CKCM</option>
-                    <option value="NCMC">NCMC</option>
-                    <option value="LSSTI">LSSTI</option>
-                </select>
-                
-                <!-- Add School Button, shown when dropdown is enabled -->
-                <button type="button" id="addSchoolBtn" class="btn btn-outline-primary mt-2" style="display:none;">Add School</button>
-
-                <!-- Form to Add New School, initially hidden -->
-                <div class="form-group mt-3 d-none" id="newSchoolForm">
-                    <input type="text" id="newSchoolInput" class="form-control mb-2" placeholder="Enter new school name" />
-                    <div class="d-flex">
-                        <button type="button" id="saveSchoolBtn" class="btn btn-success me-2">Save</button>
-                        <button type="button" id="cancelSchoolBtn" class="btn btn-secondary">Cancel</button>
-                    </div>
-                </div>
-            </div>
-
-
             <div class="form-col">
                 <label for="lname">Gender</label>
                 <input type="text" id="lname" name="gender" value="<?php echo $gender ?>" readonly>
+            </div>
+            <div class="form-col">
+                <label for="lname">School</label>
+                <input type="text" id="lname" name="school" value="<?php echo $school ?>" readonly>
             </div>
             <div class="form-col">
                 <label for="email">Email</label>
@@ -578,113 +541,7 @@ if (isset($_POST['submit'])) {
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const statusDropdown = document.getElementById('statusDropdown');
-            const schoolDropdown = document.getElementById('schoolDropdown');
-            const addSchoolBtn = document.getElementById('addSchoolBtn');
-            const newSchoolForm = document.getElementById('newSchoolForm');
-            const newSchoolInput = document.getElementById('newSchoolInput');
-            const saveSchoolBtn = document.getElementById('saveSchoolBtn');
-            const cancelSchoolBtn = document.getElementById('cancelSchoolBtn');
-
-            // Enable/disable dropdown and show/hide add button based on Status selection
-            statusDropdown.addEventListener('change', function () {
-                const selectedStatus = statusDropdown.value;
-
-                if (selectedStatus.toLowerCase().includes('student')) {
-                    schoolDropdown.disabled = false;
-                    schoolDropdown.classList.remove('disabled');
-                    addSchoolBtn.style.display = 'inline-block'; // Show Add button
-                } else {
-                    schoolDropdown.disabled = true;
-                    schoolDropdown.value = '';
-                    schoolDropdown.classList.add('disabled');
-                    addSchoolBtn.style.display = 'none'; // Hide Add button
-                    newSchoolForm.classList.add('d-none');
-                }
-            });
-
-            // Show form to add a new school
-            addSchoolBtn.addEventListener('click', function () {
-                newSchoolForm.classList.remove('d-none');
-                addSchoolBtn.style.display = 'none'; // Hide Add button when form is shown
-            });
-
-            // Save the new school
-            saveSchoolBtn.addEventListener('click', function () {
-                const newSchoolName = newSchoolInput.value.trim();
-
-                if (newSchoolName) {
-                    const newOption = document.createElement('option');
-                    newOption.value = newSchoolName;
-                    newOption.textContent = newSchoolName;
-
-                    schoolDropdown.appendChild(newOption); // Add to dropdown
-                    schoolDropdown.value = newSchoolName; // Select the newly added school
-                    newSchoolInput.value = ''; // Clear input
-
-                    alert(`${newSchoolName} has been added to the list of schools.`);
-                } else {
-                    alert('Please enter a valid school name.');
-                }
-
-                newSchoolForm.classList.add('d-none');
-                addSchoolBtn.style.display = 'inline-block'; // Show Add button again
-            });
-
-            // Cancel adding a new school
-            cancelSchoolBtn.addEventListener('click', function () {
-                newSchoolInput.value = ''; // Clear input
-                newSchoolForm.classList.add('d-none');
-                addSchoolBtn.style.display = 'inline-block'; // Show Add button again
-            });
-        });
-    </script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const addStatusBtn = document.getElementById('addStatusBtn');
-            const addStatusDiv = document.getElementById('addStatusDiv');
-            const saveStatusBtn = document.getElementById('saveStatusBtn');
-            const cancelStatusBtn = document.getElementById('cancelStatusBtn');
-            const newStatusInput = document.getElementById('newStatusInput');
-            const statusDropdown = document.getElementById('statusDropdown');
-
-            // Toggle the addStatusDiv visibility
-            addStatusBtn.addEventListener('click', function () {
-                if (addStatusDiv.classList.contains('d-none')) {
-                    addStatusDiv.classList.remove('d-none');
-                } else {
-                    addStatusDiv.classList.add('d-none');
-                }
-            });
-
-            // Save new status
-            saveStatusBtn.addEventListener('click', function () {
-                const newStatus = newStatusInput.value.trim();
-                if (newStatus) {
-                    // Create a new option and add it to the dropdown
-                    const newOption = document.createElement('option');
-                    newOption.value = newStatus;
-                    newOption.textContent = newStatus;
-                    statusDropdown.appendChild(newOption);
-
-                    // Reset input and hide the addStatusDiv
-                    newStatusInput.value = '';
-                    addStatusDiv.classList.add('d-none');
-                } else {
-                    alert('Please enter a valid status.');
-                }
-            });
-
-            // Cancel the addition of a new status
-            cancelStatusBtn.addEventListener('click', function () {
-                newStatusInput.value = ''; // Clear the input field
-                addStatusDiv.classList.add('d-none'); // Hide the div
-            });
-        });
-    </script>
+   
     
     <script>
         document.getElementById('datein').addEventListener('change', function() {
