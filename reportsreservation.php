@@ -18,11 +18,16 @@ $mostReservedRoomResult = mysqli_query($conn, $mostReservedRoomQuery);
 $mostReservedRoom = mysqli_fetch_assoc($mostReservedRoomResult);
 
 // Fetch most common gender reserved
-$mostGenderReservedQuery = "SELECT gender, COUNT(gender) AS count 
-                            FROM reservation 
-                            WHERE hname = '$hname' 
-                            GROUP BY gender 
-                            ORDER BY count DESC LIMIT 1";
+$mostGenderReservedQuery = "
+    SELECT gender, COUNT(*) AS count 
+    FROM (
+        SELECT DISTINCT email, gender 
+        FROM reservation 
+        WHERE hname = '$hname'
+    ) AS unique_genders
+    GROUP BY gender 
+    ORDER BY count DESC 
+    LIMIT 1";
 $mostGenderReservedResult = mysqli_query($conn, $mostGenderReservedQuery);
 $mostGenderReserved = mysqli_fetch_assoc($mostGenderReservedResult);
 

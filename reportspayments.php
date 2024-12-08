@@ -119,8 +119,6 @@ $reportResult = mysqli_query($conn, $reportQuery);
                             <th>Balance</th>
                             <th>Payment Date</th>
                             <th>Payment Status</th>
-                            <th>Date In</th>
-                            <th>Date Out</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,8 +137,6 @@ $reportResult = mysqli_query($conn, $reportQuery);
                                 <td><?php echo number_format($balance, 2); ?> PHP</td>
                                 <td><?php echo $report['pay_date'] ?: 'N/A'; ?></td>
                                 <td><?php echo $report['pay_stat'] ?: 'N/A'; ?></td>
-                                <td><?php echo $report['date_in']; ?></td>
-                                <td><?php echo $report['date_out'] ?: 'N/A'; ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
