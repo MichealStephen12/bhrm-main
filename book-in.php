@@ -351,7 +351,7 @@ if (isset($_POST['submit'])) {
                 <input type="text" id="lname" name="lname" value="<?php echo $lname ?>" readonly>
             </div>
             <div class="form-col">
-                <label for="lname">Tenant Status</label>
+                <label for="lname">Status</label>
                 <input type="text" id="lname" name="tenant_status" value="<?php echo $tenantstatus ?>" readonly>
             </div>
             <div class="form-col">

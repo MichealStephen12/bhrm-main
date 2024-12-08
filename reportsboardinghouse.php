@@ -41,61 +41,51 @@ $boardingHouseDetailsResult = mysqli_query($conn, $boardingHouseDetailsQuery);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boarding House Report</title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
-
-    <!-- jQuery (necessary for DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin-left: 220px; /* Offset for the navbar */
-            padding: 20px;
+            background-color: #f8f9fa;
         }
 
         .summary {
             display: flex;
+            flex-wrap: wrap;
             gap: 20px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
 
         .card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: calc(33.333% - 20px);
+            background: #fff;
+            border: none;
+            border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1 1 calc(33% - 20px);
             text-align: center;
         }
 
         .card h3 {
-            font-size: 1.5em;
-            color: #333;
+            font-size: 1.25rem;
+            color: #6c757d;
         }
 
-        table.dataTable {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-
-        table.dataTable th,
-        table.dataTable td {
-            padding: 15px;
-            text-align: left;
+        .card p {
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #495057;
         }
     </style>
 </head>
 <body>
     <?php include 'navadmin.php'; ?>
 
-    <div class="container">
-        <h1>Boarding House Report</h1>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Boarding House Report</h1>
 
         <!-- Summary Cards -->
         <div class="summary">
@@ -114,34 +104,42 @@ $boardingHouseDetailsResult = mysqli_query($conn, $boardingHouseDetailsQuery);
         </div>
 
         <!-- Boarding House Details Table -->
-        <h2>Boarding House Details</h2>
-        <table id="boardingHouseTable" class="display">
-            <thead>
-                <tr>
-                    <th>Boarding House Name</th>
-                    <th>Address</th>
-                    <th>Reservations</th>
-                    <th>Landlord Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($house = mysqli_fetch_assoc($boardingHouseDetailsResult)) { 
-                    $hname = $house['hname'];
-                    $reservations = $reservationCounts[$hname] ?? 0; // Default to 0 if no reservations
-                ?>
+        <h2 class="mt-4">Boarding House Details</h2>
+        <div class="table-responsive">
+            <table id="boardingHouseTable" class="table table-striped table-bordered">
+                <thead class="table-dark">
                     <tr>
-                        <td><?php echo $house['hname']; ?></td>
-                        <td><?php echo $house['haddress']; ?></td>
-                        <td><?php echo $reservations; ?></td>
-                        <td><?php echo $house['landlord']; ?></td>
+                        <th>Boarding House Name</th>
+                        <th>Address</th>
+                        <th>Reservations</th>
+                        <th>Landlord Name</th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php while ($house = mysqli_fetch_assoc($boardingHouseDetailsResult)) { 
+                        $hname = $house['hname'];
+                        $reservations = $reservationCounts[$hname] ?? 0; // Default to 0 if no reservations
+                    ?>
+                        <tr>
+                            <td><?php echo $house['hname']; ?></td>
+                            <td><?php echo $house['haddress']; ?></td>
+                            <td><?php echo $reservations; ?></td>
+                            <td><?php echo $house['landlord']; ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
     <script>
-        $(document).ready(function() {
+        // Initialize DataTable
+        $(document).ready(function () {
             $('#boardingHouseTable').DataTable();
         });
     </script>

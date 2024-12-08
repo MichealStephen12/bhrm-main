@@ -60,7 +60,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         /* General Styles */
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: none; /* White background */
+            background-color: #c5c5c5; /* White background */
             color: #343a40; /* Dark text color */
             margin: 0;
             overflow-x: hidden; /* Prevent horizontal scrolling only */
@@ -80,18 +80,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         }
 
    
-        /* Content Background */
-        .content-background {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: auto;
-            
-            margin-top: 100px; /* Adds space around the content */
-            max-width: 1100px;
-        }
-
+ 
         /* Section for admin charts */
         .chart-section {
             text-align: center;
@@ -187,18 +176,18 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
 
         .section {
             padding: 40px 20px;
-            background-color: #d9d9d9;
+            background-color: #343a40;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .section h2 {
-            color: #3f3f3f;
+            color: white;
             margin-bottom: 20px;
         }
 
         .section p, .section ol {
-            color: #555;
+            color: white;
         }
 
         .icon-circle {
@@ -227,7 +216,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
         }
 
         .highlight {
-            background-color: #d9d9d9;
+            background-color: #343a40;
             padding: 20px;
             border-radius: 8px;
         }
@@ -272,6 +261,19 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
                 padding-bottom: 80px; /* Ensure footer space */
 
             }
+
+                    /* Content Background */
+            .content-background {
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin: auto;
+                
+            /*  margin-top: 100px; Adds space around the content */
+                max-width: 1100px;
+            }
+
         </style>
         <?php  else: include 'navbar.php'; ?>
         <style>
@@ -285,6 +287,20 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
                 position: relative;
                 padding-bottom: 80px; /* Ensure footer space */
             }
+
+                    /* Content Background */
+            .content-background {
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin: auto;
+                margin-top: 100px;
+                
+            /*  margin-top: 100px; Adds space around the content */
+                max-width: 1100px;
+            }
+
         </style>
         <?php  endif; ?>
 
@@ -415,7 +431,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             <p><strong>Maranding Boarding House Center</strong> is your trusted platform for finding the best boarding houses in Maranding. Whether you're a student, worker, or traveler, we make accommodation easy, accessible, and hassle-free.</p>
             <div class="row">
                 <div class="col-md-6">
-                    <img src="/bhrm-main/images/logo.png" style="background-color: #d9d9d9; border-radius: 20px;" class="img-fluid rounded" alt="Boarding House">
+                    <img src="/bhrm-main/images/logo.png" style="background-color: #343a40; border-radius: 20px;" class="img-fluid rounded" alt="Boarding House">
                 </div>
                 <div class="col-md-6">
                     <p>Our goal is to provide a seamless experience, from browsing to booking. Find your ideal room, enjoy transparent pricing, and experience convenience like never before!</p>

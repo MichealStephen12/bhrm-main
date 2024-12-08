@@ -96,7 +96,7 @@ if (isset($_POST['submit'])) {
 
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 30%;
             margin: 5% auto;
             background-color: #a9a9a9;
             border-radius: 20px;

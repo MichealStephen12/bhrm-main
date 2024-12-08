@@ -12,7 +12,6 @@ if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $uname = $_POST['uname'];
-    $gender = $_POST['gender'];
     $pass = $_POST['pass'];
     $conpassword = $_POST['confirmpassword'];
 
@@ -44,7 +43,7 @@ if (isset($_POST['submit'])) {
         $modalMessage = implode("<br>", $errors); // Combine error messages with line breaks
         $showModal = true;
     } else {
-        $query = "INSERT INTO `users`(`id`, `fname`, `lname`, `gender`, `uname`, `pass`, `role`) VALUES ('','$fname','$lname', '$gender', '$uname','$pass', 'landlord')";
+        $query = "INSERT INTO `users`(`id`, `fname`, `lname`,`uname`, `pass`, `role`) VALUES ('','$fname','$lname','$uname','$pass', 'landlord')";
         mysqli_query($conn, $query);
         $modalMessage = "Registration successful!";
         $showModal = true;

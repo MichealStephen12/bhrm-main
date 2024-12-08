@@ -36,16 +36,7 @@
                     <th>Tenant Status</th>
                     <th>Room No</th>
                     <th>Room Rent</th>
-                    <th>Capacity</th>
                     <th>Selected Room Slot</th>
-                    <th>Current Tenant</th>
-                    <th>Gender Allowed</th>
-                    <th>Room Amenities</th>
-                    <th>Room Floor</th>
-                    <th>Room Status</th>
-                    <th>Payment</th>
-                    <th>Payment Date</th>
-                    <th>Payment Status</th>
                     <th>Date In</th>
                     <th>Date Out</th>
                     <th>Requests</th>
@@ -65,16 +56,7 @@
                     <td><?php echo $fetch['tenant_status']; ?></td>
                     <td><?php echo $fetch['room_no']; ?></td>
                     <td><?php echo $fetch['price']; ?></td>
-                    <td><?php echo $fetch['capacity']; ?></td>
                     <td><?php echo $fetch['room_slot']; ?></td>
-                    <td><?php echo $fetch['current_tenant']; ?></td>
-                    <td><?php echo $fetch['tenant_type']; ?></td>
-                    <td><?php echo $fetch['amenities']; ?></td>
-                    <td><?php echo $fetch['room_floor']; ?></td>
-                    <td><?php echo $fetch['status']; ?></td>
-                    <td><?php echo $fetch['payment']; ?></td>
-                    <td><?php echo $fetch['pay_date']; ?></td>
-                    <td><?php echo $fetch['pay_stat']; ?></td>
                     <td><?php echo $fetch['date_in']; ?></td>
                     <td><?php echo $fetch['date_out']; ?></td>
                     <td><?php echo $fetch['addons']; ?></td>

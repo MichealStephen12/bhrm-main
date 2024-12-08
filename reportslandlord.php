@@ -19,75 +19,107 @@ $landlordsResult = mysqli_query($conn, $landlordsQuery);
     <title>Landlord Report</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Optional Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
 
-    <!-- jQuery (necessary for DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+        .summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #fff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1 1 calc(33% - 20px);
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            color: #6c757d;
+        }
+
+        .card p {
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #495057;
+        }
+    </style>
 </head>
 <body>
     <?php include 'navadmin.php'; ?>
 
-    <!-- Navbar or other sections here -->
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Landlord Report</h1>
 
-    <div class="container mt-5">
-        <h1 class="display-4">Landlord Report</h1>
-
-        <!-- Landlord Summary -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3 class="card-title">Total Landlords</h3>
-                <p class="card-text">
-                    <?php echo $totalLandlords; ?>
-                </p>
+        <!-- Total Landlords Summary -->
+        <div class="summary">
+            <div class="card">
+                <h3>Total Landlords</h3>
+                <p><?php echo $totalLandlords; ?></p>
             </div>
         </div>
 
-        <!-- Landlords Table -->
-        <h2 class="mb-4">Landlords List</h2>
-        <table id="landlordTable" class="display table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Gender</th>
-                    <th>Email</th>
-                    <th>Image</th>
-                    <th>Boarding House</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($landlord = mysqli_fetch_assoc($landlordsResult)) { ?>
+        <!-- Landlord Details Table -->
+        <h2 class="mt-4">Landlord Details</h2>
+        <div class="table-responsive">
+            <table id="landlordTable" class="table table-striped table-bordered">
+                <thead class="table-dark">
                     <tr>
-                        <td><?php echo $landlord['id']; ?></td>
-                        <td><img src="/bhrm-main/<?php echo $landlord['image'] ?? 'default.png'; ?>" width="50" height="50" class="rounded-circle" alt="Profile Picture"></td>
-                        <td><?php echo $landlord['fname']; ?></td>
-                        <td><?php echo $landlord['lname']; ?></td>
-                        <td><?php echo $landlord['gender']; ?></td>
-                        <td><?php echo $landlord['uname']; ?></td>
-                        <td><?php echo $landlord['hname']; ?></td>
+                        <th>ID</th>
+                        <th>Profile Picture</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Gender</th>
+                        <th>Email</th>
+                        <th>Boarding House</th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php while ($landlord = mysqli_fetch_assoc($landlordsResult)) { ?>
+                        <tr>
+                            <td><?php echo $landlord['id']; ?></td>
+                            <td>
+                                <img src="/bhrm-main/<?php echo $landlord['image'] ?? 'default.png'; ?>" 
+                                     width="50" 
+                                     height="50" 
+                                     class="rounded-circle" 
+                                     alt="Profile Picture">
+                            </td>
+                            <td><?php echo $landlord['fname']; ?></td>
+                            <td><?php echo $landlord['lname']; ?></td>
+                            <td><?php echo $landlord['gender']; ?></td>
+                            <td><?php echo $landlord['uname']; ?></td>
+                            <td><?php echo $landlord['hname']; ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <!-- DataTables JS Initialization -->
+    <!-- Bootstrap JS -->
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
     <script>
-        $(document).ready(function() {
+        // Initialize DataTable
+        $(document).ready(function () {
             $('#landlordTable').DataTable();
         });
     </script>
-
 </body>
 </html>

@@ -159,11 +159,48 @@ if (isset($_POST['submit'])) {
             font-weight: 200;
             margin: 10px 0;
         }
+         /* Animations */
+         @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            .container {
+                padding: 15px;
+            }
+
+            .form-group input {
+                font-size: 12px;
+            }
+
+            .btn {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+<div class="container">
         <a href="../index.php"><img src="../images/logo.png" alt="Logo"></a>
         <span>Login</span>
 
