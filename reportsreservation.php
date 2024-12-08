@@ -47,6 +47,7 @@ $emailHighestReservations = mysqli_fetch_assoc($emailHighestReservationsResult);
 // Fetch counts for reservation statuses
 $reservationStatusQuery = "SELECT 
                               SUM(res_stat = 'Approved') AS approved_count,
+                              SUM(res_stat = 'Confirmed') AS confirm_count,
                               SUM(res_stat = 'Rejected') AS rejected_count,
                               SUM(res_stat = 'Ended') AS ended_count,
                               SUM(res_stat = 'Cancelled') AS cancelled_count
@@ -56,6 +57,7 @@ $reservationStatusResult = mysqli_query($conn, $reservationStatusQuery);
 $reservationStatusData = mysqli_fetch_assoc($reservationStatusResult);
 
 $approvedCount = $reservationStatusData['approved_count'];
+$confirmedCount = $reservationStatusData['confirm_count'];
 $rejectedCount = $reservationStatusData['rejected_count'];
 $endedCount = $reservationStatusData['ended_count'];
 $cancelledCount = $reservationStatusData['cancelled_count'];
@@ -145,16 +147,20 @@ $reservationResult = mysqli_query($conn, $reservationQuery);
                 <p><?php echo $approvedCount; ?></p>
             </div>
             <div class="card">
-                <h5>Rejected Reservations</h5>
-                <p><?php echo $rejectedCount; ?></p>
+                <h5>Confirmed Reservations</h5>
+                <p><?php echo $confirmedCount; ?></p>
             </div>
             <div class="card">
-                <h5>Ended Reservations</h5>
+                <h5>Books Ended</h5>
                 <p><?php echo $endedCount; ?></p>
             </div>
             <div class="card">
                 <h5>Cancelled Reservations</h5>
                 <p><?php echo $cancelledCount; ?></p>
+            </div>
+            <div class="card">
+                <h5>Rejected Reservations</h5>
+                <p><?php echo $rejectedCount; ?></p>
             </div>
         </div>
 
@@ -173,6 +179,7 @@ $reservationResult = mysqli_query($conn, $reservationQuery);
                             <th>Requests</th>
                             <th>Date In</th>
                             <th>Date Out</th>
+                            <th>Reservation Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -186,6 +193,7 @@ $reservationResult = mysqli_query($conn, $reservationQuery);
                                 <td><?php echo $reservation['addons']; ?></td>
                                 <td><?php echo $reservation['date_in']; ?></td>
                                 <td><?php echo $reservation['date_out'] ?: 'N/A'; ?></td>
+                                <td><?php echo $reservation['res_stat']; ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>

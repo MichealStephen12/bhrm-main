@@ -4,7 +4,7 @@ include('php/connection.php'); // Database connection file
 $hname = $_SESSION['hname'];
 
 // Fetch total tenants
-$totalTenantsQuery = "SELECT COUNT(*) AS total_tenants FROM users WHERE hname = '$hname' and role = 'user'";
+$totalTenantsQuery = "SELECT COUNT(*) AS total_tenants FROM users WHERE role = 'user'";
 $totalTenantsResult = mysqli_query($conn, $totalTenantsQuery);
 $totalTenants = mysqli_fetch_assoc($totalTenantsResult)['total_tenants'];
 
@@ -13,7 +13,7 @@ $genderCountQuery = "SELECT
                         SUM(gender = 'Male') AS male_count, 
                         SUM(gender = 'Female') AS female_count 
                      FROM users 
-                     WHERE hname = '$hname'";
+                     WHERE role = 'user'";
 $genderCountResult = mysqli_query($conn, $genderCountQuery);
 $genderCount = mysqli_fetch_assoc($genderCountResult);
 
@@ -21,8 +21,40 @@ $maleCount = $genderCount['male_count'];
 $femaleCount = $genderCount['female_count'];
 
 // Fetch tenant details for table
-$tenantDetailsQuery = "SELECT * FROM users WHERE hname = '$hname' ORDER BY id DESC";
+$tenantDetailsQuery = "SELECT * FROM users WHERE role = 'user' ORDER BY id DESC";
 $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
+
+
+$tenantquery = "SELECT * FROM users WHERE role = 'user' ORDER BY id DESC";
+$tenantresult = mysqli_query($conn, $tenantquery);
+
+while ($tenant = mysqli_fetch_assoc($tenantresult)) { 
+    $email = $tenant['uname']; // Tenant email
+    
+    // Fetch the total number of students and the total number of students from CKCM for each tenant (limit to 1 reservation per email)
+    $countQuery = "
+        SELECT 
+            COUNT(CASE WHEN tenant_status = 'Student' THEN 1 END) AS total_students,
+            COUNT(CASE WHEN tenant_status = 'Student' AND school = 'CKCM' THEN 1 END) AS total_ckcm_students
+        FROM reservation 
+        WHERE email = '$email'
+        LIMIT 1;
+    ";
+    $countResult = mysqli_query($conn, $countQuery);
+    $countFetch = mysqli_fetch_assoc($countResult);
+
+    // You can now use $countFetch['total_students'] and $countFetch['total_ckcm_students']
+    $totalStudents = $countFetch['total_students'];
+    $totalCkcmStudents = $countFetch['total_ckcm_students'];
+}
+
+
+
+// Get the total students and CKCM students
+$totalStudents = $countFetch['total_students'];
+$totalCkcmStudents = $countFetch['total_ckcm_students'];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -97,6 +129,16 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
                 <h5>Total Female Tenants</h5>
                 <p><?php echo $femaleCount; ?></p>
             </div>
+
+            <div class="card">
+                <h5>Total Students</h5>
+                <p><?php echo $totalStudents; ?></p>
+            </div>
+
+            <div class="card">
+                <h5>Total CKCM Students</h5>
+                <p><?php echo $totalCkcmStudents; ?></p>
+            </div>
         </div>
 
         <!-- DataTable Section -->
@@ -112,10 +154,25 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
                             <th>Last Name</th>
                             <th>Gender</th>
                             <th>Email</th>
+                            <th>Status</th>
+                            <th>School</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($tenant = mysqli_fetch_assoc($tenantDetailsResult)) { ?>
+                        <?php 
+                        // Loop through each tenant
+                        while ($tenant = mysqli_fetch_assoc($tenantDetailsResult)) { 
+                            $email = $tenant['uname']; // Tenant email
+                            
+                            // Fetch reservation details for each tenant using their email
+                            $reservationDetailsQuery = "SELECT * FROM reservation WHERE email = '$email' ORDER BY id DESC";
+                            $reservationDetailsResult = mysqli_query($conn, $reservationDetailsQuery);
+                            $reservationDetailsFetch = mysqli_fetch_assoc($reservationDetailsResult); // Get the latest reservation details
+
+                            // If there are no reservation details, set default values
+                            $tenantStatus = $reservationDetailsFetch ? $reservationDetailsFetch['tenant_status'] : 'N/A';
+                            $school = $reservationDetailsFetch ? $reservationDetailsFetch['school'] : 'N/A';
+                        ?>
                             <tr>
                                 <td><?php echo $tenant['id']; ?></td>
                                 <td><img src="/bhrm-main/<?php echo $tenant['image'] ?? 'default.png'; ?>" width="50" height="50" class="rounded-circle" alt="Profile Picture"></td>
@@ -123,6 +180,8 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
                                 <td><?php echo $tenant['lname']; ?></td>
                                 <td><?php echo $tenant['gender']; ?></td>
                                 <td><?php echo $tenant['uname']; ?></td>
+                                <td><?php echo $tenantStatus; ?></td>
+                                <td><?php echo $school; ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
