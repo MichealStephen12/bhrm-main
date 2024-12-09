@@ -90,10 +90,10 @@ require 'php/connection.php';
     <div class="background">
         <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center row-container">
             <?php
-            $query = "SELECT * FROM boardinghouses INNER JOIN documents ON boardinghouses.hname = documents.hname";
-            $result = mysqli_query($conn, $query);
-            while ($fetch = mysqli_fetch_assoc($result)) :
-                $hname = $fetch['hname'];
+                $query = "SELECT * FROM boardinghouses INNER JOIN documents ON boardinghouses.hname = documents.hname";
+                $result = mysqli_query($conn, $query);
+                while ($fetch = mysqli_fetch_assoc($result)) :
+                    $hname = $fetch['hname'];
             ?>
                 <div class="col">
                     <div class="card h-100">
@@ -103,6 +103,13 @@ require 'php/connection.php';
                             <p class="card-text"><strong>Owner:</strong> <?php echo $fetch['landlord']; ?></p>
                             <p class="card-text"><strong>Address:</strong> <?php echo $fetch['haddress']; ?></p>
                             <p class="card-text"><strong>Contact:</strong> <?php echo $fetch['contact_no']; ?></p>
+                            <?php 
+                            
+                            $desquery = "SELECT * FROM description where hname = '$hname'"; 
+                            $desresult = mysqli_query($conn, $desquery);
+                            $desfetch = mysqli_fetch_assoc($desresult);
+                            ?>
+                            <p class="card-text"><strong>Description:</strong> <?php echo $desfetch['bh_description']; ?></p>
                             <div>
                                 <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin') : ?>
                                     <a href="php/function.php?edit=<?php echo $fetch['id']; ?>" class="btn btn-warning me-2">Update</a>
