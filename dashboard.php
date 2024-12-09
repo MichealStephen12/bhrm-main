@@ -29,37 +29,37 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 }
 
 
+    $hname = $_SESSION['hname'];
 
-
-    $reservationQuery = "SELECT COUNT(*) as total_reservations FROM reservation";
+    $reservationQuery = "SELECT COUNT(*) as total_reservations FROM reservation where hname = '$hname'";
     $reservationResult = mysqli_query($conn, $reservationQuery);
     $reservationData = mysqli_fetch_assoc($reservationResult);
     $totalReservations = $reservationData['total_reservations'];
 
-    $reservationQuery = "SELECT COUNT(*) as total_reservations FROM reservation where res_stat = 'Approved'";
+    $reservationQuery = "SELECT COUNT(*) as total_reservations FROM reservation where res_stat = 'Approved' and hname = '$hname'";
     $reservationResult = mysqli_query($conn, $reservationQuery);
     $reservationData = mysqli_fetch_assoc($reservationResult);
     $totalapproved = $reservationData['total_reservations'];
 
     // Fetch total tenants
-    $tenantQuery = "SELECT COUNT(*) as total_tenants FROM users WHERE role = 'user'";
+    $tenantQuery = "SELECT COUNT(*) as total_tenants FROM users WHERE role = 'user'  and hname = '$hname'";
     $tenantResult = mysqli_query($conn, $tenantQuery);
     $tenantData = mysqli_fetch_assoc($tenantResult);
     $totalTenants = $tenantData['total_tenants'];
 
     // Fetch total rooms
-    $totalRoomsQuery = "SELECT COUNT(*) as total_rooms FROM rooms";
+    $totalRoomsQuery = "SELECT COUNT(*) as total_rooms FROM rooms where hname = '$hname'";
     $totalRoomsResult = mysqli_query($conn, $totalRoomsQuery);
     $totalRoomsData = mysqli_fetch_assoc($totalRoomsResult);
     $totalRooms = $totalRoomsData['total_rooms'];
 
     // Fetch total available rooms
-    $availableRoomsQuery = "SELECT COUNT(*) as available_rooms FROM rooms WHERE status = 'Available'";
+    $availableRoomsQuery = "SELECT COUNT(*) as available_rooms FROM rooms WHERE status = 'Available'  and hname = '$hname'";
     $availableRoomsResult = mysqli_query($conn, $availableRoomsQuery);
     $availableRoomsData = mysqli_fetch_assoc($availableRoomsResult);
     $availableRooms = $availableRoomsData['available_rooms'];
 
-    $totalPaymentsQuery = "SELECT SUM(payment) as total_payments FROM reports";
+    $totalPaymentsQuery = "SELECT SUM(payment) as total_payments FROM reports where hname = '$hname'";
     $totalPaymentsResult = mysqli_query($conn, $totalPaymentsQuery);
     $totalPaymentsData = mysqli_fetch_assoc($totalPaymentsResult);
     $totalPayments = $totalPaymentsData['total_payments'] ?? 0;

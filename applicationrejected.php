@@ -100,8 +100,8 @@ if (empty($_SESSION["uname"]) || empty($_SESSION["role"])) {
                         <td><?php echo $fetch['haddress']; ?></td>
                         <td><?php echo $fetch['bh_description']; ?></td>
                         <td>
-                            <a href="../<?php echo $fetch['bar_clear']; ?>" class="btn btn-link text-danger" target="_blank">Bar Clearance</a><br>
-                            <a href="../<?php echo $fetch['bus_per']; ?>" class="btn btn-link text-danger" target="_blank">Business Permit</a>
+                            <a href="./<?php echo $fetch['bar_clear']; ?>" class="btn btn-link text-danger" target="_blank">Bar Clearance</a><br>
+                            <a href="./<?php echo $fetch['bus_per']; ?>" class="btn btn-link text-danger" target="_blank">Business Permit</a>
                         </td>
                         <td><span class="badge bg-danger">Rejected</span></td>
                         <td><button class="btn btn-secondary" disabled>Rejected</button></td>

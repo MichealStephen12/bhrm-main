@@ -12,8 +12,35 @@ if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $uname = $_POST['uname'];
+    $gender = $_POST['gender'];
     $pass = $_POST['pass'];
     $conpassword = $_POST['confirmpassword'];
+
+    $_FILES['image'];
+
+    $fileName = $_FILES['image']['name'];
+    $fileTmpName = $_FILES['image']['tmp_name'];
+    $fileSize = $_FILES['image']['size'];
+    $fileError = $_FILES['image']['error'];
+    $fileType = $_FILES['image']['type'];
+
+    $fileExt = explode('.', $fileName);
+    $fileactualext = strtolower(end($fileExt));
+    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
+
+    if (in_array($fileactualext, $allowed)) {
+        if ($fileError === 0) {
+            if ($fileSize < 1000000) {
+                $fileNameNew = uniqid('', true) . '.' . $fileactualext;
+                $fileDestination = '../profiles/' . $fileNameNew;
+                move_uploaded_file($fileTmpName, $fileDestination);
+            } else {
+                echo "Your file is too big.";
+            }
+        }
+    } else {
+        echo "You cannot upload this type of file.";
+    }
 
     $query = "SELECT * FROM `users` WHERE uname = '$uname'";
     $result = mysqli_query($conn, $query);
@@ -43,7 +70,7 @@ if (isset($_POST['submit'])) {
         $modalMessage = implode("<br>", $errors); // Combine error messages with line breaks
         $showModal = true;
     } else {
-        $query = "INSERT INTO `users`(`id`, `fname`, `lname`,`uname`, `pass`, `role`) VALUES ('','$fname','$lname','$uname','$pass', 'landlord')";
+        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`,`uname`, `pass`, `role`) VALUES ('', 'profiles/$fileNameNew', '$fname','$lname','$uname','$gender','$pass', 'landlord')";
         mysqli_query($conn, $query);
         $modalMessage = "Registration successful!";
         $showModal = true;
@@ -79,8 +106,12 @@ if (isset($_POST['submit'])) {
                         <span style="font-weight: 100; font-size: 17px;">Registration Form</span>
                     </div>
                     <div class="col-md-12">
-                        <form method="post">
+                        <form method="post"  enctype="multipart/form-data">
                             <div class="row">
+                                <div class="form-group">
+                                    <label>Picture</label>
+                                    <input type="file" name="image" value="">
+                                </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>First Name</label>
                                     <input type="text" name="fname" placeholder="First Name" class="form-control" required>
@@ -92,6 +123,14 @@ if (isset($_POST['submit'])) {
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 20px 20px 10px 20px;">
                                     <label>Email</label>
                                     <input type="email" name="uname" placeholder="Your Email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Gender</label>
+                                    <select name="gender" id="" class="form-select me-2" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
                                     <label>Password</label>

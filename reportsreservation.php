@@ -17,6 +17,10 @@ $mostReservedRoomQuery = "SELECT room_no, COUNT(room_no) AS count
 $mostReservedRoomResult = mysqli_query($conn, $mostReservedRoomQuery);
 $mostReservedRoom = mysqli_fetch_assoc($mostReservedRoomResult);
 
+// Set default values if no data is fetched
+$mostReservedRoomNo = $mostReservedRoom['room_no'] ?? 'None';
+$mostReservedRoomCount = $mostReservedRoom['count'] ?? 0;
+
 // Fetch most common gender reserved
 $mostGenderReservedQuery = "
     SELECT gender, COUNT(*) AS count 
@@ -31,6 +35,9 @@ $mostGenderReservedQuery = "
 $mostGenderReservedResult = mysqli_query($conn, $mostGenderReservedQuery);
 $mostGenderReserved = mysqli_fetch_assoc($mostGenderReservedResult);
 
+// Set default values if no data is fetched
+$mostGenderReservedGender = $mostGenderReserved['gender'] ?? 'None';
+$mostGenderReservedCount = $mostGenderReserved['count'] ?? 0;
 
 // Fetch email with the highest reservations
 $emailHighestReservationsQuery = "SELECT email, COUNT(email) AS count 
@@ -40,6 +47,10 @@ $emailHighestReservationsQuery = "SELECT email, COUNT(email) AS count
                                   ORDER BY count DESC LIMIT 1";
 $emailHighestReservationsResult = mysqli_query($conn, $emailHighestReservationsQuery);
 $emailHighestReservations = mysqli_fetch_assoc($emailHighestReservationsResult);
+
+// Set default values if no data is fetched
+$emailHighestReservationsEmail = $emailHighestReservations['email'] ?? 'None';
+$emailHighestReservationsCount = $emailHighestReservations['count'] ?? 0;
 
 // Fetch counts for reservation statuses
 $reservationStatusQuery = "SELECT 
@@ -125,15 +136,21 @@ $reservationResult = mysqli_query($conn, $reservationQuery);
             </div>
             <div class="card">
                 <h5>Most Reserved Room</h5>
-                <p><?php echo $mostReservedRoom['room_no'] . ' (' . $mostReservedRoom['count'] . ' reservations)'; ?></p>
+                <p>
+                    <?php echo $mostReservedRoomNo . ' (' . $mostReservedRoomCount . ' reservations)'; ?>
+                </p>
             </div>
             <div class="card">
                 <h5>Most Gender Booked</h5>
-                <p><?php echo $mostGenderReserved['gender'] . ' (' . $mostGenderReserved['count'] . ')'; ?></p>
+                <p>
+                    <?php echo $mostGenderReservedGender . ' (' . $mostGenderReservedCount . ')'; ?>
+                </p>
             </div>
             <div class="card">
                 <h5>Email with Highest Reservations</h5>
-                <p><?php echo $emailHighestReservations['email'] . ' (' . $emailHighestReservations['count'] . ')'; ?></p>
+                <p>
+                    <?php echo $emailHighestReservationsEmail . ' (' . $emailHighestReservationsCount . ')'; ?>
+                </p>
             </div>
             <div class="card">
                 <h5>Approved Reservations</h5>

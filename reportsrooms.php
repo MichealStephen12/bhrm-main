@@ -13,15 +13,19 @@ $totalRooms = mysqli_fetch_assoc($totalRoomsResult)['total_rooms'];
 $highestCapacityQuery = "SELECT room_no, capacity FROM rooms WHERE hname = '$hname' ORDER BY capacity DESC LIMIT 1";
 $highestCapacityResult = mysqli_query($conn, $highestCapacityQuery);
 $highestCapacityRoom = mysqli_fetch_assoc($highestCapacityResult);
-$highestCapacityRoomNo = $highestCapacityRoom['room_no'];
-$highestCapacity = $highestCapacityRoom['capacity'];
+
+// Set default values if no data is fetched
+$highestCapacityRoomNo = $highestCapacityRoom['room_no'] ?? 'None';
+$highestCapacity = $highestCapacityRoom['capacity'] ?? 0;
 
 // Fetch the room with the highest current tenants
 $highestTenantQuery = "SELECT room_no, current_tenant FROM rooms WHERE hname = '$hname' ORDER BY current_tenant DESC LIMIT 1";
 $highestTenantResult = mysqli_query($conn, $highestTenantQuery);
 $highestTenantRoom = mysqli_fetch_assoc($highestTenantResult);
-$highestTenantRoomNo = $highestTenantRoom['room_no'];
-$highestTenantCount = $highestTenantRoom['current_tenant'];
+
+// Set default values if no data is fetched
+$highestTenantRoomNo = $highestTenantRoom['room_no'] ?? 'None';
+$highestTenantCount = $highestTenantRoom['current_tenant'] ?? 0;
 
 // Fetch counts of available and full rooms
 $roomStatusQuery = "SELECT 
@@ -99,13 +103,14 @@ $roomsResult = mysqli_query($conn, $roomsQuery);
             <p><?php echo $totalRooms; ?></p>
         </div>
         <div class="card">
-            <h3>Highest Capacity</h3>
-            <p><?php echo "Room $highestCapacityRoomNo - $highestCapacity"; ?></p>
+            <h5>Room with Highest Capacity</h5>
+            <p><?php echo $highestCapacityRoomNo . ' (' . $highestCapacity . ' capacity)'; ?></p>
         </div>
         <div class="card">
-            <h3>Highest Current Tenants</h3>
-            <p><?php echo "Room $highestTenantRoomNo - $highestTenantCount Tenants"; ?></p>
+            <h5>Room with Highest Current Tenants</h5>
+            <p><?php echo $highestTenantRoomNo . ' (' . $highestTenantCount . ' tenants)'; ?></p>
         </div>
+
         <div class="card">
             <h3>Available Rooms</h3>
             <p><?php echo $availableRooms; ?></p>

@@ -147,7 +147,7 @@ if (isset($_GET['approve'])) {
             $query_insert = "UPDATE users SET hname = '$hname' where uname = '$owner'";
             mysqli_query($conn, $query_insert);
             
-            header('Location: ../index.php');
+            header('Location: ../applicationapproved.php');
         } else {
             echo "Error: " . $query_insert . "<br>" . mysqli_error($conn);
         }
@@ -174,7 +174,7 @@ if (isset($_GET['reject'])) {
         $query_update = "UPDATE description SET hname = '' where uname = '$owner'";
         mysqli_query($conn, $query_update);
         
-        header('Location: ../index.php');
+        header('Location: ../applicationrejected.php');
     } else {
         echo "Error: " . $query_update . "<br>" . mysqli_error($conn);
     }

@@ -106,15 +106,15 @@ if (empty($_SESSION["uname"]) || empty($_SESSION["role"])) {
                         <td><?php echo $fetch['bh_description']; ?></td>
                         <td>
                             <!-- Links to download documents -->
-                            <a href="../<?php echo $fetch['bar_clear']; ?>" class="btn btn-link text-primary" target="_blank">Bar Clearance</a><br>
-                            <a href="../<?php echo $fetch['bus_per']; ?>" class="btn btn-link text-primary" target="_blank">Business Permit</a>
+                            <a href="./<?php echo $fetch['bar_clear']; ?>" class="btn btn-link text-primary" target="_blank">Bar Clearance</a><br>
+                            <a href="./<?php echo $fetch['bus_per']; ?>" class="btn btn-link text-primary" target="_blank">Business Permit</a>
                         </td>
                         <td><span class="badge bg-warning text-dark">Pending</span></td>
                         <td>
                             <!-- Admin actions -->
                             <?php if ($_SESSION["role"] == "admin"): ?>
-                                <a href="bhfunction.php?approve=<?php echo $fetch['hname']; ?>" class="btn btn-success btn-sm">Approve</a>
-                                <a href="bhfunction.php?reject=<?php echo $fetch['hname']; ?>" class="btn btn-danger btn-sm">Reject</a>
+                                <a href="php/bhfunction.php?approve=<?php echo $fetch['hname']; ?>" class="btn btn-success btn-sm">Approve</a>
+                                <a href="php/bhfunction.php?reject=<?php echo $fetch['hname']; ?>" class="btn btn-danger btn-sm">Reject</a>
                             <?php endif; ?>
                         </td>
                     </tr>

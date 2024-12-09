@@ -64,8 +64,7 @@ require 'php/connection.php';
     </style>
 
     <div class="background">
-    <!-- Cards Section -->
-        <!-- Cards Section -->
+
         <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
             <?php
             $query = "SELECT * FROM boardinghouses INNER JOIN documents ON boardinghouses.hname = documents.hname";
