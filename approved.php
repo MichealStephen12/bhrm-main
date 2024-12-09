@@ -4,14 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Approved Reservations</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Include DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
     <style>
-        /* Custom styles for the page */
+        body {
+            background-color: #f8f9fa;
+        }
         .container {
             margin-top: 20px;
+        }
+        .table-responsive {
+            margin-top: 20px;
+            overflow-x: auto; /* Allow horizontal scrolling */
+        }
+        .dataTable thead {
+            background-color: #212529;
+            color: white;
+        }
+
+        /* Keep search bar and pagination fixed */
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_paginate {
+            position: sticky;
+            top: 10px; /* Adjust to your needs */
+            background-color: white;
+            z-index: 10; /* Ensure it's above the table */
+        }
+
+        /* Remove background color for pagination container */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background-color: transparent; /* No background color */
+            color: #212529; /* Default text color */
+            border: none; /* Remove border */
+            padding: 0; /* Remove padding */
+        }
+        /* Remove padding on the "Next" and "Previous" buttons */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.next {
+            padding: 0; /* Remove padding */
+        }
+        /* Remove padding from individual page number buttons */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0; /* Remove padding */
+        }
+        /* Highlight on hover */
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #212529; /* Dark background */
+            color: white; /* White text */
+            border-radius: 5px; /* Optional: rounded corners */
+        }
+        /* Highlight current page */
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: #212529; /* Dark background */
+            color: white; /* White text */
+            border-radius: 5px; /* Optional: rounded corners */
+        }
+
+        /* Fix the header so it stays on top */
+        .dataTables_wrapper .dataTables_scrollHead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .dataTables_wrapper .dataTables_scrollBody {
+            overflow-x: auto; /* Ensure horizontal scroll on body only */
+        }
+
+        .dataTables_wrapper .dataTables_scroll {
+            overflow-x: hidden; /* Prevent horizontal scroll on the whole table */
         }
     </style>
 </head>
@@ -28,10 +91,11 @@
         }
     ?>
 
-    <h1 class="text-center">Approved Reservations</h1>
+    <h1 class="text-center">Approved and Confirmed reservations</h1>
+
     <div class="container table-responsive">
-        <table id="reservationsTable" class="table table-striped">
-            <thead>
+        <table id="reservationsTable" class="table table-striped table-bordered">
+            <thead class="table-dark">
                 <tr>
                     <th>Reservation No</th>
                     <th>Guest Name</th>
@@ -104,24 +168,23 @@
         </table>
     </div>
 
-    <!-- Include jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- Include DataTables JS -->
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- jQuery and DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
-        // Initialize DataTable with search functionality
-        $(document).ready(function() {
-            $('#reservationsTable').DataTable({
-                "paging": true,         // Enable pagination
-                "searching": true,      // Enable search functionality
-                "ordering": true,       // Enable sorting
-                "order": [[0, 'desc']], // Default order by Reservation ID (descending)
-                "columnDefs": [
-                    { "targets": [10], "orderable": false } // Disable sorting on the "Actions" column
-                ]
-            });
+    // Initialize DataTable
+    $(document).ready(function () {
+        $('#reservationsTable').DataTable({
+            paging: true,       // Enable pagination
+            searching: true,    // Enable search bar
+            ordering: true,     // Enable column ordering
+            info: true,         // Show info (e.g., "Showing 1 to 10 of 100 entries")
+            responsive: false,  // Disable auto-stacking for small screens
+            scrollX: true       // Enable horizontal scrolling
         });
+    });
     </script>
 </body>
 </html>

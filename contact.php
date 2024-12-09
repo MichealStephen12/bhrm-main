@@ -1,6 +1,5 @@
 <?php
 require 'php/connection.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -12,159 +11,144 @@ require 'php/connection.php';
     <title>Contact Us</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-      body {
+        /* General Styles */
+        body {
             margin: 0;
             padding: 0;
             height: 100vh;
-            overflow: hidden;
             color: white;
+            font-family: 'Arial', sans-serif;
         }
 
-        .video-background {
+        /* Animated Gradient Background */
+        .animated-background {
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #343a40, #aeb5bb, #343a40, #ffffff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             z-index: -1;
         }
 
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Navbar */
         .navbar {
-            background-color: #343a40 !important;
+            background-color: rgba(0, 0, 0, 0.7) !important;
         }
 
         .navbar-brand img {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
         }
+
         .nav-link {
             color: #fff !important;
         }
+
+        /* Contact Us Section */
         .container {
             margin-top: 150px;
         }
 
-        h1, h2, p {
-            color: #fff;
-            text-align: center; /* Center align the text */
-            font-weight: bold; /* Make text bold */
+        h1, p {
+            text-align: center;
         }
 
-        .btn-warning {
-            background-color: #ffc107;
-            border-color: #ffc107;
-            color: #333;
-        }
-
-        .content {
-            color: #fff;
-            margin-top: 50px;
-        }
-
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .col-md-6 {
+        h1 {
+            font-size: 2.5rem;
             margin-bottom: 20px;
         }
 
-        .boarding-house-card {
-            background-color: #a9a9a9;
-            color: #fff;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            height: 100%;
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
         }
 
-        .boarding-house-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 20px 20px 0 0;
-        }
-
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 10px;
-        }
-
-        .btn-container button {
-            flex: 0 0 48%;
-        }
-
+        /* Contact Form Styles */
         .contact-form {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 10px;
-            color: #fff;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .form-group label {
             font-weight: bold;
+            color: #ffcc00;
         }
 
         .form-control {
             background-color: rgba(255, 255, 255, 0.1);
             border: none;
             color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
         }
 
         .form-control::placeholder {
             color: #ccc;
         }
 
-        .form-control:focus {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #fff;
+        .btn-warning {
+            background-color: #ffcc00;
+            border: none;
+            color: #333;
+            padding: 10px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            background-color: #ffdd33;
+            color: #000;
+            box-shadow: 0 8px 15px rgba(255, 204, 0, 0.8);
+            transform: translateY(-3px);
         }
     </style>
 </head>
 
 <body>
-<video autoplay muted loop class="video-background">
-        <source src="backvideo.mp4" type="video/mp4">
-    </video>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-0">
-        <a class="navbar-brand" href="#">
-            <img src="images/logo.png" alt="Logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="about.php">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.php">Contact</a>
-                </li>
-                <?php
-                if ($_SESSION == true) {
-                    echo '<a class="btn btn-warning" href="php/logout.php">Logout</a>';
-                } else {
-                    echo '<a class="btn btn-warning" href="php/login.php">Login</a>';
-                }
-                ?>
-            </ul>
-        </div>
-    </nav>
+    <!-- Animated Background -->
+    <div class="animated-background"></div>
 
-    <div class="container text-center">
-        <h1>Contact Us</h1>
-        <p>If you have any questions, feel free to reach out to us by filling the form below.</p>
-    </div>
+    <!-- Navbar -->
+    <?php include 'navbar.php'; ?>
 
+    <!-- Contact Us Section -->
     <div class="container">
+        <h1>Contact Us</h1>
+        <p>If you have any questions, feel free to reach out to us by filling out the form below.</p>
+
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="contact-form">
@@ -188,6 +172,7 @@ require 'php/connection.php';
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

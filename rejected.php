@@ -5,12 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejected Reservations</title>
     <!-- Include Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Include DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
     <style>
+        body {
+            background-color: #f8f9fa;
+        }
         .container {
             margin-top: 20px;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .dataTable thead {
+            background-color: #212529;
+            color: white;
+        }
+        /* Pagination styles */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background-color: transparent;
+            color: #212529;
+            border: none;
+            padding: 0;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.next {
+            padding: 0;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #212529;
+            color: white;
+            border-radius: 5px;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: #212529;
+            color: white;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -25,8 +60,8 @@
             $query = "SELECT * FROM reservation WHERE hname = '$hname' AND res_stat = 'Rejected' ORDER BY id DESC";
             $result = mysqli_query($conn, $query);
         ?>
-        <table id="reservationsTable" class="table table-striped">
-            <thead>
+        <table id="reservationsTable" class="table table-striped table-bordered">
+            <thead class="table-dark">
                 <tr>
                     <th>Reservation No</th>
                     <th>Guest Name</th>
@@ -54,7 +89,7 @@
                     <td><?php echo $fetch['gender']; ?></td>
                     <td><?php echo $fetch['tenant_status']; ?></td>
                     <td><?php echo $fetch['room_no']; ?></td>
-                    <td><?php echo $fetch['price']; ?></td>
+                    <td><?php echo number_format($fetch['price'], 2); ?> PHP</td>
                     <td><?php echo $fetch['room_slot']; ?></td>
                     <td><?php echo $fetch['date_in']; ?></td>
                     <td><?php echo $fetch['date_out']; ?></td>
@@ -83,23 +118,23 @@
     </div>
 
     <!-- Include jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Include DataTables JS -->
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            // Initialize DataTable with searching enabled
-            $('#reservationsTable').DataTable({
-                "paging": true,         // Enable pagination
-                "searching": true,      // Enable search functionality
-                "ordering": true,       // Enable sorting
-                "order": [[0, 'desc']], // Default order by Reservation ID (descending)
-                "columnDefs": [
-                    { "targets": [10], "orderable": false } // Disable sorting on the "Actions" column
-                ]
-            });
+    // Initialize DataTable
+    $(document).ready(function () {
+        $('#reservationsTable').DataTable({
+            paging: true,       // Enable pagination
+            searching: true,    // Enable search bar
+            ordering: true,     // Enable column ordering
+            info: true,         // Show info (e.g., "Showing 1 to 10 of 100 entries")
+            responsive: false,  // Disable auto-stacking for small screens
+            scrollX: true       // Enable horizontal scrolling
         });
+    });
     </script>
 </body>
 </html>
