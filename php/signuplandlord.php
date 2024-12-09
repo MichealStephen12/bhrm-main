@@ -70,7 +70,8 @@ if (isset($_POST['submit'])) {
         $modalMessage = implode("<br>", $errors); // Combine error messages with line breaks
         $showModal = true;
     } else {
-        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`,`uname`, `pass`, `role`) VALUES ('', 'profiles/$fileNameNew', '$fname','$lname','$uname','$gender','$pass', 'landlord')";
+        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`,`uname`, `gender`, `pass`, `role`) VALUES 
+                                    ('', 'profiles/$fileNameNew', '$fname','$lname','$uname','$gender','$pass', 'landlord')";
         mysqli_query($conn, $query);
         $modalMessage = "Registration successful!";
         $showModal = true;

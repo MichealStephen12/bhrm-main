@@ -409,12 +409,16 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                     <?php endif; ?>
                 </div>
                 <div class="secrow2">
+                    <?php 
+                    
+                        $query = "SELECT * FROM `description` WHERE hname = '$hname'";
+                        $result = mysqli_query($conn, $query);
+                        $fetch = mysqli_fetch_assoc($result); 
+
+                    ?>
                     <div class="text-box">
                         <h1>Welcome to <?php if(!empty($_SESSION['hname'])){ echo $_SESSION['hname']; }else {  echo $_GET['hname']; } ?></h1>
-                        <p>Introducing <?php if(!empty($_SESSION['hname'])){ echo $_SESSION['hname']; }else {  echo $_GET['hname']; } ?>: The Epitome of Comfort and Convenience in Maranding, Lala, Lanao del Norte</p>
-                        <p>Located in the serene town of Maranding, Lala, Lanao del Norte, <?php if(!empty($_SESSION['hname'])){ echo $_SESSION['hname']; }else {  echo $_GET['hname']; } ?> stands as the premier boarding house, offering an unparalleled living experience for students and professionals alike.</p>
-                        <p>At <?php if(!empty($_SESSION['hname'])){ echo $_SESSION['hname']; }else {  echo $_GET['hname']; } ?>, we understand the importance of a comfortable 
-                        and conducive living environment. Our spacious and well-appointed rooms provide a haven for relaxation and productivity. Each room is thoughtfully designed with modern furnishings, ensuring a cozy and inviting atmosphere.</p>
+                        <p><?php echo $fetch['bh_description']; ?></p>
                     </div>
                 </div>
              

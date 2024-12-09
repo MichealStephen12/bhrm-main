@@ -547,10 +547,6 @@ if (isset($_POST['submit'])) {
                     <input type="text" id="contactno" name="contactno" placeholder="Enter here.." required>
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label>
-                    <input type="text" id="description" name="description" placeholder="Enter here.." required>
-                </div>
-                <div class="form-group">
                     <label for="image">Provide Image of Boarding House</label>
                     <input type="file" id="image" name="image" required>
                 </div>
@@ -561,6 +557,10 @@ if (isset($_POST['submit'])) {
                 <div class="form-group">
                     <label for="image2">Provide Business Permit for BH Verification</label>
                     <input type="file" id="image2" name="busper" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Boarding House Additional Info (Free Water/Electricity, House Rules, Etc.)</label>
+                    <textarea id="description" name="description" placeholder="Enter here.." rows="5" cols="40" required></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit" name="submit">Submit</button>
