@@ -425,7 +425,7 @@ if (isset($_GET['delete'])) {
                                     <button type="submit" name="update" class="btn btn-warning">Submit</button>
                                 </div>
                                 <div class="col-md-12" style="text-align: center; font-size: 13px; font-weight: 100;">
-                                    <a href="../index.php" style="text-decoration: none; color: black;">Back</a>
+                                    <a href="../manageboardinghouse.php" style="text-decoration: none; color: black;">Back</a>
                                 </div>
                             </div>
                         </form>

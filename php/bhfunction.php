@@ -568,7 +568,7 @@ if (isset($_POST['submit'])) {
                 <div class="form-group">
                     <?php 
                         if ($_SESSION['role'] != 'landlord'){
-                            echo '<a href="../index.php">Back</a>';
+                            echo '<a href="../manageboardinghouse.php">Back</a>';
                         }
                     ?>
                 </div>

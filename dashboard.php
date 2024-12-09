@@ -6,20 +6,22 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $query = "select * from boardinghouses inner join documents on boardinghouses.hname = documents.hname where boardinghouses.owner = '$uname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);   
-    echo "
-    <script src='jquery.min.js'></script>
-    <link rel='stylesheet' href='toastr.min.css'/>
-    <script src='toastr.min.js'></script>
-    <script>
-        $(document).ready(function() {
-            // Check if the login message should be displayed
-            " . (isset($_SESSION['login_message_displayed']) ? "toastr.success('Logged in Successfully');" : "") . "
-        });
-    </script>
-    ";
-
-    // Unset the session variable to avoid repeated notifications
     if (isset($_SESSION['login_message_displayed'])) {
+        echo "
+        <link href='https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css' rel='stylesheet'>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Logged in Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+        ";
+        // Unset the session variable to prevent repeated notifications
         unset($_SESSION['login_message_displayed']);
     }
 }else{

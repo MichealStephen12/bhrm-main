@@ -33,7 +33,7 @@ if (isset($_POST['submit'])) {
             $_SESSION["uname"] = $row['uname'];
             $_SESSION["role"] = $row["role"];
             $_SESSION['login_message_displayed'] = true;
-            header("Location: ../index.php");
+            header("Location: ../dashboardadmin.php");
             exit;
         } elseif ($role == 'user') {
             $_SESSION["uname"] = $row['uname'];

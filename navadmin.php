@@ -133,7 +133,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/bhrm-main/index.php">
+                <a class="nav-link" href="/bhrm-main/manageboardinghouse.php">
                     <i class="bi bi-house-door"></i>
                     <span>Manage Boarding House</span>
                 </a>

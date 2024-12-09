@@ -5,47 +5,57 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"] == 'user')) {
     unset($_SESSION['hname']);
 }
 
+
+if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
+    header('location: boardinghouse.php');
+}
+
 if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     $uname = $_SESSION["uname"];
     $role = $_SESSION["role"];
     $result = mysqli_query($conn, "select * from users where uname = '$uname'");
     $fetch = mysqli_fetch_assoc($result);
     
-    echo "
-    <script src='jquery.min.js'></script>
-    <link rel='stylesheet' href='toastr.min.css'/>
-    <script src='toastr.min.js'></script>
-    <script>
-        $(document).ready(function() {
-            // Check if the login message should be displayed
-            " . (isset($_SESSION['login_message_displayed']) ? "toastr.success('Logged in Successfully');" : "") . "
-        });
-    </script>
-    ";
-
-    // Unset the session variable to avoid repeated notifications
     if (isset($_SESSION['login_message_displayed'])) {
+        echo "
+        <link href='https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css' rel='stylesheet'>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Logged in Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+        ";
+        // Unset the session variable to prevent repeated notifications
         unset($_SESSION['login_message_displayed']);
     }
 }
 
 
-if (!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord') {
-    header('location: boardinghouse.php');
-}
-
 if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
     echo "
-    <script src='jquery.min.js'></script>
-    <link rel='stylesheet' href='toastr.min.css'/>
-    <script src='toastr.min.js'></script>
     <script>
-        $(document).ready(function() {
-            toastr.error('Please log in to proceed further.');
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Access Denied',
+                text: 'Please log in to proceed further.',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            });
         });
     </script>";
     unset($_SESSION['login_warning']); // Clear the session variable after use
 }
+
 ?>
 
 
@@ -56,6 +66,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
     <style>
         /* General Styles */
         body {
@@ -79,17 +90,28 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             }
         }
 
-   
- 
-        /* Section for admin charts */
-        .chart-section {
-            text-align: center;
-            margin-bottom: 30px;
+        .background {
+            background: linear-gradient(45deg, #343a40, #aeb5bb, #343a40, #ffffff);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            min-height: 100vh;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            padding-bottom: 80px; /* Ensure footer space */
         }
 
-        canvas {
-            max-width: 100%;
-            height: auto;
+                /* Content Background */
+        .content-background {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: auto;
+            margin-top: 100px;
+            
+        /*  margin-top: 100px; Adds space around the content */
+            max-width: 1100px;
         }
 
         /* Card Styles */
@@ -245,64 +267,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
 
 <body>
     <div class="background">
-        
-        <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin'): include 'navadmin.php'; ?>
-        <style>
-            .background {
-                background: linear-gradient(45deg, #343a40, #aeb5bb, #343a40, #ffffff);
-                background-size: 400% 400%;
-                animation: gradientAnimation 15s ease infinite;
-                background-repeat: no-repeat;
-                background-position: center;
-                min-height: 100vh;
-                background-repeat: no-repeat;
-                background-position: center;
-                position: relative;
-                padding-bottom: 80px; /* Ensure footer space */
-
-            }
-
-                    /* Content Background */
-            .content-background {
-                background-color: white;
-                border-radius: 10px;
-                box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-                margin: auto;
-                
-            /*  margin-top: 100px; Adds space around the content */
-                max-width: 1100px;
-            }
-
-        </style>
-        <?php  else: include 'navbar.php'; ?>
-        <style>
-            .background {
-                background: linear-gradient(45deg, #343a40, #aeb5bb, #343a40, #ffffff);
-                background-size: 400% 400%;
-                animation: gradientAnimation 15s ease infinite;
-                min-height: 100vh;
-                background-repeat: no-repeat;
-                background-position: center;
-                position: relative;
-                padding-bottom: 80px; /* Ensure footer space */
-            }
-
-                    /* Content Background */
-            .content-background {
-                background-color: white;
-                border-radius: 10px;
-                box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-                margin: auto;
-                margin-top: 100px;
-                
-            /*  margin-top: 100px; Adds space around the content */
-                max-width: 1100px;
-            }
-
-        </style>
-        <?php  endif; ?>
+        <?php include 'navbar.php'; ?>
 
         <div class="content-background">
 
@@ -342,42 +307,8 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             </div>
         </div>
     </div>
-    
- <!-- Confirmation Modal -->
- <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this landlord's boarding house?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Yes</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const deleteButtons = document.querySelectorAll('.button.delete');
-            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const deleteUrl = this.getAttribute('data-href');
-                    confirmDeleteBtn.setAttribute('href', deleteUrl);
-                });
-            });
-        });
-    </script>
-
-    <?php if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"] == 'admin')): ?>
-    <?php else: ?>
     <div class="container mt-5">
         <!-- Reservation Section -->
         <section id="reservation-easy" class="section mb-5">
@@ -439,9 +370,6 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             </div>
         </section>
     </div>
-    <?php endif; ?>
-
-
 
     <footer class="footer">
         <p>© 2024 Your Company Name. All Rights Reserved.</p>

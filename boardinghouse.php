@@ -43,15 +43,21 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
 <?php
     if (isset($_SESSION['already_booked']) && $_SESSION['already_booked'] === true) {
         echo "
-        <script src='jquery.min.js'></script>
-        <link rel='stylesheet' href='toastr.min.css' />
-        <script src='toastr.min.js'></script>
+        <link href='https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css' rel='stylesheet'>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
         <script>
-            $(document).ready(function() {
-                toastr.warning('You have already booked a room.');
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'You have already booked a room.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
             });
-        </script>";
-        unset($_SESSION['already_booked']); 
+        </script>
+        ";
+        // Unset the session variable to prevent repeated alerts
+        unset($_SESSION['already_booked']);
     }
 ?>
 

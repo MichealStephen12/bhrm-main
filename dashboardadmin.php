@@ -1,6 +1,33 @@
 <?php
 require 'php/connection.php';
 
+if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
+    $uname = $_SESSION["uname"];
+    $role = $_SESSION["role"];
+    $result = mysqli_query($conn, "select * from users where uname = '$uname'");
+    $fetch = mysqli_fetch_assoc($result);
+    
+    if (isset($_SESSION['login_message_displayed'])) {
+        echo "
+        <link href='https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css' rel='stylesheet'>
+        <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Logged in Successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+        ";
+        // Unset the session variable to prevent repeated notifications
+        unset($_SESSION['login_message_displayed']);
+    }
+}
+
+
 // Fetch the total landlords
 $query_landlords = "SELECT COUNT(*) as total_landlords FROM users where role = 'landlord'";
 $result_landlords = mysqli_query($conn, $query_landlords);
