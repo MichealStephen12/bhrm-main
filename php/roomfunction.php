@@ -84,7 +84,7 @@ if (isset($_GET['rdelete'])) {
     $query = "DELETE FROM rooms WHERE id = $id";
     $result = mysqli_query($conn, $query);
     if ($result) {
-        header('Location: ../boardinghouse.php');
+        header('Location: ../manageroom.php');
     }
 }
 

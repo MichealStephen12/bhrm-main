@@ -377,8 +377,6 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
         </p>
     </footer>
-
-    <?php include 'chat.php'?>
 </body> 
 
 </html>
