@@ -87,8 +87,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
 
 <body>
     <?php include 'navigationbar.php'; ?>
-    <?php include 'chat.php'; ?>
-
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">Dashboard Overview</h1>

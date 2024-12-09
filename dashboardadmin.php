@@ -37,6 +37,16 @@ $total_landlords = mysqli_fetch_assoc($result_landlords)['total_landlords'];
 $query_boardinghouses = "SELECT COUNT(*) as total_boardinghouses FROM boardinghouses";
 $result_boardinghouses = mysqli_query($conn, $query_boardinghouses);
 $total_boardinghouses = mysqli_fetch_assoc($result_boardinghouses)['total_boardinghouses'];
+
+// Fetch total boarding houses
+$totalBoardingHousesQuery = "SELECT COUNT(*) AS total_houses FROM boardinghouses";
+$totalBoardingHousesResult = mysqli_query($conn, $totalBoardingHousesQuery);
+$totalBoardingHouses = mysqli_fetch_assoc($totalBoardingHousesResult)['total_houses'];
+
+$totalLandlordsQuery = "SELECT COUNT(*) AS total_landlords FROM users WHERE role = 'landlord'";
+$totalLandlordsResult = mysqli_query($conn, $totalLandlordsQuery);
+$totalLandlords = mysqli_fetch_assoc($totalLandlordsResult)['total_landlords'];
+
 ?>
 
 <!DOCTYPE html>
@@ -50,11 +60,57 @@ $total_boardinghouses = mysqli_fetch_assoc($result_boardinghouses)['total_boardi
     <!-- Chart.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #fff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1 1 calc(33% - 20px);
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            color: #6c757d;
+        }
+
+        .card p {
+            font-size: 1.75rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #495057;
+        }
+    </style>
 <body>
+    
     <?php include 'navadmin.php'; ?>
 
     <div class="container mt-5">
         <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+        <div class="summary">
+            <div class="card">
+                <h3>Total Boarding Houses</h3>
+                <p><?php echo $totalBoardingHouses; ?></p>
+            </div>
+            <div class="card">
+                <h3>Total Landlords</h3>
+                <p><?php echo $totalLandlords; ?></p>
+            </div>
+        </div>
 
         <!-- Chart Section -->
         <div class="card">
@@ -100,7 +156,7 @@ $total_boardinghouses = mysqli_fetch_assoc($result_boardinghouses)['total_boardi
                     },
                     title: {
                         display: true,
-                        text: 'Landlords vs Boarding Houses'
+                        text: 'Landlords and Boarding Houses'
                     }
                 },
                 scales: {
