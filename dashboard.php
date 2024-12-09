@@ -41,8 +41,10 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     $reservationData = mysqli_fetch_assoc($reservationResult);
     $totalapproved = $reservationData['total_reservations'];
 
-    // Fetch total tenants
-    $tenantQuery = "SELECT COUNT(*) as total_tenants FROM users WHERE role = 'user'  and hname = '$hname'";
+    $tenantQuery = "
+        SELECT COUNT(DISTINCT email) AS total_tenants
+        FROM reservation
+        WHERE hname = '$hname'";
     $tenantResult = mysqli_query($conn, $tenantQuery);
     $tenantData = mysqli_fetch_assoc($tenantResult);
     $totalTenants = $tenantData['total_tenants'];

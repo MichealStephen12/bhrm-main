@@ -103,8 +103,8 @@ if (isset($_GET['confirm'])) {
     mysqli_query($conn, $insertPaymentQuery);
 
     // Insert a report record for the reservation
-    $insertReportQuery = "INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `pay_date`, `date_in`, `date_out`, `room_no`, `hname`) 
-                          VALUES ('', '$fname', '$lname', '$gender', '$uname', '', '$date_in', NULL, '$roomno', '$hname')";
+    $insertReportQuery = "INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `pay_date`, `date_in`, `date_out`, `room_no`, `hname`, `owner`) 
+                          VALUES ('', '$fname', '$lname', '$gender', '$uname', '', '$date_in', NULL, '$roomno', '$hname', '$owner')";
     mysqli_query($conn, $insertReportQuery);
 
     // Update the reservation status
@@ -310,7 +310,8 @@ if (isset($_POST['update'])) {
     $query = "UPDATE `boardinghouses` SET `owner`='$owner', `hname`='$hname', `haddress`='$haddress', `contact_no`='$contactno', `landlord`='$landlord' WHERE owner = '$owner'";
     $result = mysqli_query($conn, $query);
     if($result){
-        $query = "UPDATE `beds` SET `hname`='$hname' where owner = '$owner'";
+
+        $query = "UPDATE `bhapplication` SET `hname`='$hname' where owner = '$owner'";
         mysqli_query($conn, $query);
 
         $query = "UPDATE `description` SET `hname`='$hname' where owner = '$owner'";
@@ -336,7 +337,7 @@ if (isset($_POST['update'])) {
 
  
 
-    header("location: ../index.php");
+    header("location: ../manageboardinghouse.php");
 }
 
 
@@ -361,7 +362,7 @@ if (isset($_GET['delete'])) {
         $result = mysqli_query($conn, $query);
     }
     
-    header("location: ../index.php");
+    header("location: ../manageboardinghouse.php");
 }
 
 
