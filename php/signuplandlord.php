@@ -96,65 +96,58 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
     <div class="container-fluid">
-        <div class="row" style="padding-top: 5%;">
-            <div class="col-md-4"></div>
-            <div class="col-md-4" style="text-align: center; background-color: #a9a9a9; border-radius: 20px; padding: 10px;">
-                <div class="row">
-                    <div class="col-md-12" style="padding-bottom: 15px;">
-                        <img src="../images/logo.png" height="100px">
+        <div class="row justify-content-center" style="padding-top: 5%;">
+            <div class="col-md-6 col-lg-4">
+                <div class="text-center bg-light shadow p-4 rounded">
+                    <div class="mb-3">
+                        <img src="../images/logo.png" height="100px" alt="Logo">
                     </div>
-                    <div class="col-md-12">
-                        <span style="font-weight: 100; font-size: 17px;">Registration Form</span>
-                    </div>
-                    <div class="col-md-12">
-                        <form method="post"  enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="form-group">
-                                    <label>Picture</label>
-                                    <input type="file" name="image" value="">
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>First Name</label>
-                                    <input type="text" name="fname" placeholder="First Name" class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Last Name</label>
-                                    <input type="text" name="lname" placeholder="Last Name" class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 20px 20px 10px 20px;">
-                                    <label>Email</label>
-                                    <input type="email" name="uname" placeholder="Your Email" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Gender</label>
-                                    <select name="gender" id="" class="form-select me-2" required>
-                                        <option value="">Select Gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Password</label>
-                                    <input type="password" name="pass" placeholder="Password" class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: left; font-size: 14px; font-weight: 200; padding: 10px 20px 10px 20px;">
-                                    <label>Confirm Password</label>
-                                    <input type="password" name="confirmpassword" placeholder="Confirm Password" class="form-control" required>
-                                </div>
-                                <div class="col-md-12" style="text-align: center; font-size: 14px; font-weight: 200; padding: 0px 20px 10px 20px;">
-                                    <button type="submit" name="submit" class="btn btn-warning">Register</button>
-                                </div>
-                                <div class="col-md-12" style="text-align: center; font-size: 13px; font-weight: 100;">
-                                    <a href="login.php" style="text-decoration: none; color: black;">Already have an Account? Login Now</a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <h4 class="text-secondary mb-4">Registration Form</h4>
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3 text-start">
+                            <label for="image" class="form-label">Picture</label>
+                            <input type="file" id="image" name="image" class="form-control">
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="fname" class="form-label">First Name</label>
+                            <input type="text" id="fname" name="fname" placeholder="First Name" class="form-control" required>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="lname" class="form-label">Last Name</label>
+                            <input type="text" id="lname" name="lname" placeholder="Last Name" class="form-control" required>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="uname" class="form-label">Email</label>
+                            <input type="email" id="uname" name="uname" placeholder="Your Email" class="form-control" required>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select id="gender" name="gender" class="form-select" required>
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="pass" class="form-label">Password</label>
+                            <input type="password" id="pass" name="pass" placeholder="Password" class="form-control" required>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="confirmpassword" class="form-label">Confirm Password</label>
+                            <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Confirm Password" class="form-control" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" name="submit" class="btn btn-warning btn-block">Register</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="login.php" class="text-decoration-none text-secondary">Already have an Account? Login Now</a>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="col-md-4"></div>
         </div>
     </div>
+
 
     <!-- Modal -->
     <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
