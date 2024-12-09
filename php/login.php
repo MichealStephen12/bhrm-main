@@ -201,7 +201,7 @@ if (isset($_POST['submit'])) {
 <body>
 
 <div class="container">
-        <a href="../index.php"><img src="../images/logo.png" alt="Logo"></a>
+        <a href="../index.php"><img src="../images/0.png" alt="Logo"></a>
         <span>Login</span>
 
         <form method="POST" action="login.php">

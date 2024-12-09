@@ -171,7 +171,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
     <div class="container">
-        <img src="../images/logo.png" alt="Logo">
+        <img src="../images/0.png" alt="Logo">
         <span>Registration Form</span>
         <form method="post" enctype="multipart/form-data">
             <div class="form-group">

@@ -140,7 +140,7 @@ require 'php/connection.php';
             </div>
             <div class="col-md-6">
                 <div class="card">
-                    <img src="images/10.png" alt="Our Mission">
+                    <img src="images/0.png" alt="Our Mission">
                     <div class="card-body">
                         <h2>Our Mission</h2>
                         <p>Our mission is to revolutionize the rental experience by connecting people to quality

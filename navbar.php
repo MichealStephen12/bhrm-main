@@ -170,7 +170,7 @@
 
 <nav class="navbar">
     <a class="navbar-brand" href="#">
-        <img src="images/logo.png" alt="Logo">
+        <img src="images/0.png" alt="Logo">
     </a>
     <div class="nav-links">
         <a class="nav-link" href="index.php"><i class="fas fa-home"></i> Home</a>

@@ -117,7 +117,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"]) && $_SESSION['role']
     <!-- Sidebar -->
     <nav class="sidebar bg-dark">
         <div class="navbar-brand text-center">
-            <img src="/bhrm-main/images/logo.png" alt="Logo">
+            <img src="/bhrm-main/images/0.png" alt="Logo">
         </div>
         <ul class="nav flex-column">
             <!-- User Info -->

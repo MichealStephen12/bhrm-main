@@ -100,7 +100,7 @@ if (isset($_POST['submit'])) {
             <div class="col-md-6 col-lg-4">
                 <div class="text-center bg-light shadow p-4 rounded">
                     <div class="mb-3">
-                        <img src="../images/logo.png" height="100px" alt="Logo">
+                        <img src="../images/0.png" height="100px" alt="Logo">
                     </div>
                     <h4 class="text-secondary mb-4">Registration Form</h4>
                     <form method="post" enctype="multipart/form-data">

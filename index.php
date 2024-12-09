@@ -362,7 +362,7 @@ if (isset($_SESSION['login_warning']) && $_SESSION['login_warning'] == true) {
             <p><strong>Maranding Boarding House Center</strong> is your trusted platform for finding the best boarding houses in Maranding. Whether you're a student, worker, or traveler, we make accommodation easy, accessible, and hassle-free.</p>
             <div class="row">
                 <div class="col-md-6">
-                    <img src="/bhrm-main/images/logo.png" style="background-color: #343a40; border-radius: 20px;" class="img-fluid rounded" alt="Boarding House">
+                    <img src="/bhrm-main/images/0.png" style="background-color: #343a40; border-radius: 20px;" class="img-fluid rounded" alt="Boarding House">
                 </div>
                 <div class="col-md-6">
                     <p>Our goal is to provide a seamless experience, from browsing to booking. Find your ideal room, enjoy transparent pricing, and experience convenience like never before!</p>

@@ -117,7 +117,7 @@
     <!-- Sidebar -->
     <nav class="sidebar bg-dark">
         <div class="navbar-brand text-center">
-            <img src="/bhrm-main/images/logo.png" alt="Logo" width="60" class="mb-3 rounded-circle">
+            <img src="/bhrm-main/images/0.png" alt="Logo" width="60" class="mb-3 rounded-circle">
         </div>
         <ul class="nav flex-column">
             <!-- User Info -->
