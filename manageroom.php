@@ -142,56 +142,70 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
     </div>
 
     <div class="section3">
-    <?php 
-        $hname = $_SESSION['hname'];
-        $query = "SELECT * FROM rooms WHERE hname = '$hname' ORDER BY room_no";
-        $result = mysqli_query($conn, $query);
+        <?php 
+            $hname = $_SESSION['hname'];
+            $query = "SELECT * FROM rooms WHERE hname = '$hname' ORDER BY room_no";
+            $result = mysqli_query($conn, $query);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            while ($fetch = mysqli_fetch_assoc($result)) {
-                $id = $fetch['id'];
-                $roomno = $fetch['room_no'];
-                $capacity = $fetch['capacity'];
-                $tenantcount = $fetch['current_tenant'];
+            if ($result && mysqli_num_rows($result) > 0) {
+                while ($fetch = mysqli_fetch_assoc($result)) {
+                    $id = $fetch['id'];
+                    $roomno = $fetch['room_no'];
+                    $capacity = $fetch['capacity'];
+                    $tenantcount = $fetch['current_tenant'];
 
-                // Auto-update room status
-                if ($tenantcount == $capacity) {
-                    $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno";
-                    mysqli_query($conn, $query);
-                    $query = "UPDATE reservation SET status = 'Full' WHERE room_no = $roomno";
-                    mysqli_query($conn, $query);
-                } else if ($tenantcount < $capacity) {
-                    $query = "UPDATE rooms SET status = 'Available' WHERE room_no = $roomno";
-                    mysqli_query($conn, $query);
-                    $query = "UPDATE reservation SET status = 'Available' WHERE room_no = $roomno";
-                    mysqli_query($conn, $query);
-                }
-    ?>
-    <div class="card shadow-sm mb-4" style="width: 22rem;">
-        <img src="<?php echo $fetch['image']; ?>" class="card-img-top" alt="Room Image" style="height: 200px; object-fit: cover;">
-        <div class="card-body">
-            <h5 class="card-title text-center"><strong>Room No:</strong> <?php echo $roomno; ?></h5>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Capacity:</strong> <?php echo $capacity; ?></li>
-                <li class="list-group-item"><strong>Rent / Month:</strong> <?php echo $fetch['price']; ?></li>
-                <li class="list-group-item"><strong>Amenities:</strong> <?php echo $fetch['amenities']; ?></li>
-                <li class="list-group-item"><strong>Tenant Type:</strong> <?php echo $fetch['tenant_type']; ?> Only</li>
-                <li class="list-group-item"><strong>Current Tenant:</strong> <?php echo $tenantcount; ?> / <?php echo $capacity; ?></li>
-                <li class="list-group-item"><strong>Room Floor:</strong> <?php echo $fetch['room_floor']; ?></li>
-                <li class="list-group-item"><strong>Status:</strong> 
-                    <span class="badge bg-<?php echo $fetch['status'] === 'Full' ? 'danger' : 'success'; ?>">
-                        <?php echo $fetch['status']; ?>
-                    </span>
-                </li>
-            </ul>
-            <div class="d-flex justify-content-between mt-3">
-                <button data-action="update" data-id="<?php echo $id; ?>" class="btn btn-success action-button">Update</button>
-                <button data-action="delete" data-id="<?php echo $id; ?>" class="btn btn-danger action-button">Delete</button>
+                    // Auto-update room status
+                    if ($tenantcount == $capacity) {
+                        $query = "UPDATE rooms SET status = 'Full' WHERE room_no = $roomno";
+                        mysqli_query($conn, $query);
+                        $query = "UPDATE reservation SET status = 'Full' WHERE room_no = $roomno";
+                        mysqli_query($conn, $query);
+                    } else if ($tenantcount < $capacity) {
+                        $query = "UPDATE rooms SET status = 'Available' WHERE room_no = $roomno";
+                        mysqli_query($conn, $query);
+                        $query = "UPDATE reservation SET status = 'Available' WHERE room_no = $roomno";
+                        mysqli_query($conn, $query);
+                    }
+        ?>
+        <div class="card shadow-sm mb-4" style="width: 22rem;">
+            <img src="<?php echo $fetch['image']; ?>" class="card-img-top" alt="Room Image" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+                <h5 class="card-title text-center"><strong>Room No:</strong> <?php echo $roomno; ?></h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Capacity:</strong> <?php echo $capacity; ?></li>
+                    <li class="list-group-item"><strong>Rent / Month:</strong> <?php echo $fetch['price']; ?></li>
+                    <li class="list-group-item"><strong>Amenities:</strong> <?php echo $fetch['amenities']; ?></li>
+                    <li class="list-group-item"><strong>Tenant Type:</strong> <?php echo $fetch['tenant_type']; ?> Only</li>
+                    <li class="list-group-item"><strong>Current Tenant:</strong> <?php echo $tenantcount; ?> / <?php echo $capacity; ?></li>
+                    <li class="list-group-item"><strong>Room Floor:</strong> <?php echo $fetch['room_floor']; ?></li>
+                    <li class="list-group-item"><strong>Status:</strong> 
+                        <span class="badge bg-<?php echo $fetch['status'] === 'Full' ? 'danger' : 'success'; ?>">
+                            <?php echo $fetch['status']; ?>
+                        </span>
+                    </li>
+                </ul>
+                <div class="d-flex justify-content-between mt-3">
+                    <button 
+                        data-action="update" 
+                        data-id="<?php echo $id; ?>" 
+                        class="btn btn-success action-button"
+                        <?php echo $tenantcount > 0 ? 'disabled' : ''; ?>
+                    >
+                        Update
+                    </button>
+                    <button 
+                        data-action="delete" 
+                        data-id="<?php echo $id; ?>" 
+                        class="btn btn-danger action-button"
+                        <?php echo $tenantcount > 0 ? 'disabled' : ''; ?>
+                    >
+                        Delete
+                    </button>
+                </div>
             </div>
         </div>
+        <?php } } ?>
     </div>
-    <?php } } ?>
-</div>
 
 
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">

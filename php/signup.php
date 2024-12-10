@@ -5,6 +5,9 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     header("location: ../index.php");
 }
 
+$showModal = false;
+$modalMessage = "";
+
 if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
@@ -72,7 +75,8 @@ if (isset($_POST['submit'])) {
         $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `gender`, `tenant_status`, `school`, `uname`, `pass`, `role`) VALUES 
                                     ('', 'profiles/$fileNameNew','$fname','$lname', '$gender', '$tenantstatus', '$school', '$uname','$pass', 'user')";
         mysqli_query($conn, $query);
-        echo "<script>alert('Successfully added the information.');</script>"; // Display success message in an alert button
+        $modalMessage = "Registration successful!";
+        $showModal = true;
     }    
 }
 ?>
@@ -255,6 +259,35 @@ if (isset($_POST['submit'])) {
             <a href="login.php">Already have an Account? Login Now</a>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <p><?= $modalMessage ?></p>
+                    <button type="button" class="btn btn-warning" id="modalConfirmButton">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        <?php if ($showModal): ?>
+            var modal = new bootstrap.Modal(document.getElementById('responseModal'));
+            modal.show();
+        <?php endif; ?>
+
+        document.getElementById('modalConfirmButton').addEventListener('click', function () {
+            <?php if ($modalMessage === "Registration successful!"): ?>
+                window.location.href = "login.php";
+            <?php else: ?>
+                var modalInstance = bootstrap.Modal.getInstance(document.getElementById('responseModal'));
+                modalInstance.hide();
+            <?php endif; ?>
+        });
+    </script>
 
 
     <script>
