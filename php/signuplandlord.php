@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
     <div class="container-fluid">
         <div class="row justify-content-center" style="padding-top: 5%;">
             <div class="col-md-6 col-lg-4">
-                <div class="text-center bg-light shadow p-4 rounded">
+                <div class="text-center" style="background-color: #a9a9a9; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 16px; border-radius: 8px;">
                     <div class="mb-3">
                         <img src="../images/0.png" height="100px" alt="Logo">
                     </div>
