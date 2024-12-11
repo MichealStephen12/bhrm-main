@@ -389,26 +389,31 @@ if (isset($_POST['submit'])) {
                 $currentTenant = $roomData['current_tenant']; // Current tenants in the room
                 $availableSlots = $roomCapacity - $currentTenant; // Remaining slots
 
-                // Generate checkbox options dynamically based on available slots
                 $checkbox_options = '';
 
-                // Show checkboxes for the available slots (excluding the last slot if "Whole Room" is an option)
-                for ($i = 1; $i < $availableSlots; $i++) { // Exclude the last slot for "Whole Room"
-                    $checkbox_options .= "
-                        <div class='form-check'>
-                            <input type='checkbox' class='form-check-input' id='slot_$i' name='slots[]' value='Slot $i'>
-                            <label class='form-check-label' for='slot_$i'>Slot $i</label>
-                        </div>
-                    ";
-                }
+                // Check if there are available slots
+                if ($availableSlots > 0) {
+                    // Show slots based on available capacity
+                    for ($i = 1; $i <= $availableSlots; $i++) {
+                        // Exclude the last slot if "Whole Room" option is available
+                        if ($currentTenant == 0 && $i == $availableSlots) {
+                            break; // Stop before adding the last slot when "Whole Room" will be added
+                        }
+                        $checkbox_options .= "
+                            <div class='form-check'>
+                                <input type='checkbox' class='form-check-input' id='slot_$i' name='slots[]' value='Slot $i'>
+                                <label class='form-check-label' for='slot_$i'>Slot $i</label>
+                            </div>";
+                    }
 
-                // Show the "Whole Room" option
-                if ($availableSlots > 0) { // Only add this if there are any slots available
-                    $checkbox_options .= "
-                        <div class='form-check'>
-                            <input type='checkbox' class='form-check-input' id='whole_room' name='slots[]' value='Whole Room'>
-                            <label class='form-check-label' for='whole_room'>Whole Room</label>
-                        </div>";
+                    // Add "Whole Room" only if the room is entirely vacant
+                    if ($currentTenant == 0) {
+                        $checkbox_options .= "
+                            <div class='form-check'>
+                                <input type='checkbox' class='form-check-input' id='whole_room' name='slots[]' value='Whole Room'>
+                                <label class='form-check-label' for='whole_room'>Whole Room</label>
+                            </div>";
+                    }
                 }
             ?>
 

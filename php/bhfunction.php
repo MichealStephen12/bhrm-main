@@ -401,7 +401,7 @@ if (isset($_POST['submit'])) {
 <body>
     <nav>
         <a class="navbar-brand" href="#">
-            <img src="../images/logo.png" alt="Logo">
+            <img src="./images/logo.png" alt="Logo">
         </a>
         <div class="nav-links">
             <a href="/bhrm-main/php/bhfunction.php">Home</a>
@@ -527,7 +527,7 @@ if (isset($_POST['submit'])) {
         </div>
 
         <div class="section2">
-            <img src="../images/logo.png" class="logo" alt="Logo">
+            <img src="./images/logo.png" class="logo" alt="Logo">
             <div class="title">Add Boarding House</div>
             <form method="post" enctype="multipart/form-data" class="form-container">
                 <div class="form-group">
