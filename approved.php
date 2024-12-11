@@ -106,6 +106,9 @@
                     <th>Room No</th>
                     <th>Room Rent</th>
                     <th>Selected Room Slot</th> 
+                    <th>Payment</th> 
+                    <th>Payment Date</th> 
+                    <th>Payment Status</th> 
                     <th>Date In</th>
                     <th>Date Out</th>
                     <th>Requests</th>
@@ -119,18 +122,9 @@
                 <?php 
                 while ($fetch = mysqli_fetch_assoc($result)) {
                     $id = $fetch['id'];
-                    $uname = $fetch['email'];
-
-                    // Fetch payment details for the current reservation email
-                    $paymentQuery = "SELECT * FROM payments WHERE hname = '$hname' AND email = '$uname' and res_id = '$id' ORDER BY id DESC LIMIT 1";
-                    $paymentResult = mysqli_query($conn, $paymentQuery);
-                    $paymentData = mysqli_fetch_assoc($paymentResult);
-
-                    $payment = $paymentData['payment'] ?? 'No Payment Data';
-                    $paystat = $paymentData['pay_stat'] ?? 'No Payment Status';
-                    $paydate = $paymentData['pay_date'] ?? 'No Payment Date';
+                    $payment = $fetch['payment'];
+                    $price = $fetch['price'];
                 ?>
-                <tr id="reservation-<?php echo $fetch['id']; ?>">
                     <td><?php echo $fetch['id']; ?></td>
                     <td><?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></td>
                     <td><?php echo $fetch['email']; ?></td>
@@ -139,6 +133,9 @@
                     <td><?php echo $fetch['room_no']; ?></td>
                     <td><?php echo $fetch['price']; ?></td>
                     <td><?php echo $fetch['room_slot']; ?></td>
+                    <td><?php echo $fetch['payment']; ?></td>
+                    <td><?php echo $fetch['pay_date']; ?></td>
+                    <td><?php echo $fetch['pay_stat']; ?></td>
                     <td><?php echo $fetch['date_in']; ?></td>
                     <td><?php echo $fetch['date_out']; ?></td>
                     <td><?php echo $fetch['addons']; ?></td>
@@ -158,72 +155,21 @@
                         <?php if ($fetch['res_stat'] == 'Approved'): ?>
                             <a href="php/function.php?confirm=<?php echo $fetch['id']; ?>" class="btn btn-success btn-sm">Confirm</a>
                             <a href="php/function.php?cancel=<?php echo $fetch['id']; ?>" class="btn btn-danger btn-sm">Cancel</a>
-                        <?php elseif ($fetch['res_stat'] == 'Confirmed'): ?>
-                            <!-- Dynamically check payment status for "End Reservation" button -->
-                            <a href="php/function.php?end=<?php echo $fetch['id']; ?>" 
-                                id="end-reservation-<?php echo $fetch['id']; ?>" 
-                                class="btn btn-warning btn-sm">End Reservation</a>
-                            <?php elseif ($fetch['res_stat'] == 'Ended'): ?>
-                            <button class="btn btn-secondary btn-sm" disabled>End Reservation</button>
+                        <?php elseif ($payment === $price): ?>
+                            <a href="php/function.php?end=<?php echo $fetch['id']; ?>" class="btn btn-warning btn-sm">End Reservation</a>
+                        <?php else: ?>
+                            <a href="php/function.php?end=<?php echo $fetch['id']; ?>" class="btn btn-warning btn-sm disabled">End Reservation</a>
                         <?php endif; ?>
                     </td>
-                </tr>
                 <?php } ?>
             </tbody>
         </table>
     </div>
 
-
     <!-- jQuery and DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            // Function to check payment status for each reservation
-            function checkPaymentStatus(reservationId) {
-                $.ajax({
-                    url: '',  // Stay within the current file
-                    type: 'POST',
-                    data: {
-                        reservation_id: reservationId
-                    },
-                    success: function(response) {
-                        // Get the payment status from the response
-                        let payStatus = response.trim();  // Assuming the response is just the payment status
-
-                        // Get the End Reservation button for this reservation
-                        let endButton = $('#end-reservation-' + reservationId);
-
-                        // If payment status is "Not Paid Yet", disable the button
-                        if (payStatus === 'Not Paid Yet') {
-                            endButton.addClass('disabled').prop('disabled', true);
-                        } else {
-                            endButton.removeClass('disabled').prop('disabled', false);
-                        }
-                    }
-                });
-            }
-
-            // Loop through each reservation to check payment status
-            <?php 
-            while ($fetch = mysqli_fetch_assoc($result)) {
-                echo 'checkPaymentStatus(' . $fetch['id'] . ');';
-            }
-            ?>
-
-            // Optional: Set an interval to check the payment status every 30 seconds
-            setInterval(function() {
-                <?php 
-                // Recheck for all reservations
-                while ($fetch = mysqli_fetch_assoc($result)) {
-                    echo 'checkPaymentStatus(' . $fetch['id'] . ');';
-                }
-                ?>
-            }, 30000); // Check every 30 seconds
-        });
-        </script>
 
     <script>
     // Initialize DataTable

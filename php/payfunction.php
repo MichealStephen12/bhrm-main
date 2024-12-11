@@ -8,6 +8,7 @@ if (isset($_GET['id'])) {
     $query = "SELECT * FROM payments WHERE id = $id";
     $result = mysqli_query($conn, $query);
     $payment = mysqli_fetch_assoc($result);
+    $resid = $payment['res_id'];
     $email = $payment['email'];
     $hname = $payment['hname'];
     $price = floatval($payment['price']); // Fetch the room price
@@ -35,12 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pay_stat = $payment_amount >= $price ? 'Fully Paid' : 'Partially Paid';
     }
 
+    $updateQuery = "UPDATE reservation SET 
+                    payment = $payment_amount, 
+                    pay_stat = '$pay_stat', 
+                    pay_date = '$pay_date' 
+                    WHERE id = $resid and email = '$email' and hname = '$hname'";
+    mysqli_query($conn, $updateQuery);
+
     // Update the payment record
     $updateQuery = "UPDATE payments SET 
                     payment = $payment_amount, 
                     pay_stat = '$pay_stat', 
                     pay_date = '$pay_date' 
                     WHERE id = $id and email = '$email' and hname = '$hname'";
+                    
 
     if (mysqli_query($conn, $updateQuery)) {
         header('Location: ../payment.php');

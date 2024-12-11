@@ -37,7 +37,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
