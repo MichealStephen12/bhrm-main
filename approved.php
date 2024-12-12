@@ -125,6 +125,7 @@
                     $payment = $fetch['payment'];
                     $price = $fetch['price'];
                 ?>
+                <tr>
                     <td><?php echo $fetch['id']; ?></td>
                     <td><?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></td>
                     <td><?php echo $fetch['email']; ?></td>
@@ -160,7 +161,9 @@
                         <?php else: ?>
                             <a href="php/function.php?end=<?php echo $fetch['id']; ?>" class="btn btn-warning btn-sm disabled">End Reservation</a>
                         <?php endif; ?>
+                        
                     </td>
+                </tr>
                 <?php } ?>
             </tbody>
         </table>
