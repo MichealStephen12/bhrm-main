@@ -90,7 +90,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($fetch = mysqli_fetch_assoc($result)) { ?>
+                    <?php while ($fetch = mysqli_fetch_assoc($result)){
+                        
+                    ?>
+                        
                     <tr>
                         <td><?php echo $fetch['id']; ?></td>
                         <td><?php echo $fetch['fname'] . ' ' . $fetch['lname']; ?></td>
@@ -107,7 +110,7 @@
                         <td><?php echo $fetch['res_reason']; ?></td>
                         <td><?php echo $fetch['res_stat']; ?></td>
                         <td>
-                            <?php if ($fetch['res_stat'] == 'Pending'): ?>
+                            <?php if ($fetch['res_stat'] == 'Pending' && $fetch['status'] != 'Reserved'): ?>
                                 <a href="php/function.php?approve=<?php echo $fetch['id']; ?>" class="btn btn-success btn-sm">Approve</a>
                                 <a href="php/function.php?reject=<?php echo $fetch['id']; ?>" class="btn btn-danger btn-sm">Reject</a>
                             <?php else: ?>

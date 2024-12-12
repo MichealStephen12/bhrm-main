@@ -35,7 +35,10 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                     <th>Guest Name</th>
                     <th>Email</th>
                     <th>Room No</th>
-                    <th>Price</th>
+                    <th>Room Rent</th>
+                    <th>Payment</th>
+                    <th>Payment Date</th>
+                    <th>Payment Status</th>
                     <th>Date In</th>
                     <th>Date Out</th>
                     <th>Status</th>
@@ -45,7 +48,7 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                 <?php
                 if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user') {
                     $uname = $_SESSION['uname'];
-                    $reservationQuery = "SELECT * FROM reservation WHERE email = '$uname' ORDER BY id DESC";
+                    $reservationQuery = "SELECT * FROM reservation WHERE email = '$uname' ORDER BY id desc";
                     $reservationResult = mysqli_query($conn, $reservationQuery);
 
                     while ($reservation = mysqli_fetch_assoc($reservationResult)) {
@@ -56,6 +59,9 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
                             <td>{$reservation['email']}</td>
                             <td>{$reservation['room_no']}</td>
                             <td>{$reservation['price']} PHP</td>
+                            <td>{$reservation['payment']}</td>
+                            <td>{$reservation['pay_date']}</td>
+                            <td>{$reservation['pay_stat']}</td>
                             <td>{$reservation['date_in']}</td>
                             <td>{$reservation['date_out']}</td>
                             <td>{$reservation['res_stat']}</td>

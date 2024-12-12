@@ -524,49 +524,54 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                         }
                                     </style>
                                         <div class="room-btn">
-                                            <?php 
-                                                // Fetch room capacity, current tenant count, and tenant type from the database
-                                                $roomQuery = "SELECT capacity, current_tenant, tenant_type FROM rooms WHERE room_no = $roomno AND hname = '$hname'";
-                                                $roomResult = mysqli_query($conn, $roomQuery);
-                                                $roomData = mysqli_fetch_assoc($roomResult);
+                                        <?php 
+                                            // Fetch room capacity, current tenant count, tenant type, and room status from the database
+                                            $roomQuery = "SELECT capacity, current_tenant, tenant_type, status FROM rooms WHERE room_no = $roomno AND hname = '$hname'";
+                                            $roomResult = mysqli_query($conn, $roomQuery);
+                                            $roomData = mysqli_fetch_assoc($roomResult);
 
-                                                $roomCapacity = $roomData['capacity']; // Total capacity of the room
-                                                $currentTenant = $roomData['current_tenant']; // Current tenants in the room
+                                            $roomCapacity = $roomData['capacity']; // Total capacity of the room
+                                            $currentTenant = $roomData['current_tenant']; // Current tenants in the room
+                                            $roomStatus = $roomData['status']; // Current status of the room (Available, Full, Reserved)
 
-                                                // Check if the room is full
-                                                if ($currentTenant == $roomCapacity) {
-                                                    $roomStatus = "Full"; // Room is full
-                                                } else {
-                                                    $roomStatus = "Available"; // Room has space
-                                                }
+                                            // Check if the room is full
+                                            if ($currentTenant == $roomCapacity) {
+                                                $roomStatus = "Full"; // Room is full
+                                            } elseif ($roomStatus !== "Reserved") {
+                                                $roomStatus = "Available"; // Room has space and is not reserved
+                                            }
 
-                                                // Ensure the current user is logged in
-                                                if (isset($_SESSION['uname'])) {
-                                                    $userQuery = "SELECT role, gender FROM users WHERE uname = '" . $_SESSION['uname'] . "'";
-                                                    $userResult = mysqli_query($conn, $userQuery);
-                                                    $userData = mysqli_fetch_assoc($userResult);
+                                            // Ensure the current user is logged in
+                                            if (isset($_SESSION['uname'])) {
+                                                $userQuery = "SELECT role, gender FROM users WHERE uname = '" . $_SESSION['uname'] . "'";
+                                                $userResult = mysqli_query($conn, $userQuery);
+                                                $userData = mysqli_fetch_assoc($userResult);
 
-                                                    // Check if the user matches the room's gender restriction
-                                                    if ($roomData['tenant_type'] === 'All' || strtolower($roomData['tenant_type']) === strtolower($userData['gender'])) {
-                                                        // Check room status before allowing booking
-                                                        if ($roomStatus === "Available") {
-                                                            // Allow booking if room is available
-                                                            ?>
-                                                            <a href='book-in.php?roomno=<?php echo $roomno; ?>' class='btn btn-warning'>Book Now!</a>
-                                                            <?php
-                                                        } else {
-                                                            // Message if the room is full
-                                                            echo "<p>This room is currently full. You cannot book it.</p>";
-                                                        }
+                                                // Check if the user matches the room's gender restriction
+                                                if ($roomData['tenant_type'] === 'All' || strtolower($roomData['tenant_type']) === strtolower($userData['gender'])) {
+                                                    // Check room status before allowing booking
+                                                    if ($roomStatus === "Available") {
+                                                        // Allow booking if room is available
+                                                        ?>
+                                                        <a href='book-in.php?roomno=<?php echo $roomno; ?>' class='btn btn-warning'>Book Now!</a>
+                                                        <?php
                                                     } else {
-                                                        // Message if the user is not eligible due to gender restriction
-                                                        echo "<p>This room is restricted to " . ucfirst($roomData['tenant_type']) . " tenants.</p>";
+                                                        // Message if the room is full or reserved
+                                                        if ($roomStatus === "Full") {
+                                                            echo "<p>This room is currently full. You cannot book it.</p>";
+                                                        } elseif ($roomStatus === "Reserved") {
+                                                            echo "<p>This room is currently reserved. You cannot book it.</p>";
+                                                        }
                                                     }
                                                 } else {
-                                                    // Message if the user is not logged in
-                                                    echo "<p>Please log in to book this room.</p>";
+                                                    // Message if the user is not eligible due to gender restriction
+                                                    echo "<p>This room is restricted to " . ucfirst($roomData['tenant_type']) . " tenants.</p>";
                                                 }
-                                            ?>
+                                            } else {
+                                                // Message if the user is not logged in
+                                                echo "<p>Please log in to book this room.</p>";
+                                            }
+                                        ?>
                                         </div>
                                     </div>
                                 </div>

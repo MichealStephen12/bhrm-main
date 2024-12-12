@@ -16,6 +16,16 @@ if (isset($_GET['approve'])) {
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
 
+    $resid = $fetch['id'];
+    $roomno = $fetch['room_no'];
+    $price = $fetch['price'];
+    $uname = $fetch['email'];
+    $fname = $fetch['fname'];
+    $lname = $fetch['lname'];
+    $gender = $fetch['gender'];
+    $owner = $fetch['owner'];
+    $capacity = $fetch['capacity'];  // Room capacity
+
     // Update the reservation status
     $updateReservationQuery = "UPDATE reservation 
                                 SET res_duration = '1 day', 
@@ -23,6 +33,23 @@ if (isset($_GET['approve'])) {
                                     res_reason = 'Process Completed' 
                                 WHERE id = $id AND hname = '$hname'";
     mysqli_query($conn, $updateReservationQuery);
+
+    // If the room capacity is 1, update the room status to 'Reserved'
+    if ($capacity == 1) {
+        // Update the room status in the reservation table
+        $updateRoomStatusQuery = "UPDATE reservation 
+                                  SET res_duration = '1 day',
+                                    status = 'Reserved',
+                                    res_reason = 'Process Completed'
+                                  WHERE room_no = '$roomno' AND hname = '$hname' AND res_stat = 'Approved'";
+        mysqli_query($conn, $updateRoomStatusQuery);
+
+        // Update the room status in the rooms table
+        $updateRoomStatusInRoomsQuery = "UPDATE rooms 
+                                         SET status = 'Reserved' 
+                                         WHERE room_no = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateRoomStatusInRoomsQuery);
+    }
 
     // Redirect after the update
     header('Location: ../approved.php');
@@ -97,15 +124,15 @@ if (isset($_GET['confirm'])) {
 
     $roomStatus = ($newTenantCount >= $roomCapacity) ? 'Full' : 'Available';
 
-    // Insert a payment record for the reservation
-    $insertPaymentQuery = "INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `pay_stat`, `hname`, `owner`) 
-                           VALUES                   ('', '$resid', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
-    mysqli_query($conn, $insertPaymentQuery);
-
     // Insert a report record for the reservation
     $insertReportQuery = "INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `pay_date`, `date_in`, `date_out`, `room_no`, `hname`, `owner`) 
                           VALUES ('', '$fname', '$lname', '$gender', '$uname', '', '$date_in', NULL, '$roomno', '$hname', '$owner')";
     mysqli_query($conn, $insertReportQuery);
+
+        // Insert a payment record for the reservation
+    $insertPaymentQuery = "INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `pay_stat`, `hname`, `owner`) 
+                            VALUES ('', '$resid', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
+    mysqli_query($conn, $insertPaymentQuery);
 
     // Update the reservation status
     $updateReservationQuery = "UPDATE reservation 
@@ -138,6 +165,7 @@ if (isset($_GET['cancel'])) {
     $query = "SELECT * FROM reservation WHERE id = $id AND hname = '$hname'";
     $result = mysqli_query($conn, $query);
     $fetch = mysqli_fetch_assoc($result);
+    $capacity = $fetch['capacity'];  // Room capacity
 
     $roomno = $fetch['room_no'];
 
@@ -148,6 +176,22 @@ if (isset($_GET['cancel'])) {
                                    res_reason = 'Reservation Cancelled' 
                                WHERE id = $id AND hname = '$hname'";
     mysqli_query($conn, $updateReservationQuery);
+    
+    if ($capacity == 1) {
+        // Update the room status in the reservation table
+        $updateRoomStatusQuery = "UPDATE reservation 
+                                  SET res_duration = '',
+                                    status = 'Cancelled',
+                                    res_reason = 'Reservation Cancelled'
+                                  WHERE room_no = '$roomno' AND hname = '$hname' AND res_stat = 'Approved'";
+        mysqli_query($conn, $updateRoomStatusQuery);
+
+        // Update the room status in the rooms table
+        $updateRoomStatusInRoomsQuery = "UPDATE rooms 
+                                         SET status = 'Available' 
+                                         WHERE room_no = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateRoomStatusInRoomsQuery);
+    }
 
     // Redirect after the update
     header('Location: ../cancelled.php');

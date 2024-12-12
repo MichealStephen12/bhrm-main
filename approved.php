@@ -106,6 +106,7 @@
                     <th>Room No</th>
                     <th>Room Rent</th>
                     <th>Selected Room Slot</th> 
+                    <th>Room Status</th>
                     <th>Payment</th> 
                     <th>Payment Date</th> 
                     <th>Payment Status</th> 
@@ -120,10 +121,44 @@
             </thead>
             <tbody>
                 <?php 
-                while ($fetch = mysqli_fetch_assoc($result)) {
-                    $id = $fetch['id'];
-                    $payment = $fetch['payment'];
-                    $price = $fetch['price'];
+                    while ($fetch = mysqli_fetch_assoc($result)) {
+                        $id = $fetch['id'];
+                        $payment = $fetch['payment'];
+                        $price = $fetch['price'];
+                        $roomno = $fetch['room_no'];
+                        $roomCapacity = $fetch['capacity'];  // Assuming capacity is available in reservation or room table
+
+                        // Fetch other reservations for the same room that are confirmed
+                        $conflictQuery = "SELECT room_slot FROM reservation WHERE room_no = '$roomno' AND res_stat = 'Confirmed'";
+                        $conflictResult = mysqli_query($conn, $conflictQuery);
+
+                        $occupiedSlots = []; // Array to hold all occupied slots
+                        while ($conflict = mysqli_fetch_assoc($conflictResult)) {
+                            if ($conflict['room_slot'] === 'Whole Room') {
+                                // If "Whole Room" is booked, disable the button for all others
+                                $occupiedSlots = range(1, $roomCapacity); // Simulate full capacity
+                                break;
+                            }
+                            $occupiedSlots = array_merge($occupiedSlots, explode(', ', $conflict['room_slot']));
+                        }
+
+                        // Calculate total occupied slots and unique slots
+                        $totalOccupiedSlots = count(array_unique($occupiedSlots));
+                        $currentSlots = explode(', ', $fetch['room_slot']);
+                        $newTotal = $totalOccupiedSlots + count(array_unique($currentSlots));
+
+                        $isRoomFull = $newTotal > $roomCapacity; // Check if adding the current slots exceeds capacity
+                        $hasConflict = false;
+
+                        // Check for overlapping slots
+                        if (array_intersect($currentSlots, $occupiedSlots)) {
+                            $hasConflict = true;
+                        }
+
+                        // Prevent "Whole Room" conflicts
+                        if ($fetch['room_slot'] === 'Whole Room' && $totalOccupiedSlots > 0) {
+                            $hasConflict = true;
+                        }
                 ?>
                 <tr>
                     <td><?php echo $fetch['id']; ?></td>
@@ -134,6 +169,7 @@
                     <td><?php echo $fetch['room_no']; ?></td>
                     <td><?php echo $fetch['price']; ?></td>
                     <td><?php echo $fetch['room_slot']; ?></td>
+                    <td><?php echo $fetch['status']; ?></td>
                     <td><?php echo $fetch['payment']; ?></td>
                     <td><?php echo $fetch['pay_date']; ?></td>
                     <td><?php echo $fetch['pay_stat']; ?></td>
@@ -153,8 +189,13 @@
                             <button class="btn btn-secondary btn-sm" disabled>Reject</button>
                         <?php endif; ?>
 
+
                         <?php if ($fetch['res_stat'] == 'Approved'): ?>
-                            <a href="php/function.php?confirm=<?php echo $fetch['id']; ?>" class="btn btn-success btn-sm">Confirm</a>
+                            <?php if (!$hasConflict): ?>
+                                <a href="php/function.php?confirm=<?php echo $fetch['id']; ?>" class="btn btn-success btn-sm">Confirm</a>
+                            <?php else: ?>
+                                <button class="btn btn-success btn-sm disabled">Confirm</button>
+                            <?php endif; ?>
                             <a href="php/function.php?cancel=<?php echo $fetch['id']; ?>" class="btn btn-danger btn-sm">Cancel</a>
                         <?php elseif ($payment === $price): ?>
                             <a href="php/function.php?end=<?php echo $fetch['id']; ?>" class="btn btn-warning btn-sm">End Reservation</a>

@@ -53,9 +53,11 @@ $tenantDetailsQuery = "
            MAX(gender) AS gender, 
            MAX(tenant_status) AS tenant_status, 
            MAX(school) AS school, 
-           MAX(image) AS image 
+           MAX(image) AS image,
+           MAX(date_in) AS date_in, 
+           MAX(date_out) AS date_out
     FROM reservation 
-    WHERE hname = '$hname'
+    WHERE hname = '$hname' and res_stat = 'Confirmed'
     GROUP BY email
     ORDER BY MAX(id) DESC";
 $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
@@ -160,12 +162,13 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
                             <th>Email</th>
                             <th>Status</th>
                             <th>School</th>
+                            <th>Date In</th>
+                            <th>Date Out</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php while ($tenant = mysqli_fetch_assoc($tenantDetailsResult)) { ?>
-                            <tr>
-                                <td>
+                            <tr>                                <td>
                                     <img src="/bhrm-main/<?php echo $tenant['image'] ?? 'default.png'; ?>" 
                                         width="50" height="50" 
                                         class="rounded-circle" 
@@ -177,6 +180,8 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
                                 <td><?php echo htmlspecialchars($tenant['email']); ?></td>
                                 <td><?php echo htmlspecialchars($tenant['tenant_status'] ?? 'N/A'); ?></td>
                                 <td><?php echo htmlspecialchars($tenant['school'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars($tenant['date_in']); ?></td>
+                                <td><?php echo htmlspecialchars($tenant['date_out']); ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
