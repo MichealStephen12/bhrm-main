@@ -36,15 +36,15 @@ if (isset($_GET['approve'])) {
 
     // If the room capacity is 1, update the room status to 'Reserved'
     if ($capacity == 1) {
-        // Update the room status in the reservation table
-        $updateRoomStatusQuery = "UPDATE reservation 
-                                  SET res_duration = '1 day',
-                                    status = 'Reserved',
-                                    res_reason = 'Process Completed'
-                                  WHERE room_no = '$roomno' AND hname = '$hname' AND res_stat = 'Approved'";
-        mysqli_query($conn, $updateRoomStatusQuery);
-
-        // Update the room status in the rooms table
+        // Update the status of all reservations for this room to 'Reserved'
+        $updateAllReservationsQuery = "UPDATE reservation 
+                                       SET res_duration = '1 day',
+                                           status = 'Reserved',
+                                           res_reason = 'Process Completed'
+                                       WHERE room_no = '$roomno' AND hname = '$hname'";
+        mysqli_query($conn, $updateAllReservationsQuery);
+    
+        // Update the room status in the rooms table to 'Reserved'
         $updateRoomStatusInRoomsQuery = "UPDATE rooms 
                                          SET status = 'Reserved' 
                                          WHERE room_no = '$roomno' AND hname = '$hname'";
@@ -131,7 +131,7 @@ if (isset($_GET['confirm'])) {
 
         // Insert a payment record for the reservation
     $insertPaymentQuery = "INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `pay_stat`, `hname`, `owner`) 
-                            VALUES ('', '$resid', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
+    VALUES ('', '$resid', '$uname', '$roomno', '$price', 'Not Fully Paid', '$hname', '$owner')";
     mysqli_query($conn, $insertPaymentQuery);
 
     // Update the reservation status
@@ -211,7 +211,7 @@ if (isset($_GET['end'])) {
 
     $roomno = $fetch['room_no'];
     $email = $fetch['email'];
-    $selected_slots = $fetch['room_slot']; // Assuming this field exists and stores the slots booked
+    $selected_slots = $fetch['room_slot']; // Slots booked by this reservation
 
     // Fetch room details
     $roomQuery = "SELECT capacity, price, current_tenant FROM rooms WHERE room_no = '$roomno' AND hname = '$hname'";
@@ -244,7 +244,7 @@ if (isset($_GET['end'])) {
     $paymentResult = mysqli_query($conn, $paymentQuery);
     $paymentData = mysqli_fetch_assoc($paymentResult);
 
-    $payment = $paymentData['payment']; // Get the final payment amount
+    $payment = $paymentData['price']; // Get the final payment amount
     $pay_stat = $paymentData['pay_stat'];
     $pay_date = $paymentData['pay_date']; // Get the payment date
     $date_out = date('Y-m-d'); // Use the current date for the end of reservation
@@ -295,6 +295,7 @@ if (isset($_GET['end'])) {
     header('Location: ../ended.php');
     exit;
 }
+
 
 
 

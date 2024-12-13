@@ -80,6 +80,7 @@
                         <th>Room No</th>
                         <th>Room Rent</th>
                         <th>Selected Room Slot</th>
+                        <th>Room Status</th>
                         <th>Date In</th>
                         <th>Date Out</th>
                         <th>Requests</th>
@@ -103,6 +104,7 @@
                         <td><?php echo $fetch['room_no']; ?></td>
                         <td><?php echo number_format($fetch['price'], 2); ?> PHP</td>
                         <td><?php echo $fetch['room_slot']; ?></td>
+                        <td><?php echo $fetch['status']; ?></td>
                         <td><?php echo $fetch['date_in']; ?></td>
                         <td><?php echo $fetch['date_out']; ?></td>
                         <td><?php echo $fetch['addons']; ?></td>
@@ -115,7 +117,7 @@
                                 <a href="php/function.php?reject=<?php echo $fetch['id']; ?>" class="btn btn-danger btn-sm">Reject</a>
                             <?php else: ?>
                                 <button class="btn btn-secondary btn-sm" disabled>Approve</button>
-                                <button class="btn btn-secondary btn-sm" disabled>Reject</button>
+                                <a href="php/function.php?reject=<?php echo $fetch['id']; ?>" class="btn btn-danger btn-sm">Reject</a>
                             <?php endif; ?>
                         </td>
                     </tr>

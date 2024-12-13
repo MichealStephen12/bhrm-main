@@ -106,6 +106,7 @@
                     <th>Room No</th>
                     <th>Room Rent</th>
                     <th>Selected Room Slot</th> 
+                    <th>Current Tenant</th>
                     <th>Room Status</th>
                     <th>Payment</th> 
                     <th>Payment Date</th> 
@@ -121,44 +122,36 @@
             </thead>
             <tbody>
                 <?php 
-                    while ($fetch = mysqli_fetch_assoc($result)) {
-                        $id = $fetch['id'];
-                        $payment = $fetch['payment'];
-                        $price = $fetch['price'];
-                        $roomno = $fetch['room_no'];
-                        $roomCapacity = $fetch['capacity'];  // Assuming capacity is available in reservation or room table
-
-                        // Fetch other reservations for the same room that are confirmed
-                        $conflictQuery = "SELECT room_slot FROM reservation WHERE room_no = '$roomno' AND res_stat = 'Confirmed'";
-                        $conflictResult = mysqli_query($conn, $conflictQuery);
-
-                        $occupiedSlots = []; // Array to hold all occupied slots
-                        while ($conflict = mysqli_fetch_assoc($conflictResult)) {
-                            if ($conflict['room_slot'] === 'Whole Room') {
-                                // If "Whole Room" is booked, disable the button for all others
-                                $occupiedSlots = range(1, $roomCapacity); // Simulate full capacity
-                                break;
-                            }
-                            $occupiedSlots = array_merge($occupiedSlots, explode(', ', $conflict['room_slot']));
-                        }
-
-                        // Calculate total occupied slots and unique slots
-                        $totalOccupiedSlots = count(array_unique($occupiedSlots));
-                        $currentSlots = explode(', ', $fetch['room_slot']);
-                        $newTotal = $totalOccupiedSlots + count(array_unique($currentSlots));
-
-                        $isRoomFull = $newTotal > $roomCapacity; // Check if adding the current slots exceeds capacity
-                        $hasConflict = false;
-
-                        // Check for overlapping slots
-                        if (array_intersect($currentSlots, $occupiedSlots)) {
-                            $hasConflict = true;
-                        }
-
-                        // Prevent "Whole Room" conflicts
-                        if ($fetch['room_slot'] === 'Whole Room' && $totalOccupiedSlots > 0) {
-                            $hasConflict = true;
-                        }
+                   while ($fetch = mysqli_fetch_assoc($result)) {
+                    $id = $fetch['id'];
+                    $roomno = $fetch['room_no'];
+                    $payment = $fetch['payment'];
+                    $price = $fetch['price'];
+                    $roomCapacity = $fetch['capacity'];  // Total capacity of the room
+        
+                    // Fetch confirmed reservations for the same room
+                    $conflictQuery = "SELECT room_slot FROM reservation WHERE room_no = '$roomno' AND res_stat = 'Confirmed'";
+                    $conflictResult = mysqli_query($conn, $conflictQuery);
+        
+                    $occupiedSlots = []; // To track unique slots already occupied
+        
+                    while ($conflict = mysqli_fetch_assoc($conflictResult)) {
+                        $slots = explode(', ', $conflict['room_slot']);
+                        $occupiedSlots = array_unique(array_merge($occupiedSlots, $slots)); // Avoid duplicates
+                    }
+        
+                    // Current reservation slots
+                    $currentSlots = explode(', ', $fetch['room_slot']);
+        
+                    // Calculate total slots after including the current reservation
+                    $totalSlotsOccupied = count(array_unique(array_merge($occupiedSlots, $currentSlots)));
+        
+                    // Check if total exceeds room capacity
+                    $isRoomFull = $totalSlotsOccupied > $roomCapacity;
+        
+                    // Check if slots completely overlap for conflict
+                    $overlap = array_intersect($currentSlots, $occupiedSlots);
+                    $isConflict = count($overlap) > 0 && count($currentSlots) + count($occupiedSlots) > $roomCapacity;
                 ?>
                 <tr>
                     <td><?php echo $fetch['id']; ?></td>
@@ -169,6 +162,7 @@
                     <td><?php echo $fetch['room_no']; ?></td>
                     <td><?php echo $fetch['price']; ?></td>
                     <td><?php echo $fetch['room_slot']; ?></td>
+                    <td><?php echo $fetch['current_tenant']; ?></td>
                     <td><?php echo $fetch['status']; ?></td>
                     <td><?php echo $fetch['payment']; ?></td>
                     <td><?php echo $fetch['pay_date']; ?></td>
@@ -191,7 +185,7 @@
 
 
                         <?php if ($fetch['res_stat'] == 'Approved'): ?>
-                            <?php if (!$hasConflict): ?>
+                            <?php if (!$isRoomFull && !$isConflict): ?>
                                 <a href="php/function.php?confirm=<?php echo $fetch['id']; ?>" class="btn btn-success btn-sm">Confirm</a>
                             <?php else: ?>
                                 <button class="btn btn-success btn-sm disabled">Confirm</button>
