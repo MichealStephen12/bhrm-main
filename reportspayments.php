@@ -105,7 +105,7 @@ $reportResult = mysqli_query($conn, $reportQuery);
 
         <!-- DataTable Section -->
         <div class="mt-5">
-            <h2 class="mb-3">Detailed Reports</h2>
+            <h2 class="mb-3">Detailed Income Reports</h2>
             <div class="table-responsive">
                 <table id="reportTable" class="table table-striped table-bordered">
                     <thead class="table-dark">
