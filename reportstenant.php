@@ -7,7 +7,7 @@ $hname = $_SESSION['hname'];
 $totalTenantsQuery = "
     SELECT COUNT(DISTINCT email) AS total_tenants 
     FROM reservation 
-    WHERE hname = '$hname'";
+    WHERE hname = '$hname' and res_stat IN ('Confirmed', 'Approved')";
 $totalTenantsResult = mysqli_query($conn, $totalTenantsQuery);
 $totalTenants = mysqli_fetch_assoc($totalTenantsResult)['total_tenants'];
 
@@ -17,7 +17,7 @@ $genderCountQuery = "
         COUNT(DISTINCT CASE WHEN gender = 'Male' THEN email END) AS male_count, 
         COUNT(DISTINCT CASE WHEN gender = 'Female' THEN email END) AS female_count 
     FROM reservation 
-    WHERE hname = '$hname'";
+    WHERE hname = '$hname' and res_stat IN ('Confirmed', 'Approved') ";
 $genderCountResult = mysqli_query($conn, $genderCountQuery);
 $genderCount = mysqli_fetch_assoc($genderCountResult);
 
@@ -28,7 +28,7 @@ $femaleCount = $genderCount['female_count'];
 $tenantDetailsQuery = "
     SELECT DISTINCT email, fname, lname, gender, tenant_status, school, image 
     FROM reservation 
-    WHERE hname = '$hname'
+    WHERE hname = '$hname' and res_stat IN ('Confirmed', 'Approved')
     ORDER BY id DESC";
 $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
 
@@ -36,14 +36,33 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
 $countQuery = "
     SELECT 
         COUNT(DISTINCT CASE WHEN tenant_status = 'Student' THEN email END) AS total_students,
-        COUNT(DISTINCT CASE WHEN tenant_status = 'Student' AND school = 'CKCM' THEN email END) AS total_ckcm_students
+        COUNT(DISTINCT CASE WHEN tenant_status = 'Student' AND school = 'CKCM' THEN email END) AS total_ckcm_students,
+        COUNT(DISTINCT CASE WHEN tenant_status = 'Student' AND school = 'LSSTI' THEN email END) AS total_lssti_students,
+        COUNT(DISTINCT CASE WHEN tenant_status = 'Student' AND school = 'NCMC' THEN email END) AS total_ncmc_students
     FROM reservation 
-    WHERE hname = '$hname'";
+    WHERE hname = '$hname' and res_stat IN ('Confirmed', 'Approved')";
 $countResult = mysqli_query($conn, $countQuery);
 $countFetch = mysqli_fetch_assoc($countResult);
 
+// Fetch results
 $totalStudents = $countFetch['total_students'];
 $totalCkcmStudents = $countFetch['total_ckcm_students'];
+$totalLsstiStudents = $countFetch['total_lssti_students'];
+$totalNcmcStudents = $countFetch['total_ncmc_students'];
+
+
+$tenantCountQuery = "
+    SELECT 
+        COUNT(DISTINCT CASE WHEN tenant_status = 'Worker' THEN email END) AS total_workers,
+        COUNT(DISTINCT CASE WHEN res_stat IN ('Confirmed', 'Approved') THEN email END) AS total_active_tenants
+    FROM reservation
+    WHERE hname = '$hname'";
+$tenantCountResult = mysqli_query($conn, $tenantCountQuery);
+$tenantCountFetch = mysqli_fetch_assoc($tenantCountResult);
+
+// Fetch results
+$totalWorkers = $tenantCountFetch['total_workers'];
+$totalActiveTenants = $tenantCountFetch['total_active_tenants'];
 
 
 $tenantDetailsQuery = "
@@ -57,7 +76,7 @@ $tenantDetailsQuery = "
            MAX(date_in) AS date_in, 
            MAX(date_out) AS date_out
     FROM reservation 
-    WHERE hname = '$hname' and res_stat = 'Confirmed'
+    WHERE hname = '$hname' and res_stat IN ('Confirmed', 'Approved')
     GROUP BY email
     ORDER BY MAX(id) DESC";
 $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
@@ -143,8 +162,24 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
                 <p><?php echo $totalStudents; ?></p>
             </div>
             <div class="card">
-                <h5>Students from CKCM</h5>
+                <h5>Total Workers</h5>
+                <p><?php echo $totalWorkers; ?></p>
+            </div>
+            <div class="card">
+                <h5>Total Active Tenants</h5>
+                <p><?php echo $totalActiveTenants; ?></p>
+            </div>
+            <div class="card">
+                <h5>Total Students from CKCM</h5>
                 <p><?php echo $totalCkcmStudents; ?></p>
+            </div>
+            <div class="card">
+                <h5>Total Students from LSSTI</h5>
+                <p><?php echo $totalLsstiStudents; ?></p>
+            </div>
+            <div class="card">
+                <h5>Total Students from NCMC</h5>
+                <p><?php echo $totalNcmcStudents; ?></p>
             </div>
         </div>
 
