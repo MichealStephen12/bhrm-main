@@ -56,6 +56,7 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     $currenttenant = $fetch['current_tenant'];
     $amenities = $fetch['amenities'];
     $roomprice = $fetch['price'];
+    $roomslotprice = $fetch['slot_price'];
     $roomstat = $fetch['status'];
     if($result){
         $uname = $_SESSION['uname'];
@@ -99,6 +100,7 @@ if (isset($_POST['submit'])) {
     $image = $fetch['image'];
     $roomfloor = $fetch['room_floor'];
     $price = $fetch['price'];
+    $slotprice = $fetch['slot_price'];
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
 
@@ -110,9 +112,9 @@ if (isset($_POST['submit'])) {
 
     // Insert the reservation
     $query = "INSERT INTO `reservation` 
-              (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `school`, `addons`, `room_no`, `capacity`, `room_slot`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
+              (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `school`, `addons`, `room_no`, `capacity`, `room_slot`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `slot_price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
               VALUES 
-              ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$school', '$addons', '$roomno', '$capacity', '$slots', '$currenttent', '$amenities', '$tenanttype', '$roomfloor', '$price', '$image', '$status', 'Pending', '', '', '$hname', '$owner')";
+              ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$school', '$addons', '$roomno', '$capacity', '$slots', '$currenttent', '$amenities', '$tenanttype', '$roomfloor', '$price', '$slotprice', '$image', '$status', 'Pending', '', '', '$hname', '$owner')";
     mysqli_query($conn, $query);
 
     // Use a session variable to trigger the modal
@@ -310,7 +312,8 @@ if (isset($_POST['submit'])) {
                     <p>Room Capacity: <?php echo $roomcapacity ?></p>
                     <p>Current Tenant: <?php echo $currenttenant ?></p>
                     <p>Room Amenities: <?php echo $amenities ?></p>
-                    <p>Room Price: <?php echo $roomprice ?></p>
+                    <p>Room Rent (Whole Room): <?php echo $roomprice ?></p>
+                    <p>Room Rent (By Slots): <?php echo $roomslotprice ?></p>
                     <p>Room Status: <?php echo $roomstat ?></p>
                 </div>
             </div>

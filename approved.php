@@ -104,7 +104,8 @@
                     <th>Gender</th>
                     <th>Tenant Status</th>
                     <th>Room No</th>
-                    <th>Room Rent</th>
+                    <th>Room Rent (Whole Room)</th>
+                    <th>Room Rent (By Slots)</th>
                     <th>Selected Room Slot</th> 
                     <th>Current Tenant</th>
                     <th>Room Status</th>
@@ -127,7 +128,20 @@
                     $roomno = $fetch['room_no'];
                     $payment = $fetch['payment'];
                     $price = $fetch['price'];
+                    $slotPrice = $fetch['slot_price'];  // Price per slot (1000)
                     $roomCapacity = $fetch['capacity']; // Total capacity of the room
+
+                    $currentSlots = explode(', ', $fetch['room_slot']);
+                    $isWholeRoom = (trim($fetch['room_slot']) === 'Whole Room');
+
+                    // Calculate total price based on selected slots
+                    if ($isWholeRoom) {
+                        $totalPriceForSlots = $price; // If it's the whole room, use the room price
+                    } else {
+                        $selectedSlots = count($currentSlots); // Number of slots selected
+                        $totalPriceForSlots = $selectedSlots * $slotPrice; // Total price for the selected slots
+                    }
+
 
                     // Fetch confirmed reservations for the same room
                     $conflictQuery = "SELECT room_slot FROM reservation WHERE room_no = '$roomno' AND res_stat = 'Confirmed'";
@@ -165,6 +179,7 @@
                         $overlap = array_intersect($currentSlots, $occupiedSlots);
                         $isConflict = count($overlap) > 0;
                     }
+                    
                 ?>
                 <tr>
                     <td><?php echo $fetch['id']; ?></td>
@@ -174,6 +189,7 @@
                     <td><?php echo $fetch['tenant_status']; ?></td>
                     <td><?php echo $fetch['room_no']; ?></td>
                     <td><?php echo $fetch['price']; ?></td>
+                    <td><?php echo $fetch['slot_price']; ?></td>
                     <td><?php echo $fetch['room_slot']; ?></td>
                     <td><?php echo $fetch['current_tenant']; ?></td>
                     <td><?php echo $fetch['status']; ?></td>
@@ -204,7 +220,8 @@
                                 <button class="btn btn-success btn-sm disabled">Confirm</button>
                             <?php endif; ?>
                             <a href="php/function.php?cancel=<?php echo $fetch['id']; ?>" class="btn btn-danger btn-sm">Cancel</a>
-                        <?php elseif ($payment === $price): ?>
+                         <!-- Check if payment matches the required total price (for selected slots or whole room) -->
+                        <?php elseif ($payment == $totalPriceForSlots): ?>
                             <a href="php/function.php?end=<?php echo $fetch['id']; ?>" class="btn btn-warning btn-sm">End Reservation</a>
                         <?php else: ?>
                             <a href="php/function.php?end=<?php echo $fetch['id']; ?>" class="btn btn-warning btn-sm disabled">End Reservation</a>

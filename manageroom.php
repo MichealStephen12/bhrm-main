@@ -172,7 +172,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'landlord'){
                 <h5 class="card-title text-center"><strong>Room No:</strong> <?php echo $roomno; ?></h5>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><strong>Capacity:</strong> <?php echo $capacity; ?></li>
-                    <li class="list-group-item"><strong>Rent / Month:</strong> <?php echo $fetch['price']; ?></li>
+                    <li class="list-group-item"><strong>Rent / Month (Whole Room):</strong> <?php echo $fetch['price']; ?></li>
+                    <li class="list-group-item"><strong>Rent / Month (By Slots):</strong> <?php echo $fetch['slot_price']; ?></li>
                     <li class="list-group-item"><strong>Amenities:</strong> <?php echo $fetch['amenities']; ?></li>
                     <li class="list-group-item"><strong>Tenant Type:</strong> <?php echo $fetch['tenant_type']; ?> Only</li>
                     <li class="list-group-item"><strong>Current Tenant:</strong> <?php echo $tenantcount; ?> / <?php echo $capacity; ?></li>

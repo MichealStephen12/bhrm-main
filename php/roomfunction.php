@@ -20,6 +20,7 @@ if (isset($_POST['submit'])) {
     $tenanttype = $_POST['tenanttype'];
     $roomfloor = $_POST['roomfloor'];
     $price = $_POST['price'];
+    $slotprice = $_POST['slotprice'];
     $status = $_POST['status'];
 
     // Handle image upload
@@ -54,8 +55,8 @@ if (isset($_POST['submit'])) {
     $owner = $_SESSION['uname'];
 
     // Insert the room data into the database
-    $query = "INSERT INTO `rooms`(`id`, `room_no`, `capacity`, `amenities`, `tenant_type`, `room_floor`, `price`, `image`, `status`, `hname`, `owner`) VALUES 
-                ('', '$roomno', '$capacity', '$amenities', '$tenanttype', '$roomfloor', '$price', 'images/$fileNameNew', '$status', '$hname', '$owner')";
+    $query = "INSERT INTO `rooms`(`id`, `room_no`, `capacity`, `amenities`, `tenant_type`, `room_floor`, `price`, `slot_price`, `image`, `status`, `hname`, `owner`) VALUES 
+                ('', '$roomno', '$capacity', '$amenities', '$tenanttype', '$roomfloor', '$price', '$slotprice', 'images/$fileNameNew', '$status', '$hname', '$owner')";
 
     mysqli_query($conn, $query);
 
@@ -63,7 +64,7 @@ if (isset($_POST['submit'])) {
 }
 
 // Initialize data array for room details
-$data = ['id' => '', 'room_no' => '', 'room_type' => '', 'capacity' => '', 'amenities' => '', 'price' => '', 'image' => '', 'status'=>''];
+$data = ['id' => '', 'room_no' => '', 'room_type' => '', 'capacity' => '', 'amenities' => '', 'price' => '', 'slot_price' => '', 'image' => '', 'status'=>''];
 $amenitiesSelected = []; // Default to an empty array
 
 // Handle room update
@@ -101,6 +102,7 @@ if (isset($_POST['update'])) {
     $tenanttype = $_POST['tenanttype'];
     $roomfloor = $_POST['roomfloor'];
     $price = $_POST['price'];
+    $slotprice = $_POST['slotprice'];
     $status = $_POST['status'];
 
     // Handle image upload
@@ -132,7 +134,7 @@ if (isset($_POST['update'])) {
 
     // Update the room details in the database
     $query = "UPDATE `rooms` SET `room_no`='$roomno', `capacity`='$capacity', `amenities`='$amenities', 
-              `tenant_type`='$tenanttype', `room_floor`='$roomfloor', `price`='$price', `status`='$status' 
+              `tenant_type`='$tenanttype', `room_floor`='$roomfloor', `price`='$price', `slot_price`='$slotprice', `status`='$status' 
               $imageQuery WHERE `id` = $id";
     
     mysqli_query($conn, $query);
@@ -184,168 +186,168 @@ if (isset($_POST['update'])) {
     <?php include '../navigationbar.php'; ?>
 
     <style>
-    .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 20px;
-        background-color: #f4f4f4;
-    }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
 
-    .form-container {
-        background-color: #a9a9a9;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        width: 100%;
-        max-width: 500px; /* Increased width to fit the two columns */
-    }
+        .form-container {
+            background-color: #a9a9a9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px; /* Increased width to fit the two columns */
+        }
 
-    .form-container img {
-        display: block;
-        margin: 0 auto 15px;
-    }
+        .form-container img {
+            display: block;
+            margin: 0 auto 15px;
+        }
 
-    h1 {
-        text-align: center;
-        font-size: 22px;
-        color: #333;
-        margin-bottom: 15px;
-    }
+        h1 {
+            text-align: center;
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
 
-    label {
-        display: block;
-        font-size: 14px;
-        color: #fff;
-        margin-bottom: 5px;
-    }
+        label {
+            display: block;
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 5px;
+        }
 
-    input, select {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #fff;
-        font-size: 14px;
-        box-sizing: border-box;
-    }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
 
-    input[type="file"] {
-        padding: 5px;
-    }
+        input[type="file"] {
+            padding: 5px;
+        }
 
-    input[type="checkbox"] {
-        margin: 0px;
-    }
+        input[type="checkbox"] {
+            margin: 0px;
+        }
 
-    /* Align radio buttons horizontally and wrap them when necessary */
-    #amenities-container {
-        display: flex;
-        flex-wrap: wrap; /* Ensure the radio buttons wrap */
-        gap: 20px; /* Space between radio buttons */
-        margin-bottom: 10px;
-    }
+        /* Align radio buttons horizontally and wrap them when necessary */
+        #amenities-container {
+            display: flex;
+            flex-wrap: wrap; /* Ensure the radio buttons wrap */
+            gap: 20px; /* Space between radio buttons */
+            margin-bottom: 10px;
+        }
 
-    #amenities-container label{
-        margin: 0px;
-    }
+        #amenities-container label{
+            margin: 0px;
+        }
 
-    #amenities-container div {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
+        #amenities-container div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-    #add-amenity-btn {
-        background-color: #ffc107;
-        color: #fff;
-        padding: 8px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
+        #add-amenity-btn {
+            background-color: #ffc107;
+            color: #fff;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
 
-    .button-container {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        margin-top: 20px;
-    }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
 
-    /* Make both submit and back buttons equally tall */
-    .button-container input, .button-container a {
-        background-color: #ffc107;
-        color: #fff;
-        font-size: 16px;
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px; /* Set a fixed height to make buttons equal height */
-    }
+        /* Make both submit and back buttons equally tall */
+        .button-container input, .button-container a {
+            background-color: #ffc107;
+            color: #fff;
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px; /* Set a fixed height to make buttons equal height */
+        }
 
-    a.btn-secondary {
-        background-color: #343a40;
-    }
+        a.btn-secondary {
+            background-color: #343a40;
+        }
 
-    .button-container input[type="submit"]:hover, a.btn-secondary:hover {
-        opacity: 0.9;
-    }
+        .button-container input[type="submit"]:hover, a.btn-secondary:hover {
+            opacity: 0.9;
+        }
 
-    .img-preview {
-        text-align: center;
-        margin-bottom: 15px;
-    }
+        .img-preview {
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-    .img-preview img {
-        width: 70%;
-        height: auto;
-        border-radius: 5px;
-    }
+        .img-preview img {
+            width: 70%;
+            height: auto;
+            border-radius: 5px;
+        }
 
-    #new-amenity, #save-amenity-btn {
-        display: none;
-        margin-top: 10px;
-    }
+        #new-amenity, #save-amenity-btn {
+            display: none;
+            margin-top: 10px;
+        }
 
-    #new-amenity {
-        width: calc(100% - 80px);
-        display: inline-block;
-    }
+        #new-amenity {
+            width: calc(100% - 80px);
+            display: inline-block;
+        }
 
-    #save-amenity-btn {
-        width: 70px;
-        padding: 8px;
-        display: inline-block;
-        background-color: #28a745;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+        #save-amenity-btn {
+            width: 70px;
+            padding: 8px;
+            display: inline-block;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    #save-amenity-btn:hover {
-        opacity: 0.9;
-    }
+        #save-amenity-btn:hover {
+            opacity: 0.9;
+        }
 
-    .status {
-        background-color: #d3d3d3;
-        color: #666;
-    }
-</style>
+        .status {
+            background-color: #d3d3d3;
+            color: #666;
+        }
+    </style>
 
 <div class="container">
     <div class="form-container">
@@ -419,8 +421,11 @@ if (isset($_POST['update'])) {
                 <button type="button" id="save-roomfloor-btn" style="display:none;">Save</button>
             </div>
 
-        <label>Rent / Month:</label>
+        <label>Rent / Month (Whole Room):</label>
         <input type="text" name="price" value="<?php echo $data['price']; ?>" placeholder="Enter here..." required>
+
+        <label>Rent / Month (By Slots):</label>
+        <input type="text" name="slotprice" value="<?php echo $data['slot_price']; ?>" placeholder="Enter here..." required>
 
         <label>Image:</label>
         <input type="file" name="image" value="<?php echo $data['image']; ?>">

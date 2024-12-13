@@ -503,7 +503,8 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                     <div class="card-content">
                                     <h5><strong></strong> Room No: </strong><?php echo $fetch['room_no']?></h5>
                                     <p><strong> Capacity:</strong> <?php echo $fetch['capacity']?></p>
-                                    <p><strong> Price:</strong> <?php echo $fetch['price']?></p>
+                                    <p><strong> Room Rent (Whole Room):</strong> <?php echo $fetch['price']?></p>
+                                    <p><strong> Room Rent (By Slots):</strong> <?php echo $fetch['slot_price']?></p>
                                     <p><strong>Amenities:</strong> <?php echo $fetch['amenities']?></p>
                                     <p><strong>Gender Allowed:</strong>  <?php echo $fetch['tenant_type']?></p>
                                     <p><strong>Current Tenant:</strong> <?php echo $fetch['current_tenant']; ?>/<?php echo $fetch['capacity']?> </p>

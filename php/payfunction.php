@@ -11,7 +11,10 @@ if (isset($_GET['id'])) {
     $resid = $payment['res_id'];
     $email = $payment['email'];
     $hname = $payment['hname'];
-    $price = floatval($payment['price']); // Fetch the room price
+    $slotPrice = floatval($payment['slot_price']); // Fetch slot price
+    $roomSlots = explode(', ', $payment['room_slot']); // Slots selected
+    $slotCount = count($roomSlots); // Number of slots selected
+    $maxPayment = $slotPrice * $slotCount; // Maximum payment based on slots
 
     if (!$payment) {
         echo "Payment not found.";
@@ -19,21 +22,34 @@ if (isset($_GET['id'])) {
     }
 }
 
+if (isset($payment['room_slot'])) {
+    // Whole room should use the full capacity of the room
+    if ($payment['room_slot'] === 'Whole Room') {
+        // Assume room capacity is available from a database or defined earlier
+        $roomCapacity = 6; // Example capacity, adjust as necessary
+        $slotCount = $roomCapacity; // Total number of slots (capacity)
+        $maxPayment = $slotPrice * $slotCount; // Total payment based on the full room capacity
+    } else {
+        // Otherwise, count selected slots normally
+        $roomSlots = explode(', ', $payment['room_slot']);
+        $slotCount = count($roomSlots);
+        $maxPayment = $slotPrice * $slotCount;
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $payment_amount = floatval($_POST['payment']);
     $pay_stat = $_POST['pay_stat'];
     $pay_date = !empty($_POST['pay_date']) ? $_POST['pay_date'] : date('Y-m-d H:i:s'); // Automatically set current date/time
-    $price = floatval($payment['price']);
 
     // Calculate the payment status if it's not manually selected
     if ($pay_stat === 'Fully Paid' || $pay_stat === 'Partially Paid') {
-        // Validate user override
-        if ($pay_stat === 'Fully Paid' && $payment_amount < $price) {
+        if ($pay_stat === 'Fully Paid' && $payment_amount < $maxPayment) {
             $pay_stat = 'Partially Paid';
         }
     } else {
         // Automatically calculate pay_stat based on amount
-        $pay_stat = $payment_amount >= $price ? 'Fully Paid' : 'Partially Paid';
+        $pay_stat = $payment_amount >= $maxPayment ? 'Fully Paid' : 'Partially Paid';
     }
 
     $updateQuery = "UPDATE reservation SET 
@@ -43,13 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id = $resid and email = '$email' and hname = '$hname'";
     mysqli_query($conn, $updateQuery);
 
-    // Update the payment record
     $updateQuery = "UPDATE payments SET 
                     payment = $payment_amount, 
                     pay_stat = '$pay_stat', 
                     pay_date = '$pay_date' 
                     WHERE id = $id and email = '$email' and hname = '$hname'";
-                    
 
     if (mysqli_query($conn, $updateQuery)) {
         header('Location: ../payment.php');
@@ -140,10 +154,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 id="payment" 
                 name="payment" 
                 step="0.01" 
-                max="<?php echo $price; ?>" 
+                max="<?php echo $maxPayment; ?>" 
                 value="<?php echo $payment['payment']; ?>" 
                 required
                 oninput="updatePaymentStatus()">
+            <small class="form-text text-muted">
+                Maximum Payment: <?php echo number_format($maxPayment, 2); ?> (<?php echo $slotPrice; ?>/slot × <?php echo $slotCount; ?> slots)
+            </small>
         </div>
 
         <!-- Payment Status -->
@@ -170,29 +187,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <script>
-            const roomPrice = <?php echo $price; ?>; // Get the room price from PHP
+            const maxPayment = <?php echo $maxPayment; ?>; // Maximum payment based on PHP calculation
 
             function updatePaymentStatus() {
-                const paymentInput = document.getElementById('payment');
-                const statusInput = document.getElementById('pay_stat');
+            const paymentInput = document.getElementById('payment');
+            const statusInput = document.getElementById('pay_stat');
+            let payment = parseFloat(paymentInput.value);
 
-                let payment = parseFloat(paymentInput.value);
-
-                // Ensure payment does not exceed the room price
-                if (payment > roomPrice) {
-                    paymentInput.value = roomPrice;
-                    payment = roomPrice;
-                }
-
-                // Update payment status based on the input amount
-                if (payment === 0) {
-                    statusInput.value = 'Not Paid Yet';
-                } else if (payment > 0 && payment < roomPrice) {
-                    statusInput.value = 'Partially Paid';
-                } else if (payment === roomPrice) {
-                    statusInput.value = 'Fully Paid';
-                }
+            // Ensure payment does not exceed the maximum payment
+            if (isNaN(payment)) {
+                payment = 0;
             }
+
+            if (payment > maxPayment) {
+                paymentInput.value = maxPayment.toFixed(2); // Automatically set the max limit
+                payment = maxPayment;
+            }
+
+            // Update payment status based on the input amount
+            if (payment === 0) {
+                statusInput.value = 'Not Paid Yet';
+            } else if (payment > 0 && payment < maxPayment) {
+                statusInput.value = 'Partially Paid';
+            } else if (payment === maxPayment) {
+                statusInput.value = 'Fully Paid';
+            }
+        }
+
+        // Format the value to two decimal places when the input loses focus
+        document.getElementById('payment').addEventListener('blur', function() {
+            const paymentInput = document.getElementById('payment');
+            let payment = parseFloat(paymentInput.value);
+            if (!isNaN(payment)) {
+                paymentInput.value = payment.toFixed(2); // Format the value to two decimal places
+            }
+        });
         </script>
 
         <script>

@@ -139,7 +139,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
         <div class="card-body">
             <p><strong>Email:</strong> <?php echo $fetch['email']; ?></p>
             <p><strong>Room Number:</strong> <?php echo $fetch['room_no']; ?></p>
-            <p><strong>Room Rent:</strong> <?php echo $fetch['price']; ?></p>
+            <p><strong>Room Rent (Whole Room):</strong> <?php echo $fetch['price']; ?></p>
+            <p><strong>Room Rent (By Slots):</strong> <?php echo $fetch['slot_price']; ?></p>
             <p><strong>Payment:</strong> <?php echo $fetch['payment']; ?></p>
             <p><strong>Status:</strong> <?php echo $fetch['pay_stat']; ?></p>
             <p><strong>Date:</strong> <?php echo $fetch['pay_date']; ?></p>
