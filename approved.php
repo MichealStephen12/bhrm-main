@@ -147,17 +147,18 @@
                     $conflictQuery = "SELECT room_slot FROM reservation WHERE room_no = '$roomno' AND res_stat = 'Confirmed'";
                     $conflictResult = mysqli_query($conn, $conflictQuery);
 
-                    $occupiedSlots = []; // To track unique slots already occupied
+                    $occupiedSlots = []; // To track all slots (no unique filtering)
 
                     while ($conflict = mysqli_fetch_assoc($conflictResult)) {
                         if (trim($conflict['room_slot']) === 'Whole Room') {
                             // Whole Room reservation occupies all slots
-                            $occupiedSlots = range(1, $roomCapacity);
+                            $occupiedSlots = range(1, $roomCapacity); // Mark all slots as occupied
                             break;
                         }
 
+                        // Add all selected slots from this tenant's reservation (without making them unique)
                         $slots = explode(', ', $conflict['room_slot']);
-                        $occupiedSlots = array_unique(array_merge($occupiedSlots, $slots)); // Avoid duplicates
+                        $occupiedSlots = array_merge($occupiedSlots, $slots); // Add without removing duplicates
                     }
 
                     // Current reservation slots
@@ -169,16 +170,16 @@
                         $isConflict = count($occupiedSlots) > 0; // Any slot occupied causes conflict for Whole Room
                         $isRoomFull = count($occupiedSlots) >= $roomCapacity; // Check if room is fully occupied
                     } else {
-                        // Calculate total slots after including the current reservation
-                        $totalSlotsOccupied = count(array_unique(array_merge($occupiedSlots, $currentSlots)));
+                        // Count the total number of slots (with possible overlap)
+                        $totalSlotsOccupied = count(array_merge($occupiedSlots, $currentSlots));
 
-                        // Check if total exceeds room capacity
+                        // Check if total selected slots exceed room capacity
                         $isRoomFull = $totalSlotsOccupied > $roomCapacity;
 
-                        // Check if slots completely overlap for conflict
-                        $overlap = array_intersect($currentSlots, $occupiedSlots);
-                        $isConflict = count($overlap) > 0;
+                        // In this case, we don't check for overlaps as we allow repeated slot selections
+                        $isConflict = false;  // No conflict in overlapping slots, as long as total does not exceed capacity
                     }
+
                     
                 ?>
                 <tr>
@@ -220,7 +221,7 @@
                                 <button class="btn btn-success btn-sm disabled">Confirm</button>
                             <?php endif; ?>
                             <a href="php/function.php?cancel=<?php echo $fetch['id']; ?>" class="btn btn-danger btn-sm">Cancel</a>
-                         <!-- Check if payment matches the required total price (for selected slots or whole room) -->
+                        <!-- Check if payment matches the required total price (for selected slots or whole room) -->
                         <?php elseif ($payment == $totalPriceForSlots): ?>
                             <a href="php/function.php?end=<?php echo $fetch['id']; ?>" class="btn btn-warning btn-sm">End Reservation</a>
                         <?php else: ?>

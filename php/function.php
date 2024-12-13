@@ -51,17 +51,7 @@ if (isset($_GET['approve'])) {
                                          SET status = 'Reserved' 
                                          WHERE room_no = '$roomno' AND hname = '$hname'";
         mysqli_query($conn, $updateRoomStatusInRoomsQuery);
-
-         // Insert a payment record for the reservation
-        $insertPaymentQuery = "INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `room_slot`, `slot_price`, `pay_stat`, `hname`, `owner`) 
-        VALUES ('', '$resid', '$uname', '$roomno', '$price', '$roomslot', '$slotprice', 'Not Fully Paid', '$hname', '$owner')";
-        mysqli_query($conn, $insertPaymentQuery);
     }
-
-     // Insert a payment record for the reservation
-     $insertPaymentQuery = "INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `room_slot`, `slot_price`, `pay_stat`, `hname`, `owner`) 
-     VALUES ('', '$resid', '$uname', '$roomno', '$price', '$roomslot', '$slotprice', 'Not Fully Paid', '$hname', '$owner')";
-     mysqli_query($conn, $insertPaymentQuery);
 
     // Redirect after the update
     header('Location: ../approved.php');
@@ -105,6 +95,8 @@ if (isset($_GET['confirm'])) {
     $resid = $fetch['id'];
     $roomno = $fetch['room_no'];
     $price = $fetch['price'];
+    $roomslot = $fetch['room_slot'];
+    $slotprice = $fetch['slot_price'];
     $uname = $fetch['email'];
     $fname = $fetch['fname'];
     $lname = $fetch['lname'];
@@ -140,6 +132,12 @@ if (isset($_GET['confirm'])) {
     $insertReportQuery = "INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `pay_date`, `date_in`, `date_out`, `room_no`, `hname`, `owner`) 
                           VALUES ('', '$fname', '$lname', '$gender', '$uname', '', '$date_in', NULL, '$roomno', '$hname', '$owner')";
     mysqli_query($conn, $insertReportQuery);
+
+    
+     // Insert a payment record for the reservation
+     $insertPaymentQuery = "INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `room_slot`, `slot_price`, `pay_stat`, `hname`, `owner`) 
+     VALUES ('', '$resid', '$uname', '$roomno', '$price', '$roomslot', '$slotprice', 'Not Fully Paid', '$hname', '$owner')";
+     mysqli_query($conn, $insertPaymentQuery);
 
 
     // Update the reservation status
