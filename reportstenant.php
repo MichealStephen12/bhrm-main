@@ -183,6 +183,17 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
             </div>
         </div>
 
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label for="filterBookingIn" class="form-label">Filter Booking In</label>
+                <input type="month" id="filterBookingIn" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="filterBookingEnd" class="form-label">Filter by Ended Book Month:</label>
+                <input type="month" id="filterBookingEnd" class="form-control">
+            </div>
+        </div>
+
         <!-- DataTable Section -->
         <div class="mt-5">
             <h2 class="mb-3">Tenant Details</h2>
@@ -225,19 +236,80 @@ $tenantDetailsResult = mysqli_query($conn, $tenantDetailsQuery);
         </div>
     </div>
 
+
+
+    <!-- add the download here as excel -->
+
     <!-- Bootstrap JS -->
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+        
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    
     <script>
-        $(document).ready(function() {
-            $('#tenantTable').DataTable({
+        $(document).ready(function () {
+            // Initialize DataTable
+            var table = $('#tenantTable').DataTable({
                 paging: true,
                 searching: true,
                 ordering: true,
                 responsive: true
+            });
+        
+            // Custom filter for Booking In month
+            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                var filterBookingIn = $('#filterBookingIn').val(); // Selected Booking In Month
+                var dateIn = data[7]; // 'Date In' column
+
+                // If no filter is selected, show all records
+                if (!filterBookingIn) {
+                    return true;
+                }
+
+                var inDate = new Date(dateIn);
+                var selectedBookingInMonth = new Date(filterBookingIn + "-01");
+
+                // Check if Date In matches the selected "Booking In" month
+                return inDate.getFullYear() === selectedBookingInMonth.getFullYear() &&
+                    inDate.getMonth() === selectedBookingInMonth.getMonth();
+            });
+
+            // Custom filter for Booking End month
+            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                var filterBookingEnd = $('#filterBookingEnd').val(); // Selected Booking End Month
+                var dateOut = data[8]; // 'Date Out' column
+
+                // If no filter is selected, show all records
+                if (!filterBookingEnd) {
+                    return true;
+                }
+
+                // Ensure dateOut is in a valid format
+                var outDate = new Date(dateOut);
+                var selectedBookingEndMonth = new Date(filterBookingEnd + "-01");
+
+                // Check if Date Out matches the selected "Booking End" month
+                return outDate.getFullYear() === selectedBookingEndMonth.getFullYear() &&
+                    outDate.getMonth() === selectedBookingEndMonth.getMonth();
+            });
+
+            // Trigger filter automatically when any month changes
+            $('#filterBookingIn').on('change', function () {
+                // Clear Booking End filter when Booking In is selected
+                $('#filterBookingEnd').val('');
+                table.draw();
+            });
+
+            $('#filterBookingEnd').on('change', function () {
+                // Clear Booking In filter when Booking End is selected
+                $('#filterBookingIn').val('');
+                table.draw();
             });
         });
     </script>

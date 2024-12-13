@@ -103,6 +103,14 @@ $reportResult = mysqli_query($conn, $reportQuery);
             </div>
         </div>
 
+        <!-- Filter for this month -->
+        <div class="form-group row">
+            <label for="paymentMonth" class="col-sm-2 col-form-label">Filter Payments by Month:</label>
+            <div class="col-sm-10">
+                <input type="month" id="paymentMonth" class="form-control" value="" />
+            </div>
+        </div>
+
         <!-- DataTable Section -->
         <div class="mt-5">
             <h2 class="mb-3">Detailed Income Reports</h2>
@@ -151,13 +159,50 @@ $reportResult = mysqli_query($conn, $reportQuery);
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#reportTable').DataTable({
+            var table = $('#reportTable').DataTable({
                 paging: true,
                 searching: true,
                 ordering: true,
                 responsive: true
+            });
+
+            // Custom filter for payment date based on selected month
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var selectedMonth = $('#paymentMonth').val(); // Get selected month
+                var paymentDate = data[7]; // Assuming the payment date is in the 8th column (index 7)
+
+                if (selectedMonth) {
+                    // Get the year and month from the selected value
+                    var selectedYearMonth = selectedMonth.split("-");
+                    var selectedYear = selectedYearMonth[0];
+                    var selectedMonthNumber = selectedYearMonth[1];
+
+                    // Extract year and month from the payment date
+                    var paymentDateParts = paymentDate.split("-");
+                    var paymentYear = paymentDateParts[0];
+                    var paymentMonth = paymentDateParts[1];
+
+                    // Check if the payment date is in the selected month
+                    if (selectedYear === paymentYear && selectedMonthNumber === paymentMonth) {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                return true;
+            });
+
+            // Trigger filter on change of the month filter
+            $('#paymentMonth').on('change', function() {
+                table.draw();
             });
         });
     </script>
