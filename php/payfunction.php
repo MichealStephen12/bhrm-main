@@ -16,6 +16,11 @@ if (isset($_GET['id'])) {
     $slotCount = count($roomSlots); // Number of slots selected
     $maxPayment = $slotPrice * $slotCount; // Maximum payment based on slots
 
+    $resquery = "SELECT * FROM reservation WHERE id = $resid and hname = '$hname'";
+    $resresult = mysqli_query($conn, $resquery);
+    $resfetch = mysqli_fetch_assoc($resresult);
+    $capacity = $resfetch['capacity'];
+
     if (!$payment) {
         echo "Payment not found.";
         exit;
@@ -26,7 +31,7 @@ if (isset($payment['room_slot'])) {
     // Whole room should use the full capacity of the room
     if ($payment['room_slot'] === 'Whole Room') {
         // Assume room capacity is available from a database or defined earlier
-        $roomCapacity = 6; // Example capacity, adjust as necessary
+        $roomCapacity = $capacity; // Example capacity, adjust as necessary
         $slotCount = $roomCapacity; // Total number of slots (capacity)
         $maxPayment = $slotPrice * $slotCount; // Total payment based on the full room capacity
     } else {

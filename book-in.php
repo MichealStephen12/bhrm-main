@@ -58,6 +58,7 @@ if(!empty($_SESSION["uname"]) && !empty($_SESSION["role"])){
     $roomprice = $fetch['price'];
     $roomslotprice = $fetch['slot_price'];
     $roomstat = $fetch['status'];
+
     if($result){
         $uname = $_SESSION['uname'];
         $query = "select * from users where uname = '$uname'";
@@ -99,8 +100,8 @@ if (isset($_POST['submit'])) {
     $tenanttype = $fetch['tenant_type'];
     $image = $fetch['image'];
     $roomfloor = $fetch['room_floor'];
-    $price = $fetch['price'];
-    $slotprice = $fetch['slot_price'];
+    $price = $roomprice;
+    $slotprice = $roomslotprice;
     $status = $fetch['status'];
     $hname = $_SESSION['hname'];
 
@@ -112,8 +113,7 @@ if (isset($_POST['submit'])) {
 
     // Insert the reservation
     $query = "INSERT INTO `reservation` 
-              (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `school`, `addons`, `room_no`, `capacity`, `room_slot`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `slot_price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) 
-              VALUES 
+              (`id`, `fname`, `lname`, `email`, `gender`, `date_in`, `date_out`, `tenant_status`, `school`, `addons`, `room_no`, `capacity`, `room_slot`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `slot_price`, `image`, `status`, `res_stat`, `res_duration`, `res_reason`, `hname`, `owner`) VALUES 
               ('', '$fname', '$lname', '$email', '$gender', '$datein', '$dateout', '$tenantstatus', '$school', '$addons', '$roomno', '$capacity', '$slots', '$currenttent', '$amenities', '$tenanttype', '$roomfloor', '$price', '$slotprice', '$image', '$status', 'Pending', '', '', '$hname', '$owner')";
     mysqli_query($conn, $query);
 

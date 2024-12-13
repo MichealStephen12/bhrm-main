@@ -37,7 +37,7 @@ if (isset($_GET['approve'])) {
     mysqli_query($conn, $updateReservationQuery);
 
     // If the room capacity is 1, update the room status to 'Reserved'
-    if ($capacity == 1) {
+    if ($capacity == 1 || trim($roomslot) == 'Whole Room') {
         // Update the status of all reservations for this room to 'Reserved'
         $updateAllReservationsQuery = "UPDATE reservation 
                                        SET res_duration = '1 day',
