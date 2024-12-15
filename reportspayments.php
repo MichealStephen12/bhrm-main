@@ -106,19 +106,21 @@ $reportResult = mysqli_query($conn, $reportQuery);
         <!-- Filter for Month -->
         <div class="form-group row">
             <label for="paymentMonth" class="col-sm-2 col-form-label">Filter Payments by Month:</label>
-            <div class="col-sm-10">
+            <div class="col-sm-3">
                 <input type="month" id="paymentMonth" class="form-control" />
+            </div>
+
+            <label for="paymentDay" class="col-sm-2 col-form-label">Filter Payments by Day:</label>
+            <div class="col-sm-3">
+                <select id="paymentDay" class="form-control">
+                    <option value="">Select Day</option>
+                </select>
             </div>
         </div>
 
         <!-- Filter for Day -->
         <div class="form-group row mt-3">
-            <label for="paymentDay" class="col-sm-2 col-form-label">Filter Payments by Day:</label>
-            <div class="col-sm-10">
-                <select id="paymentDay" class="form-control">
-                    <option value="">Select Day</option>
-                </select>
-            </div>
+            
         </div>
 
         <!-- DataTable Section -->
@@ -163,6 +165,7 @@ $reportResult = mysqli_query($conn, $reportQuery);
         </div>
     </div>
 
+
     <!-- Bootstrap JS -->
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -181,23 +184,35 @@ $reportResult = mysqli_query($conn, $reportQuery);
                 searching: true,
                 ordering: true,
                 responsive: true,
+                dom: 'Bfrtip', // Add Buttons to DataTable
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Payment Reports',
+                        text: 'Export to Excel',
+                        className: 'btn btn-success', // Bootstrap styling for button
+                        exportOptions: {
+                            columns: ':visible', // Export only visible columns
+                        },
+                    },
+                ],
             });
 
-            // Custom filter for both month and day
+            // Custom filters (Month and Day)
             $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
                 var selectedMonth = $('#paymentMonth').val(); // Get selected month
                 var selectedDay = $('#paymentDay').val(); // Get selected day
                 var paymentDateTime = data[7]; // Assuming payment date is in the 8th column (index 7)
 
-                // Extract just the date part (YYYY-MM-DD) from the payment date
+                // Extract just the date part (YYYY-MM-DD)
                 var paymentDate = paymentDateTime.split(" ")[0];
 
                 if (selectedMonth) {
-                    var paymentDateParts = paymentDate.split("-"); // Split payment date (YYYY-MM-DD)
+                    var paymentDateParts = paymentDate.split("-");
                     var paymentYear = paymentDateParts[0];
                     var paymentMonth = paymentDateParts[1];
 
-                    var selectedYearMonth = selectedMonth.split("-"); // Split selected month (YYYY-MM)
+                    var selectedYearMonth = selectedMonth.split("-");
                     var selectedYear = selectedYearMonth[0];
                     var selectedMonthNumber = selectedYearMonth[1];
 
@@ -209,20 +224,19 @@ $reportResult = mysqli_query($conn, $reportQuery);
 
                 if (selectedDay) {
                     var paymentDay = paymentDate.split("-")[2]; // Extract the day from payment date
-                    // If day doesn't match, exclude row
                     if (paymentDay !== selectedDay) {
                         return false;
                     }
                 }
 
-                return true; // Include row if all conditions pass
+                return true;
             });
 
             // Trigger filtering on month selection
             $('#paymentMonth').on('change', function () {
                 var selectedMonth = $(this).val();
 
-                // Clear and populate the day filter based on the selected month
+                // Clear and populate the day filter
                 var $dayFilter = $('#paymentDay');
                 $dayFilter.empty().append('<option value="">Select Day</option>');
 
@@ -230,15 +244,14 @@ $reportResult = mysqli_query($conn, $reportQuery);
                     var selectedYearMonth = selectedMonth.split("-");
                     var selectedYear = selectedYearMonth[0];
                     var selectedMonth = selectedYearMonth[1];
-                    var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate(); // Calculate days in month
+                    var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
 
                     for (var day = 1; day <= daysInMonth; day++) {
-                        var dayValue = day < 10 ? "0" + day : day; // Format day as 01, 02, etc.
+                        var dayValue = day < 10 ? "0" + day : day;
                         $dayFilter.append('<option value="' + dayValue + '">' + day + '</option>');
                     }
                 }
 
-                // Clear day filter and redraw the table
                 $dayFilter.val('');
                 table.draw();
             });
