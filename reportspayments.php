@@ -103,11 +103,21 @@ $reportResult = mysqli_query($conn, $reportQuery);
             </div>
         </div>
 
-        <!-- Filter for this month -->
+        <!-- Filter for Month -->
         <div class="form-group row">
             <label for="paymentMonth" class="col-sm-2 col-form-label">Filter Payments by Month:</label>
             <div class="col-sm-10">
-                <input type="month" id="paymentMonth" class="form-control" value="" />
+                <input type="month" id="paymentMonth" class="form-control" />
+            </div>
+        </div>
+
+        <!-- Filter for Day -->
+        <div class="form-group row mt-3">
+            <label for="paymentDay" class="col-sm-2 col-form-label">Filter Payments by Day:</label>
+            <div class="col-sm-10">
+                <select id="paymentDay" class="form-control">
+                    <option value="">Select Day</option>
+                </select>
             </div>
         </div>
 
@@ -165,43 +175,76 @@ $reportResult = mysqli_query($conn, $reportQuery);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var table = $('#reportTable').DataTable({
                 paging: true,
                 searching: true,
                 ordering: true,
-                responsive: true
+                responsive: true,
             });
 
-            // Custom filter for payment date based on selected month
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            // Custom filter for both month and day
+            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
                 var selectedMonth = $('#paymentMonth').val(); // Get selected month
-                var paymentDate = data[7]; // Assuming the payment date is in the 8th column (index 7)
+                var selectedDay = $('#paymentDay').val(); // Get selected day
+                var paymentDateTime = data[7]; // Assuming payment date is in the 8th column (index 7)
+
+                // Extract just the date part (YYYY-MM-DD) from the payment date
+                var paymentDate = paymentDateTime.split(" ")[0];
 
                 if (selectedMonth) {
-                    // Get the year and month from the selected value
-                    var selectedYearMonth = selectedMonth.split("-");
-                    var selectedYear = selectedYearMonth[0];
-                    var selectedMonthNumber = selectedYearMonth[1];
-
-                    // Extract year and month from the payment date
-                    var paymentDateParts = paymentDate.split("-");
+                    var paymentDateParts = paymentDate.split("-"); // Split payment date (YYYY-MM-DD)
                     var paymentYear = paymentDateParts[0];
                     var paymentMonth = paymentDateParts[1];
 
-                    // Check if the payment date is in the selected month
-                    if (selectedYear === paymentYear && selectedMonthNumber === paymentMonth) {
-                        return true;
-                    }
+                    var selectedYearMonth = selectedMonth.split("-"); // Split selected month (YYYY-MM)
+                    var selectedYear = selectedYearMonth[0];
+                    var selectedMonthNumber = selectedYearMonth[1];
 
-                    return false;
+                    // If month doesn't match, exclude row
+                    if (paymentYear !== selectedYear || paymentMonth !== selectedMonthNumber) {
+                        return false;
+                    }
                 }
 
-                return true;
+                if (selectedDay) {
+                    var paymentDay = paymentDate.split("-")[2]; // Extract the day from payment date
+                    // If day doesn't match, exclude row
+                    if (paymentDay !== selectedDay) {
+                        return false;
+                    }
+                }
+
+                return true; // Include row if all conditions pass
             });
 
-            // Trigger filter on change of the month filter
-            $('#paymentMonth').on('change', function() {
+            // Trigger filtering on month selection
+            $('#paymentMonth').on('change', function () {
+                var selectedMonth = $(this).val();
+
+                // Clear and populate the day filter based on the selected month
+                var $dayFilter = $('#paymentDay');
+                $dayFilter.empty().append('<option value="">Select Day</option>');
+
+                if (selectedMonth) {
+                    var selectedYearMonth = selectedMonth.split("-");
+                    var selectedYear = selectedYearMonth[0];
+                    var selectedMonth = selectedYearMonth[1];
+                    var daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate(); // Calculate days in month
+
+                    for (var day = 1; day <= daysInMonth; day++) {
+                        var dayValue = day < 10 ? "0" + day : day; // Format day as 01, 02, etc.
+                        $dayFilter.append('<option value="' + dayValue + '">' + day + '</option>');
+                    }
+                }
+
+                // Clear day filter and redraw the table
+                $dayFilter.val('');
+                table.draw();
+            });
+
+            // Trigger filtering on day selection
+            $('#paymentDay').on('change', function () {
                 table.draw();
             });
         });
