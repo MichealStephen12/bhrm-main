@@ -171,6 +171,66 @@ if (isset($_POST['submit'])) {
         .links a:hover {
             text-decoration: underline;
         }
+        @media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Adjust container width for smaller screens */
+        padding: 15px;
+        margin: 10% auto;
+    }
+
+    .container img {
+        width: 60%; /* Adjust logo size */
+    }
+
+    .form-group input,
+    .form-group select,
+    .btn {
+        font-size: 12px; /* Adjust font size for inputs and buttons */
+        padding: 8px; /* Add consistent padding */
+    }
+
+    .form-group label {
+        font-size: 12px;
+    }
+
+    .links {
+        font-size: 12px;
+    }
+
+    .modal-body p {
+        font-size: 14px;
+    }
+
+    #addSchoolBtn,
+    #addStatusBtn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container img {
+        width: 70%; /* Smaller logo for very small screens */
+    }
+
+    .form-group input,
+    .form-group select,
+    .btn {
+        font-size: 10px;
+        padding: 6px;
+    }
+
+    .btn {
+        font-size: 10px;
+        padding: 8px 12px;
+    }
+
+    .links a {
+        font-size: 11px;
+    }
+}
+
+        
     </style>
 </head>
 <body>

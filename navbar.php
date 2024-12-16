@@ -17,6 +17,7 @@
         $fetch = mysqli_fetch_assoc($result);
     }
 ?>
+
 <style>
     * {
         margin: 0;
@@ -92,27 +93,27 @@
     }
 
     /* Dropdown Content */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    min-width: 150px;
-    top: 60px;
-    right: 0;
-    border-radius: 5px;
-    z-index: 10; /* Make sure it's above other elements */
-}
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        min-width: 150px;
+        top: 60px;
+        right: 0;
+        border-radius: 5px;
+        z-index: 10; /* Make sure it's above other elements */
+    }
 
-/* Show Dropdown on Hover */
-.profile-dropdown:hover .dropdown-content {
-    display: block;
-}
+    /* Show Dropdown on Hover */
+    .profile-dropdown:hover .dropdown-content {
+        display: block;
+    }
 
-/* To ensure the dropdown doesn't hide when interacting with it */
-.dropdown-content:hover {
-    display: block;
-}
+    /* To ensure the dropdown doesn't hide when interacting with it */
+    .dropdown-content:hover {
+        display: block;
+    }
     .dropdown-content a {
         color: black;
         padding: 10px;
@@ -122,10 +123,6 @@
 
     .dropdown-content a:hover {
         background-color: #f1f1f1;
-    }
-
-    .profile-dropdown:hover .dropdown-content {
-        display: block;
     }
 
     /* Hamburger Menu */
@@ -146,6 +143,7 @@
         top: 60px;
         left: 0;
         width: 100%;
+        z-index: 10;
     }
 
     .nav-links-mobile .nav-link {
@@ -164,6 +162,15 @@
 
         .hamburger {
             display: block;
+        }
+
+        .nav-links-mobile {
+            display: none;
+        }
+
+        .nav-links-mobile.show-nav {
+            display: block;
+            top: 100%;
         }
     }
 </style>
@@ -208,7 +215,15 @@
         <a class="nav-link" href="index.php">Home</a>
         <a class="nav-link" href="about.php">About</a>
         <a class="nav-link" href="contact.php">Contact</a>
-        <!-- Add other links for logged-in users -->
+        <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'admin'): ?>
+            <a class="nav-link" href="php/bhapplications.php"><i class="fas fa-folder"></i> Applications</a>
+        <?php endif; ?>
+        <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'landlord'): ?>
+            <a class="nav-link" href="reservation.php"><i class="fas fa-calendar-check"></i> Reservations</a>
+        <?php endif; ?>
+        <?php if (!empty($_SESSION['uname']) && $_SESSION['role'] == 'user'): ?>
+            <a class="nav-link" href="reservation.php"><i class="fas fa-calendar"></i> My Reservations</a>
+        <?php endif; ?>
     </div>
 </nav>
 
@@ -218,21 +233,23 @@
         mobileNav.classList.toggle('show-nav');
     }
 
+    // Close dropdown if clicking outside
+    document.addEventListener('click', (e) => {
+        const dropdown = document.querySelector('.dropdown-content');
+        const profileDropdown = document.querySelector('.profile-dropdown');
+        if (dropdown && !profileDropdown.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+
     // Toggle dropdown on click for better mobile/desktop interaction
-document.querySelector('.profile-dropdown').addEventListener('click', (e) => {
-    const dropdown = document.querySelector('.dropdown-content');
-    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    document.querySelector('.profile-dropdown').addEventListener('click', (e) => {
+        const dropdown = document.querySelector('.dropdown-content');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 
-    // Prevent click from propagating and closing the dropdown
-    e.stopPropagation();
-});
-
-// Close dropdown if clicking outside
-document.addEventListener('click', () => {
-    const dropdown = document.querySelector('.dropdown-content');
-    if (dropdown) dropdown.style.display = 'none';
-});
-
+        // Prevent click from propagating and closing the dropdown
+        e.stopPropagation();
+    });
 </script>
 
 </body>

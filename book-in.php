@@ -134,48 +134,143 @@ if (isset($_POST['submit'])) {
     <!-- External CSS -->
 </head>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+       body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
 
-        .background{
-            padding: 20px;
-            width: 1000px;
-            margin: 50px auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+.background {
+    padding: 20px;
+    max-width: 1000px;
+    width: 100%;
+    margin: 50px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+.btn {
+    color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+}
 
-        .btn{
-            color: rgb(255, 255, 255);
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-        }
+button {
+    grid-column: span 2;
+    background-color: #ffaa00;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: white;
+}
 
-        button {
-            grid-column: span 2;
-            background-color: #ffaa00;
-            border: none;
-            padding: 15px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            color: white;
-        }
+button:hover {
+    background-color: #bb7d01;
+}
 
-        button:hover {
-            background-color: #bb7d01;
-        }
+/* Flex and grid layout adjustments */
+.form-col {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+input[type="text"], input[type="email"], input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Making the modal responsive */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+}
+
+/* Ensuring buttons scale properly */
+.preview-btn, .btn {
+    padding: 10px 20px;
+    background-color: #ffaa00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.preview-btn:hover {
+    background-color: #bb7d01;
+}
+
+button:hover {
+    background-color: #bb7d01;
+}
+
+/* Media queries for smaller devices */
+@media (max-width: 768px) {
+    .form {
+        grid-template-columns: 1fr;
+    }
+    .background {
+        width: 95%;
+        margin: 20px auto;
+    }
+    .centering {
+        flex-direction: column;
+        width: 100%;
+    }
+    .modal-content {
+        width: 90%;
+    }
+}
+
+@media (max-width: 576px) {
+    button {
+        width: 100%;
+    }
+    .preview-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .form-col label {
+        font-size: 14px;
+    }
+    .form-col input {
+        font-size: 14px;
+    }
+}
+
+/* Adjusting grid for small devices */
+@media (max-width: 400px) {
+    .form-col {
+        font-size: 14px;
+    }
+}
+
     </style>
 <body>
 <?php include 'navbar.php'; ?>

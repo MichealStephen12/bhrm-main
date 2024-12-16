@@ -87,26 +87,64 @@ if (isset($_POST['submit'])) {
     <title>REGISTRATION</title>
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="register.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <style>
         body {
-            background-color: #e6e6e6; /* Background color */
+            background-color: #e6e6e6; 
+            padding: 10px;
+        }
+
+        .form-container {
+            background-color: #a9a9a9;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        /* Custom responsive styles */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 10px;
+            }
+
+            input, select, button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            img {
+                height: 70px;
+            }
+
+            h4 {
+                font-size: 18px;
+            }
+
+            .form-label {
+                font-size: 12px;
+            }
+
+            .btn {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row justify-content-center" style="padding-top: 5%;">
-            <div class="col-md-6 col-lg-4">
-                <div class="text-center" style="background-color: #a9a9a9; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 16px; border-radius: 8px;">
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8 col-lg-6">
+                <div class="text-center form-container">
                     <div class="mb-3">
                         <img src="../images/0.png" height="100px" alt="Logo">
                     </div>
-                    <h4 class="text-secondary mb-4">Registration Form</h4>
+                    <h4 class="text-first mb-4">Registration Form</h4>
                     <form method="post" enctype="multipart/form-data">
                         <div class="mb-3 text-start">
                             <label for="image" class="form-label">Picture</label>
-                            <input type="file" id="image" name="image" class="form-control">
+                            <input type="file" id="image" name="image" class="form-control" required>
                         </div>
                         <div class="mb-3 text-start">
                             <label for="fname" class="form-label">First Name</label>
@@ -137,7 +175,7 @@ if (isset($_POST['submit'])) {
                             <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Confirm Password" class="form-control" required>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" name="submit" class="btn btn-warning btn-block">Register</button>
+                            <button type="submit" name="submit" class="btn btn-warning">Register</button>
                         </div>
                         <div class="text-center mt-3">
                             <a href="login.php" class="text-decoration-none text-secondary">Already have an Account? Login Now</a>
@@ -147,7 +185,6 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </div>
-
 
     <!-- Modal -->
     <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -161,7 +198,7 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         <?php if ($showModal): ?>
             var modal = new bootstrap.Modal(document.getElementById('responseModal'));

@@ -71,216 +71,9 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
 
 </head>
 <!-- Bootstrap CSS -->
+   
+<body>
     <style>
-        /* Custom CSS */
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: sans-serif;
-        }
-        
-        a{
-            text-decoration: none;
-            color: black;
-            
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            color: black;
-        }
-
-        .background {
-            background-color: #b9b9b9;
-            background-size: cover;  /* Ensure the image covers the entire container */
-            background-position: center; /* Position the background image centrally */
-            background-repeat: no-repeat;  /* Prevent the background from repeating */
-            min-height: auto;  /* Ensure the section is at least the height of the viewport */
-        }
-        
-
-        .content-background{
-            background-color: white;
-            margin: 60px 200px 90px 200px;
-            border-radius: 10px;
-        }
-
-        .back{
-            height: 100px;
-            display: flex;
-            justify-content: right;
-            align-items: center;
-            margin-right: 50px;
-        }.back a{
-           height: auto;
-        }
-
-
-        .secrow1{
-            display: flex;
-            justify-content: center;
-            align-items: top;
-        }
-
-        .secrow1 img{
-            overflow: hidden;
-            width: 80%;
-            height: 100%;
-        }
-
-        .text-box {
-            background-color: #f9f9f9; /* Light background */
-            padding: 20px;            /* Adds space inside the box */
-            border-radius: 10px;       /* Rounded corners */
-            box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */       /* Adds space below the box */
-            font-family: Arial, sans-serif; /* Clean font */
-            color: #333;               /* Text color */
-        }
-
-        .text-box h1 {
-            color: #444;               /* Heading color */
-            margin-bottom: 15px;       /* Space below the heading */
-        }
-
-        .text-box p {
-            line-height: 1.6;          /* Improve readability */
-        }
-
-        .secrow2 h1{
-            font-size: 50px;
-        }
-
-        .secrow2 p{
-            margin-top: 20px;
-            font-size: 20px;
-        }
-
-        .section2{
-            margin: auto;
-            width: 80%;
-            background-color: rgb(255, 255, 255);
-            height: 130px;
-            font-weight: 20;
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            
-        }
-
-        @media (max-width: 1000px){
-            .section2{
-                width: 100%;
-                margin: 0px auto 0 auto;
-            }
-        }
-
-        .room-header{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-
-        
-
-        .form{
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-        @media (max-width: 1000px){
-            .form form{
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-            }
-        }
-
-        .form select {
-            padding: 10px; /* Padding inside the select */
-            font-size: 16px; /* Text size inside the select */
-            border: 2px solid #ccc; /* Border around the select */
-            border-radius: 8px; /* Rounded corners */
-            background-color: #f9f9f9; /* Background color */
-            color: #333; /* Text color */
-            outline: none; /* Remove default focus outline */
-            transition: border-color 0.3s ease; /* Smooth transition for border color */
-        }
-
-        @media (max-width: 1000px){
-            .form select{
-                width: 45%;
-            }
-        }
-
-        .form select:focus {
-            border-color: #007bff; /* Change border color on focus */
-        }
-
-        .btn{
-            color: rgb(255, 255, 255);
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #ffcc00;
-        }
-
-        .section3{
-            height: auto;
-            display: flex;
-            border-radius: 10px;
-            flex-wrap: wrap;
-            padding-top: 5px;
-            padding-left: 30px;
-            padding-right: 30px;
-            padding-bottom: 20px;
-        }
-
-        @media (max-width: 1000px){
-            .section3{
-                justify-content: center;
-            }
-        }
-
-        .section3::-webkit-scrollbar {
-            display: none; /* For Chrome, Safari, and Opera */
-        }
-
-
-        .card img{
-            width: 100%;
-            height: 50%;
-        }
-        
-        .card-content{
-            padding: 16px;
-        }
-
-        .card-content h5{
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .card-content p{
-            color: black;
-            font-size: 15px;
-            margin-bottom: 8px;
-        }
-        
-        .room-btn{
-            margin-top: 20px;
-        }
-
-        .card-content a{
-            margin-top: 20px;
-        }
 
         .footer {
             background-color: #343a40;
@@ -353,13 +146,65 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
             color: #888;
         }
 
+        
+
+
     </style>
-<body>
-    <div class="background">
-        <?php include 'navbar.php'; ?>
 
+    <?php include 'navbar.php'; ?>
 
-        <div class="content-background">
+    <style>
+        .content-background{
+            margin: 0px 250px;
+        }
+
+        @media (max-width: 768px){
+            .content-background {
+                margin: 0px 0px;
+            }
+        }
+    </style>
+    <div class="content-background">
+            <style>
+                 .back {
+                    display: flex;
+                    justify-content: flex-end; /* Aligns the back button to the left */
+                    padding: 20px;
+                    background-color: #f5f5f5; /* Light background for contrast */
+                    border-bottom: 1px solid #ddd; /* Optional: separates the header visually */
+                }
+
+                .back .btn {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #007bff; /* Primary blue color */
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    transition: background-color 0.3s ease, transform 0.2s ease;
+                }
+
+                .back .btn:hover {
+                    background-color: #0056b3; /* Darker blue on hover */
+                    transform: scale(1.05); /* Slight zoom effect on hover */
+                }
+
+                .back .btn:active {
+                    transform: scale(1); /* Reset zoom when clicked */
+                }
+
+                @media screen and (max-width: 768px) {
+                    .back {
+                        padding: 15px; /* Adjust padding for smaller screens */
+                    }
+                    .back .btn {
+                        font-size: 14px; /* Slightly smaller text for smaller devices */
+                        padding: 8px 16px; /* Adjust padding */
+                    }
+                }
+            </style>
             <div class="back">
                 <div>
                     <?php 
@@ -386,14 +231,55 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                         padding-top: 30px;
                     }
 
-                    @media (max-width: 1000px){
+                    
+                    .secrow1{
+                        display: flex;
+                        justify-content: center;
+                        align-items: top;
+                    }
+
+                    .secrow1 img{
+                        overflow: hidden;
+                        width: 80%;
+                        height: 100%;
+                    }
+
+                    .text-box {
+                        background-color: #f9f9f9; /* Light background */
+                        padding: 20px;            /* Adds space inside the box */
+                        border-radius: 10px;       /* Rounded corners */
+                        box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow */       /* Adds space below the box */
+                        font-family: Arial, sans-serif; /* Clean font */
+                        color: #333;               /* Text color */
+                    }
+
+                    .text-box h1 {
+                        color: #444;               /* Heading color */
+                        margin-bottom: 15px;       /* Space below the heading */
+                        text-align: center;
+                    }
+
+                    .text-box p {
+                        line-height: 1.6;          /* Improve readability */
+                    }
+
+                    .secrow2 h1{
+                        font-size: 50px;
+                    }
+
+                    .secrow2 p{
+                        margin-top: 20px;
+                        font-size: 20px;
+                    }
+
+                    @media (max-width: 768px){
                         .section1{
                             background-color: white;
                             height: auto;
                             font-weight: 20;
                             display: grid;
                             grid-template-columns: 1fr;
-                            grid-template-rows: 1fr;
+                            grid-template-rows: 1fr 1fr;
                             border-radius: 10px;
                             padding: 20px;
                             padding-top: 30px;
@@ -421,20 +307,67 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                         <p><?php echo $fetch['bh_description']; ?></p>
                     </div>
                 </div>
-             
-        
-
             </div>
 
+            <style>
+                .section2{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px 250px;
+                }
+
+                select {
+                    padding: 8px 12px;
+                    font-size: 16px;
+                    color: #333;
+                    border: 1px solid #007bff; /* Blue border */
+                    border-radius: 5px;
+                    background-color: white;
+                    cursor: pointer;
+                    outline: none;
+                    transition: all 0.3s ease;
+                    margin-right: 10px; /* Adds space between dropdowns */
+                }
+
+                select:hover {
+                    border-color: #0056b3; /* Darker blue on hover */
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds subtle shadow */
+                }
+
+                select:focus {
+                    border-color: #0056b3; /* Same as hover for consistency */
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Blue glow on focus */
+                }
+
+                option {
+                    font-size: 16px; /* Consistent text size */
+                    color: #333;
+                    background-color: white;
+                }
+
+                /* Ensures consistent spacing between dropdowns and alignment within the form */
+                .form select {
+                    margin: 0 5px;
+                }
+
+                @media screen and (max-width: 768px) {
+                    .section2{
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 10px 30px;
+                    }.section2 h1{
+                        padding-bottom: 10px;
+                    }
+                }
+            </style>
             
             <div class="section2">
-
-
                 <div class="room-header">
                     <h1>Rooms</h1>
                 </div>
-
-
                 <div class="form">
                     <form method="get" action="">
                         <!-- Retain hname in the form -->
@@ -454,7 +387,6 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                         </select>
                     </form>
                 </div>  
-
             </div>
             
             <div class="section3">                 
@@ -511,6 +443,13 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                     <p><strong>Room Floor:</strong>  <?php echo $fetch['room_floor']?> </p>
                                     <p><strong>Status:</strong> <?php echo $fetch['status']?></p>
                                     <style>
+                                        .section3{
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            margin: 20px 10px;
+                                        }
+
                                         .card{
                                             width: 300px;
                                             border-radius: 8px;
@@ -522,6 +461,79 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                             justify-content: space-between; /* Align items to the bottom */
                                             padding-bottom: 10px;
                                             height: auto;
+                                        }
+
+                                        .card img{
+                                            width: 100%;
+                                            height: 50%;
+                                        }
+                                        
+                                        .card-content{
+                                            padding: 16px;
+                                        }
+
+                                        .card-content h5{
+                                            font-size: 28px;
+                                            margin-bottom: 8px;
+                                        }
+
+                                        .card-content p{
+                                            color: black;
+                                            font-size: 15px;
+                                            margin-bottom: 8px;
+                                        }
+                                        
+                                        .book {
+                                            padding: 10px 20px;
+                                            font-size: 16px;
+                                            font-weight: bold;
+                                            text-align: center;
+                                            color: white; /* Text color */
+                                            background-color: #007bff; /* Blue background */
+                                            border: none; /* Removes default border */
+                                            border-radius: 5px; /* Rounded corners */
+                                            text-decoration: none; /* Removes underline */
+                                            cursor: pointer;
+                                            transition: all 0.3s ease; /* Smooth hover effect */
+                                        }
+
+                                        .book:hover {
+                                            background-color: #0056b3; /* Darker blue on hover */
+                                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow on hover */
+                                        }
+
+                                        .book:active {
+                                            background-color: #003f7f; /* Even darker blue on click */
+                                            transform: scale(0.98); /* Slightly reduces size when clicked */
+                                        }
+
+                                        .room-btn {
+                                            margin-top: 25px; /* Maintains spacing above the button */
+                                        }
+
+                                        .card-content a{
+                                            margin-top: 20px;
+                                        }
+
+                                        @media (max-width: 768px){
+                                                    .card   {
+                                                        width: 350px;
+                                                        border-radius: 8px;
+                                                        overflow: hidden;
+                                                        box-shadow: 0px 10px 20px #aaaaaa;
+                                                        margin: 20px;
+                                                        display: flex;
+                                                        flex-direction: column; /* Ensure the flex direction is column */
+                                                        justify-content: space-between; /* Align items to the bottom */
+                                                        padding-bottom: 10px;
+                                                        height: auto;
+                                                }
+                                                .section3  {
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    justify-content: center;
+                                                    align-items: center;
+                                                }
                                         }
                                     </style>
                                         <div class="room-btn">
@@ -554,7 +566,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                                     if ($roomStatus === "Available") {
                                                         // Allow booking if room is available
                                                         ?>
-                                                        <a href='book-in.php?roomno=<?php echo $roomno; ?>' class='btn btn-warning'>Book Now!</a>
+                                                        <a href='book-in.php?roomno=<?php echo $roomno; ?>' class='book'>Book Now!</a>
                                                         <?php
                                                     } else {
                                                         // Message if the room is full or reserved
@@ -585,42 +597,41 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                 ?>
             </div>
                            
-        </div>
+    </div>
 
+    
 
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="footer-col">
-                        <h4>About Us</h4>
-                        <ul>
-                            <li><a href="#">Company Info</a></li>
-                            <li><a href="#">Our Team</a></li>
-                            <li><a href="#">Careers</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Quick Links</h4>
-                        <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">Services</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Follow Us</h4>
-                        <div class="social-links">
-                            <a href="#">Facebook<i class="fab fa-facebook-f"></i></a>
-                            <a href="#">Twitter<i class="fab fa-twitter"></i></a>
-                            <a href="#">Instagram<i class="fab fa-instagram"></i></a>
-                        </div>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>About Us</h4>
+                    <ul>
+                        <li><a href="#">Company Info</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#">Facebook<i class="fab fa-facebook-f"></i></a>
+                        <a href="#">Twitter<i class="fab fa-twitter"></i></a>
+                        <a href="#">Instagram<i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
-                <p class="footer-bottom-text">© 2024 Your Company Name. All Rights Reserved.</p>
             </div>
-        </footer>
-
-    </div>
+            <p class="footer-bottom-text">© 2024 Your Company Name. All Rights Reserved.</p>
+        </div>
+    </footer>
 
     <script src="chart.min.js"></script>
 
