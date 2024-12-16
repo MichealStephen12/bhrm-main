@@ -158,6 +158,18 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
             margin: 0px 250px;
         }
 
+        @media (max-width: 1600px){
+            .content-background {
+                margin: 0px 100px;
+            }
+        }
+
+        @media (max-width: 1000px){
+            .content-background {
+                margin: 0px 0px;
+            }
+        }
+
         @media (max-width: 768px){
             .content-background {
                 margin: 0px 0px;
