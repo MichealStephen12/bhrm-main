@@ -26,28 +26,34 @@ if (isset($_POST['submit'])) {
     $fileError = $_FILES['image']['error'];
     $fileType = $_FILES['image']['type'];
 
+    $fileNameNew = ""; // Initialize the variable to avoid undefined error
+    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
     $fileExt = explode('.', $fileName);
     $fileactualext = strtolower(end($fileExt));
-    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
 
-    if (in_array($fileactualext, $allowed)) {
-        if ($fileError === 0) {
-            if ($fileSize < 1000000) {
-                $fileNameNew = uniqid('', true) . '.' . $fileactualext;
-                $fileDestination = '../profiles/' . $fileNameNew;
-                move_uploaded_file($fileTmpName, $fileDestination);
+    if (!empty($fileName)) { // Only check if a file is uploaded
+        if (in_array($fileactualext, $allowed)) {
+            if ($fileError === 0) {
+                if ($fileSize < 1000000) {
+                    $fileNameNew = uniqid('', true) . '.' . $fileactualext;
+                    $fileDestination = '../profiles/' . $fileNameNew;
+                    move_uploaded_file($fileTmpName, $fileDestination);
+                } else {
+                    echo "Your file is too big.";
+                }
             } else {
-                echo "Your file is too big.";
+                echo "There was an error uploading your file.";
             }
+        } else {
+            echo "You cannot upload this type of file.";
         }
-    } else {
-        echo "You cannot upload this type of file.";
     }
 
     $query = "SELECT * FROM `users` WHERE uname = '$uname'";
     $result = mysqli_query($conn, $query);
     $errors = array();
 
+    // Validation checks
     if (empty($fname) && empty($lname) && empty($uname) && empty($pass) && empty($conpassword)) {
         array_push($errors, "Missing all fields");
     } elseif (empty($fname)) {
@@ -61,23 +67,27 @@ if (isset($_POST['submit'])) {
     } elseif (!filter_var($uname, FILTER_VALIDATE_EMAIL)) {
         array_push($errors, "Email is not valid.");
     } elseif (strlen($pass) < 3) {
-        array_push($errors, "Password must be 8 characters long.");
+        array_push($errors, "Password must be at least 8 characters long.");
     } elseif ($pass !== $conpassword) {
         array_push($errors, "Password didn't match.");
     } elseif ($result && mysqli_num_rows($result) > 0) {
         array_push($errors, "Email already exists.");
     }
-    
+
+    // Show errors or proceed to insert
     if (count($errors) > 0) {
-        $error_messages = implode("\\n", $errors); // Combine error messages into a single string
-        echo "<script>alert('$error_messages');</script>"; // Display the alert button with error messages
+        $error_messages = implode("\\n", $errors); 
+        echo "<script>alert('$error_messages');</script>";
     } else {
-        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `gender`, `tenant_status`, `school`, `uname`, `pass`, `role`) VALUES 
-                                    ('', 'profiles/$fileNameNew','$fname','$lname', '$gender', '$tenantstatus', '$school', '$uname','$pass', 'user')";
+        // Fallback image if upload fails
+        $filePath = !empty($fileNameNew) ? "profiles/$fileNameNew" : "profiles/default.png";
+
+        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `gender`, `tenant_status`, `school`, `uname`, `pass`, `role`) 
+                  VALUES ('', '$filePath','$fname','$lname', '$gender', '$tenantstatus', '$school', '$uname','$pass', 'user')";
         mysqli_query($conn, $query);
         $modalMessage = "Registration successful!";
         $showModal = true;
-    }    
+    }
 }
 ?>
 
