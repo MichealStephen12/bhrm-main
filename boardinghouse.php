@@ -189,7 +189,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                 .back .btn {
                     display: inline-block;
                     padding: 10px 20px;
-                    background-color: #007bff; /* Primary blue color */
+                    background-color: #ffaa00; /* Primary blue color */
                     color: white;
                     text-decoration: none;
                     border-radius: 5px;
@@ -199,7 +199,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                 }
 
                 .back .btn:hover {
-                    background-color: #0056b3; /* Darker blue on hover */
+                    background-color: #ffaa00; /* Darker blue on hover */
                     transform: scale(1.05); /* Slight zoom effect on hover */
                 }
 
@@ -501,7 +501,7 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                             font-weight: bold;
                                             text-align: center;
                                             color: white; /* Text color */
-                                            background-color: #007bff; /* Blue background */
+                                            background-color: #ffaa00; /* Blue background */
                                             border: none; /* Removes default border */
                                             border-radius: 5px; /* Rounded corners */
                                             text-decoration: none; /* Removes underline */
@@ -510,12 +510,12 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                         }
 
                                         .book:hover {
-                                            background-color: #0056b3; /* Darker blue on hover */
+                                            background-color:rgb(221, 150, 7); /* Darker blue on hover */
                                             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow on hover */
                                         }
 
                                         .book:active {
-                                            background-color: #003f7f; /* Even darker blue on click */
+                                            background-color: rgb(184, 123, 3); /* Even darker blue on click */
                                             transform: scale(0.98); /* Slightly reduces size when clicked */
                                         }
 
@@ -527,25 +527,46 @@ if(!empty($_SESSION["uname"]) && $_SESSION["role"] == 'user'){
                                             margin-top: 20px;
                                         }
 
+                                        @media (max-width: 1000px){
+                                            .card{
+                                                width: 350px;
+                                                border-radius: 8px;
+                                                overflow: hidden;
+                                                box-shadow: 0px 10px 20px #aaaaaa;
+                                                margin: 20px;
+                                                display: flex;
+                                                flex-direction: column; /* Ensure the flex direction is column */
+                                                justify-content: space-between; /* Align items to the bottom */
+                                                padding-bottom: 10px;
+                                                height: auto;
+                                            }
+                                            .section3  {
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: center;
+                                                align-items: center;
+                                            }
+                                        }
+
                                         @media (max-width: 768px){
-                                                    .card   {
-                                                        width: 350px;
-                                                        border-radius: 8px;
-                                                        overflow: hidden;
-                                                        box-shadow: 0px 10px 20px #aaaaaa;
-                                                        margin: 20px;
-                                                        display: flex;
-                                                        flex-direction: column; /* Ensure the flex direction is column */
-                                                        justify-content: space-between; /* Align items to the bottom */
-                                                        padding-bottom: 10px;
-                                                        height: auto;
-                                                }
-                                                .section3  {
-                                                    display: flex;
-                                                    flex-direction: column;
-                                                    justify-content: center;
-                                                    align-items: center;
-                                                }
+                                            .card{
+                                                width: 350px;
+                                                border-radius: 8px;
+                                                overflow: hidden;
+                                                box-shadow: 0px 10px 20px #aaaaaa;
+                                                margin: 20px;
+                                                display: flex;
+                                                flex-direction: column; /* Ensure the flex direction is column */
+                                                justify-content: space-between; /* Align items to the bottom */
+                                                padding-bottom: 10px;
+                                                height: auto;
+                                            }
+                                            .section3  {
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: center;
+                                                align-items: center;
+                                            }
                                         }
                                     </style>
                                         <div class="room-btn">

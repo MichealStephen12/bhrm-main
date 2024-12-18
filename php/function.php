@@ -250,7 +250,8 @@ if (isset($_GET['end'])) {
     $paymentResult = mysqli_query($conn, $paymentQuery);
     $paymentData = mysqli_fetch_assoc($paymentResult);
 
-    $payment = $paymentData['price']; // Get the final payment amount
+    $slotprice = $paymentData['slot_price'];
+    $payment = $paymentData['payment']; // Get the final payment amount
     $pay_stat = $paymentData['pay_stat'];
     $pay_date = $paymentData['pay_date']; // Get the payment date
     $date_out = date('Y-m-d'); // Use the current date for the end of reservation
@@ -284,10 +285,12 @@ if (isset($_GET['end'])) {
 
     // Update the report using the report ID
     $updateReportQuery = "UPDATE reports 
-                          SET payment = '$payment', 
+                          SET   room_slot = '$selected_slots',
+                                payment = '$payment', 
                               pay_stat = '$pay_stat',
                               pay_date = '$pay_date', 
                               date_out = '$date_out',
+                              slot_price = '$slotprice',
                               price = '$roomprice'
                           WHERE id = $report_id AND hname = '$hname'";
     mysqli_query($conn, $updateReportQuery);

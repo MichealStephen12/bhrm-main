@@ -215,7 +215,7 @@ form {
 /* Ensuring buttons scale properly */
 .preview-btn, .btn {
     padding: 10px 20px;
-    background-color: #ffaa00;
+    background-color: #ffaa00 ;
     color: white;
     border: none;
     border-radius: 5px;

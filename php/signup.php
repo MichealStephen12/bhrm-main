@@ -5,8 +5,8 @@ if (!empty($_SESSION["uname"]) && !empty($_SESSION["role"])) {
     header("location: ../index.php");
 }
 
+$fileErrorMessage = "";
 $showModal = false;
-$modalMessage = "";
 
 if (isset($_POST['submit'])) {
     $fname = $_POST['fname'];
@@ -19,76 +19,61 @@ if (isset($_POST['submit'])) {
     $conpassword = $_POST['confirmpassword'];
 
     $_FILES['image'];
-
     $fileName = $_FILES['image']['name'];
     $fileTmpName = $_FILES['image']['tmp_name'];
     $fileSize = $_FILES['image']['size'];
     $fileError = $_FILES['image']['error'];
     $fileType = $_FILES['image']['type'];
 
-    $fileNameNew = ""; // Initialize the variable to avoid undefined error
-    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
     $fileExt = explode('.', $fileName);
     $fileactualext = strtolower(end($fileExt));
+    $allowed = array('jpg', 'jpeg', 'png', 'pdf');
 
-    if (!empty($fileName)) { // Only check if a file is uploaded
-        if (in_array($fileactualext, $allowed)) {
-            if ($fileError === 0) {
-                if ($fileSize < 1000000) {
-                    $fileNameNew = uniqid('', true) . '.' . $fileactualext;
-                    $fileDestination = '../profiles/' . $fileNameNew;
-                    move_uploaded_file($fileTmpName, $fileDestination);
-                } else {
-                    echo "Your file is too big.";
-                }
-            } else {
-                echo "There was an error uploading your file.";
-            }
-        } else {
-            echo "You cannot upload this type of file.";
-        }
+    if (!in_array($fileactualext, $allowed)) {
+        $fileErrorMessage = "Invalid file type! Only JPG, JPEG, and PNG are allowed.";
+        $showModal = true;
+    } elseif ($fileError !== 0) {
+        $fileErrorMessage = "There was an error uploading your file.";
+        $showModal = true;
+    } elseif ($fileSize >= 52428800) {
+        $fileErrorMessage = "File size is too large! Maximum size is 1MB.";
+        $showModal = true;
+    } else {
+        $fileNameNew = uniqid('', true) . '.' . $fileactualext;
+        $fileDestination = '../profiles/' . $fileNameNew;
+        move_uploaded_file($fileTmpName, $fileDestination);
     }
 
     $query = "SELECT * FROM `users` WHERE uname = '$uname'";
     $result = mysqli_query($conn, $query);
     $errors = array();
 
-    // Validation checks
-    if (empty($fname) && empty($lname) && empty($uname) && empty($pass) && empty($conpassword)) {
-        array_push($errors, "Missing all fields");
-    } elseif (empty($fname)) {
-        array_push($errors, "Missing First Name");
-    } elseif (empty($lname)) {
-        array_push($errors, "Missing Last Name");
-    } elseif (empty($uname)) {
-        array_push($errors, "Missing Email");
-    } elseif (empty($pass)) {
-        array_push($errors, "Missing Password");
+    if (empty($fname) || empty($lname) || empty($uname) || empty($pass) || empty($conpassword)) {
+        $fileErrorMessage = "Please fill out all required fields.";
+        $showModal = true;
     } elseif (!filter_var($uname, FILTER_VALIDATE_EMAIL)) {
-        array_push($errors, "Email is not valid.");
+        $fileErrorMessage = "Invalid email format.";
+        $showModal = true;
     } elseif (strlen($pass) < 3) {
-        array_push($errors, "Password must be at least 8 characters long.");
+        $fileErrorMessage = "Password must be at least 3 characters long.";
+        $showModal = true;
     } elseif ($pass !== $conpassword) {
-        array_push($errors, "Password didn't match.");
+        $fileErrorMessage = "Passwords do not match.";
+        $showModal = true;
     } elseif ($result && mysqli_num_rows($result) > 0) {
-        array_push($errors, "Email already exists.");
+        $fileErrorMessage = "Email already exists.";
+        $showModal = true;
     }
 
-    // Show errors or proceed to insert
-    if (count($errors) > 0) {
-        $error_messages = implode("\\n", $errors); 
-        echo "<script>alert('$error_messages');</script>";
-    } else {
-        // Fallback image if upload fails
-        $filePath = !empty($fileNameNew) ? "profiles/$fileNameNew" : "profiles/default.png";
-
-        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `gender`, `tenant_status`, `school`, `uname`, `pass`, `role`) 
-                  VALUES ('', '$filePath','$fname','$lname', '$gender', '$tenantstatus', '$school', '$uname','$pass', 'user')";
+    if (empty($fileErrorMessage) && !$showModal) {
+        $query = "INSERT INTO `users`(`id`, `image`, `fname`, `lname`, `gender`, `tenant_status`, `school`, `uname`, `pass`, `role`) VALUES 
+                  ('', 'profiles/$fileNameNew','$fname','$lname', '$gender', '$tenantstatus', '$school', '$uname','$pass', 'user')";
         mysqli_query($conn, $query);
-        $modalMessage = "Registration successful!";
+        $fileErrorMessage = "Registration successful!";
         $showModal = true;
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -331,33 +316,41 @@ if (isset($_POST['submit'])) {
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <p><?= $modalMessage ?></p>
-                    <button type="button" class="btn btn-warning" id="modalConfirmButton">Confirm</button>
-                </div>
+    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="responseModalLabel">Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modalConfirmButton" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
+    document.addEventListener('DOMContentLoaded', function () {
         <?php if ($showModal): ?>
             var modal = new bootstrap.Modal(document.getElementById('responseModal'));
+            document.getElementById('modalMessage').innerText = "<?= $fileErrorMessage ?>";
             modal.show();
-        <?php endif; ?>
 
-        document.getElementById('modalConfirmButton').addEventListener('click', function () {
-            <?php if ($modalMessage === "Registration successful!"): ?>
-                window.location.href = "login.php";
-            <?php else: ?>
-                var modalInstance = bootstrap.Modal.getInstance(document.getElementById('responseModal'));
-                modalInstance.hide();
+            // Redirect to login if registration is successful
+            <?php if ($fileErrorMessage === "Registration successful!"): ?>
+                document.getElementById('modalConfirmButton').addEventListener('click', function () {
+                    window.location.href = "login.php";
+                });
             <?php endif; ?>
-        });
-    </script>
+        <?php endif; ?>
+    });
+</script>
+
 
 
     <script>

@@ -195,38 +195,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const maxPayment = <?php echo $maxPayment; ?>; // Maximum payment based on PHP calculation
 
             function updatePaymentStatus() {
-            const paymentInput = document.getElementById('payment');
-            const statusInput = document.getElementById('pay_stat');
-            let payment = parseFloat(paymentInput.value);
+                const paymentInput = document.getElementById('payment');
+                const statusInput = document.getElementById('pay_stat');
+                let cursorPosition = paymentInput.selectionStart; // Save cursor position
+                let value = paymentInput.value;
 
-            // Ensure payment does not exceed the maximum payment
-            if (isNaN(payment)) {
-                payment = 0;
+                // Remove leading zeros (except single '0') and invalid characters
+                value = value.replace(/^0+(?=\d)/, ''); // Remove leading zeros
+
+                // Allow only valid numbers and restrict to two decimal places
+                value = value.replace(/[^0-9.]/g, ''); // Remove invalid characters
+                value = value.replace(/(\.\d{2})\d+/, '$1'); // Limit to two decimals
+
+                // Ensure only one decimal point exists
+                let parts = value.split('.');
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts[1]; // Keep only the first decimal
+                }
+
+                // Cap at maxPayment
+                let payment = parseFloat(value);
+                if (!isNaN(payment) && payment > maxPayment) {
+                    payment = maxPayment;
+                    value = payment.toFixed(2);
+                }
+
+                paymentInput.value = value; // Update the input value
+
+                // Restore the cursor position
+                setTimeout(() => paymentInput.setSelectionRange(cursorPosition, cursorPosition), 0);
+
+                // Update payment status
+                payment = parseFloat(value) || 0; // Default to 0 if invalid
+                if (payment === 0) {
+                    statusInput.value = 'Not Paid Yet';
+                } else if (payment > 0 && payment < maxPayment) {
+                    statusInput.value = 'Partially Paid';
+                } else if (payment === maxPayment) {
+                    statusInput.value = 'Fully Paid';
+                }
             }
 
-            if (payment > maxPayment) {
-                paymentInput.value = maxPayment.toFixed(2); // Automatically set the max limit
-                payment = maxPayment;
-            }
-
-            // Update payment status based on the input amount
-            if (payment === 0) {
-                statusInput.value = 'Not Paid Yet';
-            } else if (payment > 0 && payment < maxPayment) {
-                statusInput.value = 'Partially Paid';
-            } else if (payment === maxPayment) {
-                statusInput.value = 'Fully Paid';
-            }
-        }
-
-        // Format the value to two decimal places when the input loses focus
-        document.getElementById('payment').addEventListener('blur', function() {
-            const paymentInput = document.getElementById('payment');
-            let payment = parseFloat(paymentInput.value);
-            if (!isNaN(payment)) {
-                paymentInput.value = payment.toFixed(2); // Format the value to two decimal places
-            }
-        });
+            // Format value when losing focus
+            document.getElementById('payment').addEventListener('blur', function() {
+                let paymentInput = this;
+                let value = parseFloat(paymentInput.value);
+                if (!isNaN(value)) {
+                    paymentInput.value = value.toFixed(2); // Format to two decimal places
+                } else {
+                    paymentInput.value = '0.00';
+                }
+            });
         </script>
 
         <script>

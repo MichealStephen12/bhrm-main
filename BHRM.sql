@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2024 at 07:26 AM
+-- Generation Time: Dec 18, 2024 at 03:07 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -133,13 +133,6 @@ CREATE TABLE `payments` (
   `owner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`id`, `res_id`, `email`, `room_no`, `price`, `room_slot`, `slot_price`, `payment`, `pay_stat`, `pay_date`, `hname`, `owner`) VALUES
-(143, 105, 'user@gmail.com', 1, '6000', 'Slot 1, Slot 2, Slot 3', 1000, 0, 'Not Fully Paid', NULL, 'Dodge Boarding House', 'dodge@gmail.com');
-
 -- --------------------------------------------------------
 
 --
@@ -160,6 +153,7 @@ CREATE TABLE `reports` (
   `room_no` int(255) NOT NULL,
   `price` int(255) NOT NULL,
   `slot_price` int(11) NOT NULL,
+  `room_slot` varchar(255) NOT NULL,
   `hname` varchar(255) NOT NULL,
   `owner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -168,139 +162,149 @@ CREATE TABLE `reports` (
 -- Dumping data for table `reports`
 --
 
-INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `payment`, `pay_date`, `pay_stat`, `date_in`, `date_out`, `room_no`, `price`, `slot_price`, `hname`, `owner`) VALUES
-(1, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, 'Dodge Boarding House', ''),
-(2, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, 'Dodge Boarding House', ''),
-(3, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, 'Dodge Boarding House', ''),
-(4, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, 'Dodge Boarding House', ''),
-(5, 'user', 'user', 'male', 'user@gmail.com', 5000, '2024-12-04 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, 'Dodge Boarding House', ''),
-(6, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, 'Dodge Boarding House', ''),
-(7, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, 'Dodge Boarding House', ''),
-(8, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, 'Dodge Boarding House', ''),
-(9, 'user', 'user', 'male', 'user@gmail.com', 500, '2024-12-04 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, 'Dodge Boarding House', ''),
-(10, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, 'Dodge Boarding House', ''),
-(11, 'user', 'user', 'male', 'user@gmail.com', 3663, '2024-12-04 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, 'Dodge Boarding House', ''),
-(12, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-04 00:00:00', 'Fully Paid', '2024-12-04', '2024-12-04', 1, 0, 0, 'Dodge Boarding House', ''),
-(13, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(14, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(15, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(16, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(17, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(18, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-05', NULL, 1, 0, 0, 'Dodge Boarding House', ''),
-(19, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(20, 'user', 'user', 'male', 'user@gmail.com', 5000, '2024-12-05 00:00:00', 'Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(21, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(22, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(23, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(24, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, 'Dodge Boarding House', ''),
-(25, 'user', 'user', 'male', 'user2@gmail.com', 5000, '2024-12-05 00:00:00', 'Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(26, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(27, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(28, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(29, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(30, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, 'Dodge Boarding House', ''),
-(31, 'user', 'user', 'male', 'user@gmail.com', 700, '2024-12-05 00:00:00', 'Partially Paid', '2024-12-05', '2024-12-06', 1, 0, 0, 'Dodge Boarding House', ''),
-(32, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-06 00:00:00', 'Fully Paid', '2024-12-06', '2024-12-06', 2, 0, 0, 'Dodge Boarding House', ''),
-(33, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-06', '2024-12-06', 1, 0, 0, 'Dodge Boarding House', ''),
-(34, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-06', '2024-12-06', 2, 1000, 0, 'Dodge Boarding House', ''),
-(35, 'user', 'user', 'male', 'user@gmail.com', 999, '2024-12-06 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, 'Dodge Boarding House', ''),
-(36, 'user', 'user', 'male', 'user2@gmail.com', 500, '2024-12-06 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, 'Dodge Boarding House', ''),
-(37, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-06 00:00:00', 'Fully Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, 'Dodge Boarding House', ''),
-(38, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-06 00:00:00', 'Fully Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, 'Dodge Boarding House', ''),
-(39, 'user', 'user', 'male', 'user2@gmail.com', 800, '1970-01-15 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, 'Dodge Boarding House', ''),
-(40, 'user', 'user', 'male', 'user2@gmail.com', 500, '1970-01-14 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, 'Dodge Boarding House', ''),
-(41, 'user', 'user', 'male', 'user@gmail.com', 700, '1970-01-14 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 2, 1000, 0, 'Dodge Boarding House', ''),
-(42, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-08 00:00:00', 'Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, 'Dodge Boarding House', ''),
-(43, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, 'Dodge Boarding House', ''),
-(44, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, 'Dodge Boarding House', ''),
-(45, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, 'Dodge Boarding House', ''),
-(46, 'user', 'user', 'male', 'user@gmail.com', 500, '2024-12-09 00:00:00', 'Partially Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, 'Dodge Boarding House', ''),
-(47, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(48, 'user', 'user', 'male', 'user2@gmail.com', 1000, '1970-01-16 00:00:00', 'Fully Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, 'Landlord2 BH', 'landlord2@gmail.com'),
-(49, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-09 00:00:00', 'Fully Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(50, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-10', '2024-12-10', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(51, 'user', 'user', 'male', 'user@gmail.com', 1000, '1970-01-16 00:00:00', 'Fully Paid', '2024-12-10', '2024-12-10', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(52, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(53, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(54, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(55, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(56, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(57, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(58, 'user', 'user', 'male', 'user@gmail.com', 1, '2024-12-11 00:00:00', 'Partially Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(59, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-11 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(60, 'user3', 'user3', 'male', 'user3@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(61, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-11 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(62, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-11 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(63, 'user3', 'user3', 'male', 'user3@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(64, 'user3', 'user3', 'male', 'user3@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(65, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(66, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(67, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(68, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(69, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(72, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(73, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(74, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(75, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(76, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 21:24:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(77, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 21:39:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(78, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 21:43:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(79, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 21:43:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(80, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 22:34:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(81, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-12 22:34:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(82, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 22:35:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(83, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 23:07:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(84, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:25:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(85, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:29:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(86, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:33:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(87, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 23:33:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(88, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:37:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(89, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:41:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(90, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 23:43:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(91, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 00:06:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(92, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-13 07:32:00', 'Fully Paid', '2024-12-12', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(93, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 07:32:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(94, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 07:33:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(95, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(96, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(97, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(98, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(99, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(100, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', '0000-00-00', 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(101, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', '0000-00-00', 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(102, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:13:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(103, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:13:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(104, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:27:00', 'Fully Paid', '2024-12-13', '2024-12-13', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(105, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:30:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(106, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:30:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(107, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:44:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(108, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:45:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(109, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:47:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(110, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:48:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(111, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:48:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(112, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(113, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 09:48:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(114, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 10:49:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(115, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 11:04:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(116, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 11:13:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(117, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 11:16:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(118, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 11:18:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(119, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 11:18:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(120, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 11:39:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(121, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 11:54:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(122, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 12:02:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(123, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:05:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(124, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 12:14:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(125, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:22:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(126, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 12:22:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(127, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 12:26:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(128, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:26:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(129, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(130, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 12:30:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(131, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:59:00', 'Fully Paid', '2024-12-13', '2024-12-13', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(132, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 13:15:00', 'Fully Paid', '2024-12-13', '2024-12-13', 3, 1000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(133, 'user', 'user', 'male', 'user@gmail.com', 5000, '2024-12-13 13:31:00', 'Fully Paid', '2024-12-13', '2024-12-13', 2, 5000, 0, 'Dodge Boarding House', 'dodge@gmail.com'),
-(134, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, 'Dodge Boarding House', 'dodge@gmail.com');
+INSERT INTO `reports` (`id`, `fname`, `lname`, `gender`, `email`, `payment`, `pay_date`, `pay_stat`, `date_in`, `date_out`, `room_no`, `price`, `slot_price`, `room_slot`, `hname`, `owner`) VALUES
+(1, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, '', 'Dodge Boarding House', ''),
+(2, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, '', 'Dodge Boarding House', ''),
+(3, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, '', 'Dodge Boarding House', ''),
+(4, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, '', 'Dodge Boarding House', ''),
+(5, 'user', 'user', 'male', 'user@gmail.com', 5000, '2024-12-04 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(6, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(7, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, '', 'Dodge Boarding House', ''),
+(8, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', NULL, 1, 0, 0, '', 'Dodge Boarding House', ''),
+(9, 'user', 'user', 'male', 'user@gmail.com', 500, '2024-12-04 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(10, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(11, 'user', 'user', 'male', 'user@gmail.com', 3663, '2024-12-04 00:00:00', '', '2024-12-04', '2024-12-04', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(12, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-04 00:00:00', 'Fully Paid', '2024-12-04', '2024-12-04', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(13, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(14, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(15, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(16, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(17, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(18, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-05', NULL, 1, 0, 0, '', 'Dodge Boarding House', ''),
+(19, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(20, 'user', 'user', 'male', 'user@gmail.com', 5000, '2024-12-05 00:00:00', 'Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(21, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(22, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(23, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(24, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(25, 'user', 'user', 'male', 'user2@gmail.com', 5000, '2024-12-05 00:00:00', 'Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(26, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(27, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(28, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(29, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(30, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-05', '2024-12-05', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(31, 'user', 'user', 'male', 'user@gmail.com', 700, '2024-12-05 00:00:00', 'Partially Paid', '2024-12-05', '2024-12-06', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(32, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-06 00:00:00', 'Fully Paid', '2024-12-06', '2024-12-06', 2, 0, 0, '', 'Dodge Boarding House', ''),
+(33, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-06', '2024-12-06', 1, 0, 0, '', 'Dodge Boarding House', ''),
+(34, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-06', '2024-12-06', 2, 1000, 0, '', 'Dodge Boarding House', ''),
+(35, 'user', 'user', 'male', 'user@gmail.com', 999, '2024-12-06 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(36, 'user', 'user', 'male', 'user2@gmail.com', 500, '2024-12-06 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(37, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-06 00:00:00', 'Fully Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(38, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-06 00:00:00', 'Fully Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(39, 'user', 'user', 'male', 'user2@gmail.com', 800, '1970-01-15 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(40, 'user', 'user', 'male', 'user2@gmail.com', 500, '1970-01-14 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(41, 'user', 'user', 'male', 'user@gmail.com', 700, '1970-01-14 00:00:00', 'Partially Paid', '2024-12-06', '2024-12-06', 2, 1000, 0, '', 'Dodge Boarding House', ''),
+(42, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-08 00:00:00', 'Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(43, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(44, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(45, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-08', '2024-12-08', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(46, 'user', 'user', 'male', 'user@gmail.com', 500, '2024-12-09 00:00:00', 'Partially Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, '', 'Dodge Boarding House', ''),
+(47, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(48, 'user', 'user', 'male', 'user2@gmail.com', 1000, '1970-01-16 00:00:00', 'Fully Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, '', 'Landlord2 BH', 'landlord2@gmail.com'),
+(49, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-09 00:00:00', 'Fully Paid', '2024-12-09', '2024-12-09', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(50, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-10', '2024-12-10', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(51, 'user', 'user', 'male', 'user@gmail.com', 1000, '1970-01-16 00:00:00', 'Fully Paid', '2024-12-10', '2024-12-10', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(52, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(53, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(54, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(55, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(56, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(57, 'user', 'user', 'male', 'user@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(58, 'user', 'user', 'male', 'user@gmail.com', 1, '2024-12-11 00:00:00', 'Partially Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(59, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-11 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(60, 'user3', 'user3', 'male', 'user3@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(61, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-11 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(62, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-11 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(63, 'user3', 'user3', 'male', 'user3@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(64, 'user3', 'user3', 'male', 'user3@gmail.com', 0, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-11', '2024-12-11', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(65, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-11', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(66, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(67, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(68, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(69, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(72, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(73, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(74, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(75, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 00:00:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(76, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 21:24:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(77, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 21:39:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(78, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 21:43:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(79, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 21:43:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(80, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-12 22:34:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(81, 'user3', 'user3', 'male', 'user3@gmail.com', 1000, '2024-12-12 22:34:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(82, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 22:35:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(83, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 23:07:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(84, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:25:00', 'Fully Paid', '2024-12-12', '2024-12-12', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(85, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:29:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(86, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:33:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(87, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 23:33:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(88, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:37:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(89, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-12 23:41:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(90, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-12 23:43:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(91, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 00:06:00', 'Fully Paid', '2024-12-12', '2024-12-12', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(92, 'user', 'user', 'male', 'user@gmail.com', 1000, '2024-12-13 07:32:00', 'Fully Paid', '2024-12-12', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(93, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 07:32:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(94, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 07:33:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(95, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(96, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(97, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(98, 'user', 'user', 'male', 'user2@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(99, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', NULL, 1, 0, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(100, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', '0000-00-00', 1, 0, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(101, 'yes', 'yes', 'male', 'yes@gmail.com', 0, '0000-00-00 00:00:00', '', '2024-12-13', '0000-00-00', 1, 0, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(102, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:13:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(103, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:13:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(104, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:27:00', 'Fully Paid', '2024-12-13', '2024-12-13', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(105, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:30:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(106, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:30:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(107, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:44:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(108, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:45:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(109, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:47:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(110, 'user', 'user', 'male', 'user2@gmail.com', 1000, '2024-12-13 08:48:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(111, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 08:48:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(112, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(113, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 09:48:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(114, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 10:49:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(115, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 11:04:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(116, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 11:13:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(117, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 11:16:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(118, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 11:18:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(119, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 11:18:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(120, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 11:39:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(121, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 11:54:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(122, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 12:02:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(123, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:05:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(124, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 12:14:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(125, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:22:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(126, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 12:22:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(127, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 12:26:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(128, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:26:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(129, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '0000-00-00 00:00:00', 'Not Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(130, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 12:30:00', 'Fully Paid', '2024-12-13', '2024-12-13', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(131, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-13 12:59:00', 'Fully Paid', '2024-12-13', '2024-12-13', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(132, 'yes', 'yes', 'male', 'yes@gmail.com', 1000, '2024-12-13 13:15:00', 'Fully Paid', '2024-12-13', '2024-12-13', 3, 1000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(133, 'user', 'user', 'male', 'user@gmail.com', 5000, '2024-12-13 13:31:00', 'Fully Paid', '2024-12-13', '2024-12-13', 2, 5000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(134, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-13 16:19:00', 'Fully Paid', '2024-12-13', '2024-12-14', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(135, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-13 16:19:00', 'Fully Paid', '2024-12-13', '2024-12-14', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(136, 'yes', 'yes', 'male', 'yes@gmail.com', 6000, '2024-12-16 10:01:00', 'Fully Paid', '2024-12-14', '2024-12-16', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(137, 'user', 'user', 'male', 'user@gmail.com', 6000, '2024-12-16 10:01:00', 'Fully Paid', '2024-12-14', '2024-12-16', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(138, 'yes', 'yes', 'male', 'yes@gmail.com', 2000, '2024-12-16 10:04:00', 'Fully Paid', '2024-12-16', '2024-12-16', 4, 2000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(139, 'user', 'user', 'male', 'user2@gmail.com', 6000, '2024-12-16 22:20:00', 'Fully Paid', '2024-12-16', '2024-12-16', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(140, 'user', 'user', 'male', 'user@gmail.com', 4000, '2024-12-18 21:43:00', 'Fully Paid', '2024-12-18', '2024-12-18', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(141, 'user', 'user', 'male', 'user@gmail.com', 2000, '2024-12-18 21:53:00', 'Fully Paid', '2024-12-18', '2024-12-18', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(142, 'user', 'user', 'male', 'user@gmail.com', 2000, '2024-12-18 21:55:00', 'Fully Paid', '2024-12-18', '2024-12-18', 1, 6000, 0, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(143, 'user', 'user', 'male', 'user@gmail.com', 2000, '2024-12-18 21:56:00', 'Fully Paid', '2024-12-18', '2024-12-18', 1, 6000, 1000, '', 'Dodge Boarding House', 'dodge@gmail.com'),
+(144, 'user', 'user', 'male', 'user@gmail.com', 2000, '2024-12-18 22:07:00', 'Fully Paid', '2024-12-18', '2024-12-18', 1, 6000, 1000, 'Slot 1, Slot 2', 'Dodge Boarding House', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -438,10 +442,10 @@ INSERT INTO `reservation` (`id`, `image`, `fname`, `lname`, `email`, `gender`, `
 (91, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'asdada', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Rejected', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
 (92, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'lakad matatag', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 6000, 'Fully Paid', '2024-12-13 12:59:00', 'Ended', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
 (93, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-19', '2025-01-18', 'Student', 'CKCM', 'lakad matatag', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Rejected', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
-(94, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-25', '2025-01-24', 'Student', 'CKCM', 'lakad matatag', 2, 5, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Reserved', 0, '', NULL, 'Rejected', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
+(94, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-25', '2025-01-24', 'Student', 'CKCM', 'lakad matatag', 2, 5, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Rejected', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
 (95, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', 'awdasdas', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Rejected', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
 (96, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'lakad matatag', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Rejected', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
-(97, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'awdasdas', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 1000, 1000, 'Available', 1000, 'Fully Paid', '2024-12-13 13:15:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(97, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'awdasdas', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 1000, 1000, 'Available', 1000, 'Fully Paid', '2024-12-13 13:15:00', 'Ended', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
 (98, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-26', '2025-01-25', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Cancelled', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
 (99, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-14', '2025-01-13', 'Student', 'CKCM', 'asdada', 1, 6, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Rejected', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
 (100, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', '', 1, 6, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Cancelled', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com'),
@@ -449,8 +453,20 @@ INSERT INTO `reservation` (`id`, `image`, `fname`, `lname`, `email`, `gender`, `
 (102, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-26', '2025-01-25', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Cancelled', '', 'Reservation Cancelled', 'Dodge Boarding House', 'dodge@gmail.com'),
 (103, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', '', 1, 6, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Rejected', '1 day', 'No valid information / No Tenant Came', 'Dodge Boarding House', 'dodge@gmail.com'),
 (104, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-21', '2025-01-20', 'Student', 'CKCM', 'lakad matatag', 2, 5, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 5000, 1000, 'Available', 5000, 'Fully Paid', '2024-12-13 13:31:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
-(105, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2, Slot 3', 3, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Confirmed', '', 'Tenant Arrived', 'Dodge Boarding House', 'dodge@gmail.com'),
-(106, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Approved', '1 day', 'Process Completed', 'Dodge Boarding House', 'dodge@gmail.com');
+(105, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2, Slot 3', 3, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 6000, 'Fully Paid', '2024-12-13 16:19:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(106, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 6000, 'Fully Paid', '2024-12-13 16:19:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(107, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2, Slot 3, Slot 4, Slot 5', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 6000, 'Fully Paid', '2024-12-16 10:01:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(108, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', '', 1, 6, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Cancelled', '', 'Reservation Cancelled', 'Dodge Boarding House', 'dodge@gmail.com'),
+(109, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', '', 1, 6, 'Slot 1', 5, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 6000, 'Fully Paid', '2024-12-16 10:01:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(110, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', 'lakad matatag', 4, 2, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 2000, 1000, 'Available', 2000, 'Fully Paid', '2024-12-16 10:04:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(111, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', 'palihug kog hinlo', 3, 1, 'Whole Room', 0, 'wifi, bedsheets', 'male', 'ground floor', 1000, 1000, 'Available', 0, '', NULL, 'Cancelled', '', 'Reservation Cancelled', 'Dodge Boarding House', 'dodge@gmail.com'),
+(112, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user2@gmail.com', 'male', '2024-12-18', '2025-01-17', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2, Slot 3, Slot 4', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 6000, 'Fully Paid', '2024-12-16 22:20:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(113, 'images/6757eb0b767dc8.02114997.jpg', 'yes', 'yes', 'yes@gmail.com', 'male', '2024-12-19', '2025-01-18', 'Student', 'CKCM', 'palihug kog hinlo', 1, 6, 'Slot 1, Slot 2, Slot 3', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 0, '', NULL, 'Cancelled', '', 'Reservation Cancelled', 'Dodge Boarding House', 'dodge@gmail.com'),
+(114, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2, Slot 3, Slot 4', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 4000, 'Fully Paid', '2024-12-18 21:43:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(115, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-27', '2025-01-26', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 2000, 'Fully Paid', '2024-12-18 21:53:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(116, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-21', '2025-01-20', 'Student', 'CKCM', 'lakad matatag', 1, 6, 'Slot 1, Slot 2', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 2000, 'Fully Paid', '2024-12-18 21:55:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(117, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', '', 1, 6, 'Slot 1, Slot 2', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 2000, 'Fully Paid', '2024-12-18 21:56:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com'),
+(118, 'images/6757eb0b767dc8.02114997.jpg', 'user', 'user', 'user@gmail.com', 'male', '2024-12-20', '2025-01-19', 'Student', 'CKCM', '', 1, 6, 'Slot 1, Slot 2', 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'Available', 2000, 'Fully Paid', '2024-12-18 22:07:00', 'Ended', '', 'Reservation Ended', 'Dodge Boarding House', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -479,10 +495,11 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `room_no`, `capacity`, `current_tenant`, `amenities`, `tenant_type`, `room_floor`, `price`, `slot_price`, `image`, `status`, `hname`, `owner`) VALUES
-(1, 1, 6, 3, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'images/6757eb0b767dc8.02114997.jpg', 'Available', 'Dodge Boarding House', 'dodge@gmail.com'),
+(1, 1, 6, 0, 'wifi, bedsheets', 'male', 'ground floor', 6000, 1000, 'images/6757eb0b767dc8.02114997.jpg', 'Available', 'Dodge Boarding House', 'dodge@gmail.com'),
 (3, 2, 5, 0, 'wifi, bedsheets', 'male', 'ground floor', 5000, 1000, 'images/6757ed67802462.63033945.jpg', 'Available', 'Dodge Boarding House', 'dodge@gmail.com'),
 (5, 1, 3, 0, 'wifi, bedsheets', 'male', 'ground floor', 1000, 0, 'images/675681f1615db3.96582265.jpg', 'Available', 'Landlord2 BH', 'landlord2@gmail.com'),
-(7, 3, 1, 0, 'wifi', 'male', 'ground floor', 1000, 1000, 'images/67596acdea3f62.90388957.jpg', 'Available', 'Dodge Boarding House', 'dodge@gmail.com');
+(7, 3, 1, 0, 'wifi', 'male', 'ground floor', 1000, 1000, 'images/67596acdea3f62.90388957.jpg', 'Available', 'Dodge Boarding House', 'dodge@gmail.com'),
+(8, 4, 2, 0, 'bedsheets', 'male', 'ground floor', 2000, 1000, 'images/676031ed4b72b1.44416726.jpg', 'Available', 'Dodge Boarding House', 'dodge@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -512,7 +529,7 @@ INSERT INTO `users` (`id`, `image`, `fname`, `lname`, `gender`, `tenant_status`,
 (1, './profiles/profile_674fbd7e3d1e00.56959370.png', 'admin', 'admin', 'male', '', '', 'admin@gmail.com', 'yes', 'admin', ''),
 (2, './profiles/profile_674fdaf0f1e706.33611863.png', 'dodge', 'suico', 'male', '', '', 'dodge@gmail.com', 'yes', 'landlord', 'Dodge Boarding House'),
 (3, 'profiles/674fbe06b1aa58.49001610.png', 'user', 'user', 'male', 'Student', 'CKCM', 'user@gmail.com', 'yes', 'user', ''),
-(4, 'profiles/6751a77e1f9204.76638950.jpg', 'user', 'user', 'male', 'Student', 'CKCM', 'user2@gmail.com', 'yes', 'user', ''),
+(4, './profiles/profile_676036f8d92401.10524387.png', 'user', 'user', 'male', 'Student', 'CKCM', 'user2@gmail.com', 'yes', 'user', ''),
 (6, 'profiles/67559d17f13c02.62300745.png', 'user3', 'user3', 'male', 'Student', 'CKCM', 'user3@gmail.com', 'yes', 'user', ''),
 (7, './profiles/profile_67564995db6406.57912063.png', 'landlord2', 'landlord2', '', '', '', 'landlord2@gmail.com', 'yes', 'landlord', 'Landlord2 BH'),
 (8, 'profiles/67564ef22ff6e4.39455169.png', 'landlord3', 'landlord3', 'male', '', '', 'landlord3@gmail.com', 'yes', 'landlord', ''),
@@ -520,7 +537,9 @@ INSERT INTO `users` (`id`, `image`, `fname`, `lname`, `gender`, `tenant_status`,
 (10, 'profiles/6757ecbbb2c9e6.87689589.png', 'yes', 'yes', 'male', 'Student', 'CKCM', 'yes@gmail.com', 'yes', 'user', ''),
 (11, 'profiles/', 'yes', 'yes', 'male', '', '', 'yes2@gmail.com', 'yes', 'landlord', ''),
 (12, 'profiles/6757edd9dd56b1.88331674.png', 'asda', 'dasdasd', 'male', 'Student', 'CKCM', 'asdadaa@gmail.com', 'yes', 'user', ''),
-(13, 'profiles/', 'ttt', 'ttttt', 'male', 'Student', 'CKCM', 'tttttt@gmail.com', 'yes', 'user', '');
+(13, 'profiles/', 'ttt', 'ttttt', 'male', 'Student', 'CKCM', 'tttttt@gmail.com', 'yes', 'user', ''),
+(14, 'profiles/', 'Dodge', 'Ackkerman', 'male', 'Student', 'CKCM', 'wastwa@gmail.com', 'yes', 'user', ''),
+(15, './profiles/profile_6761417f9f1b19.82670520.jpg', 'yes', 'yes', 'male', 'Student', 'CKCM', 'yes3@gmail.com', 'yes', 'user', '');
 
 --
 -- Indexes for dumped tables
@@ -612,31 +631,31 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT for table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

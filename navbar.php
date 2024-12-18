@@ -27,7 +27,7 @@
     }
 
     .navbar {
-        background-color: #343a40;
+        background-color: #343a40 !important;
         display: flex;
         justify-content: space-between;
         align-items: center;
