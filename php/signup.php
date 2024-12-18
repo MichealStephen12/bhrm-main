@@ -35,8 +35,8 @@ if (isset($_POST['submit'])) {
     } elseif ($fileError !== 0) {
         $fileErrorMessage = "There was an error uploading your file.";
         $showModal = true;
-    } elseif ($fileSize >= 52428800) {
-        $fileErrorMessage = "File size is too large! Maximum size is 1MB.";
+    } elseif ($fileSize >= 15728640) { // 15MB in bytes
+        $fileErrorMessage = "File size is too large! Maximum size is 15MB.";
         $showModal = true;
     } else {
         $fileNameNew = uniqid('', true) . '.' . $fileactualext;
